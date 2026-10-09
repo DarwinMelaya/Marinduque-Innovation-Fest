@@ -1,5 +1,11 @@
 import { Form, Head, Link } from "@inertiajs/react";
-import { CheckCircle2, ChevronDown, Download } from "lucide-react";
+import {
+    ArrowLeft,
+    ArrowRight,
+    CheckCircle2,
+    ChevronDown,
+    Download,
+} from "lucide-react";
 import { useState } from "react";
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
@@ -12,6 +18,7 @@ import {
     authInputClass,
     authLabelClass,
 } from "@/lib/auth-styles";
+import { home } from "@/routes";
 import { register as create } from "@/routes/participants";
 import { store } from "@/routes/participants/register";
 
@@ -118,16 +125,139 @@ function RegistrationConfirmed({
     );
 }
 
+const NOTICE_HEADING_CLASS = "font-semibold text-white";
+
+const NOTICE_LIST_CLASS = "flex list-disc flex-col gap-1 pl-5";
+
+function PrivacyNotice({ onAccept }: { onAccept: () => void }) {
+    const [agreed, setAgreed] = useState(false);
+
+    return (
+        <section aria-labelledby="privacy-title" className="flex flex-col gap-5">
+            <Head title="Privacy Notice" />
+
+            <div className="flex flex-col gap-1">
+                <h2 id="privacy-title" className="text-xl font-bold">
+                    Privacy Notice
+                </h2>
+                <p className="text-sm text-white/50">
+                    Republic Act No. 10173 (Data Privacy Act of 2012)
+                </p>
+            </div>
+
+            <div
+                tabIndex={0}
+                aria-label="Privacy Notice details"
+                className="flex max-h-80 flex-col gap-4 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-5 text-sm leading-relaxed text-white/75 [color-scheme:dark] focus-visible:ring-2 focus-visible:ring-[#F15E00]/40 focus-visible:outline-none"
+            >
+                <p>
+                    The Department of Science and Technology (DOST) MIMAROPA
+                    Regional Office collects personal information through this
+                    registration form for the purpose of managing your
+                    participation in the Marinduque Innovation Fest 2026.
+                </p>
+
+                <h3 className={NOTICE_HEADING_CLASS}>Information We Collect</h3>
+                <ul className={NOTICE_LIST_CLASS}>
+                    <li>Full name, age, and sex</li>
+                    <li>Municipality and barangay of residence</li>
+                    <li>
+                        School and course, or agency and organization
+                        affiliation
+                    </li>
+                    <li>Contact number and email address</li>
+                    <li>
+                        PWD, Indigenous People (IP), Senior Citizen, and 4Ps
+                        member status (if applicable)
+                    </li>
+                </ul>
+
+                <h3 className={NOTICE_HEADING_CLASS}>Purpose of Collection</h3>
+                <ul className={NOTICE_LIST_CLASS}>
+                    <li>Event registration and attendance tracking</li>
+                    <li>Generation of your unique attendee ID and QR code</li>
+                    <li>
+                        Communication regarding Marinduque Innovation Fest 2026
+                        activities
+                    </li>
+                    <li>Statistical reporting for DOST MIMAROPA</li>
+                </ul>
+
+                <h3 className={NOTICE_HEADING_CLASS}>
+                    Data Sharing and Storage
+                </h3>
+                <p>
+                    Your information will be stored securely and accessed only
+                    by authorized DOST MIMAROPA personnel. We will not share
+                    your personal data with third parties without your consent,
+                    except as required by law.
+                </p>
+
+                <h3 className={NOTICE_HEADING_CLASS}>Your Rights</h3>
+                <p>
+                    Under the Data Privacy Act of 2012, you have the right to
+                    access, correct, or request deletion of your personal data.
+                    For inquiries or concerns, contact DOST MIMAROPA through
+                    their official channels.
+                </p>
+
+                <h3 className={NOTICE_HEADING_CLASS}>Consent</h3>
+                <p>
+                    By proceeding with registration, you acknowledge that you
+                    have read and understood this Privacy Notice and
+                    voluntarily consent to the collection and processing of
+                    your personal information for the purposes stated above.
+                </p>
+            </div>
+
+            <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-white/80">
+                <Checkbox
+                    checked={agreed}
+                    onCheckedChange={(checked) => setAgreed(checked === true)}
+                    className="mt-0.5 border-white/30 data-[state=checked]:border-[#F15E00] data-[state=checked]:bg-[#F15E00] data-[state=checked]:text-white"
+                />
+                I have read and understood the Privacy Notice, and I
+                voluntarily consent to the collection and processing of my
+                personal information as described above.
+            </label>
+
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+                <Link
+                    href={home()}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/15 px-5 text-sm font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                    <ArrowLeft className="size-4" />
+                    Back
+                </Link>
+                <Button
+                    type="button"
+                    disabled={!agreed}
+                    onClick={onAccept}
+                    className={`${authButtonClass} px-5 sm:w-auto disabled:opacity-40`}
+                >
+                    Continue to Form
+                    <ArrowRight className="size-4" />
+                </Button>
+            </div>
+        </section>
+    );
+}
+
 export default function ParticipantsRegistration({
     registration,
     barangays,
     educationLevels,
 }: Props) {
+    const [consented, setConsented] = useState(false);
     const [municipality, setMunicipality] = useState("");
     const [educationLevel, setEducationLevel] = useState("");
 
     if (registration) {
         return <RegistrationConfirmed registration={registration} />;
+    }
+
+    if (!consented) {
+        return <PrivacyNotice onAccept={() => setConsented(true)} />;
     }
 
     return (
@@ -146,6 +276,9 @@ export default function ParticipantsRegistration({
             >
                 {({ processing, errors }) => (
                     <>
+                        <input type="hidden" name="privacy_consent" value="1" />
+                        <InputError message={errors.privacy_consent} />
+
                         <fieldset className="flex flex-col gap-5">
                             <legend className={`mb-5 ${SECTION_TITLE_CLASS}`}>
                                 Personal information

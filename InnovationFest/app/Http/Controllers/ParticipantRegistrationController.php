@@ -42,6 +42,12 @@ class ParticipantRegistrationController extends Controller
     {
         $barangays = config('marinduque.barangays');
 
+        $request->validate([
+            'privacy_consent' => ['accepted'],
+        ], [
+            'privacy_consent.accepted' => 'You must agree to the Privacy Notice to register.',
+        ]);
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],

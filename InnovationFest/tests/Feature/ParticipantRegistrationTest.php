@@ -23,6 +23,7 @@ function participantData(array $overrides = []): array
         'organization' => 'Marinduque State University',
         'contact_number' => '09171234567',
         'email' => 'juan@example.com',
+        'privacy_consent' => '1',
         ...$overrides,
     ];
 }
@@ -158,6 +159,13 @@ test('students have no affiliation saved', function () {
     $participant = Participant::sole();
     expect($participant->agency)->toBeNull()
         ->and($participant->organization)->toBeNull();
+});
+
+test('participants must agree to the privacy notice', function () {
+    $this->post(route('participants.register.store'), participantData(['privacy_consent' => null]))
+        ->assertSessionHasErrors('privacy_consent');
+
+    expect(Participant::count())->toBe(0);
 });
 
 test('an email can only register once', function () {
