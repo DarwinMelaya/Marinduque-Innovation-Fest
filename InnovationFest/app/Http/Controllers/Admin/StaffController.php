@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
-use App\Models\Staff;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,15 +19,16 @@ class StaffController extends Controller
     public function index(): Response
     {
         return Inertia::render('admin/RegisteredStaff', [
-            'staff' => Staff::query()
+            'staff' => User::query()
+                ->where('role', UserRole::Staff)
                 ->latest()
                 ->latest('id')
                 ->get()
-                ->map(fn (Staff $staff) => [
+                ->map(fn (User $staff) => [
                     'id' => $staff->id,
                     'boothName' => $staff->booth_name,
                     'name' => $staff->name,
-                    'password' => Staff::defaultPassword($staff->booth_name),
+                    'password' => User::staffPassword($staff->booth_name),
                     'createdAt' => $staff->created_at?->toIso8601String(),
                 ]),
         ]);
@@ -38,15 +40,20 @@ class StaffController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'booth_name' => ['required', 'string', 'max:100', Rule::unique(Staff::class)],
+            'booth_name' => ['required', 'string', 'max:100', Rule::unique(User::class)],
             'name' => ['required', 'string', 'max:255'],
         ], [
             'booth_name.unique' => 'This booth already has a staff account.',
         ]);
 
-        $password = Staff::defaultPassword($validated['booth_name']);
+        $password = User::staffPassword($validated['booth_name']);
 
-        Staff::create([...$validated, 'password' => $password]);
+        User::forceCreate([
+            ...$validated,
+            'password' => $password,
+            'role' => UserRole::Staff,
+            'email_verified_at' => now(),
+        ]);
 
         Inertia::flash('toast', [
             'type' => 'success',

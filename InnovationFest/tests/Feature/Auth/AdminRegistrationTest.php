@@ -20,7 +20,7 @@ test('the first admin can register and is logged in', function () use ($newAdmin
     $this->assertAuthenticated();
 
     $admin = User::where('email', 'admin@example.com')->first();
-    expect($admin->is_admin)->toBeTrue()
+    expect($admin->isAdmin())->toBeTrue()
         ->and($admin->hasVerifiedEmail())->toBeTrue();
 });
 
@@ -48,5 +48,5 @@ test('admins can register other admins', function () use ($newAdmin) {
 
     $response->assertRedirect(route('admin.register', absolute: false));
     $this->assertAuthenticatedAs($admin);
-    expect(User::where('email', 'admin@example.com')->first()->is_admin)->toBeTrue();
+    expect(User::where('email', 'admin@example.com')->first()->isAdmin())->toBeTrue();
 });

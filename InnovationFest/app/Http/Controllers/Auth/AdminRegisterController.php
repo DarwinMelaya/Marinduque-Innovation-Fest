@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
@@ -43,7 +44,7 @@ class AdminRegisterController extends Controller
 
         $user = User::create($validated);
         $user->forceFill([
-            'is_admin' => true,
+            'role' => UserRole::Admin,
             'email_verified_at' => now(),
         ])->save();
 
@@ -72,6 +73,6 @@ class AdminRegisterController extends Controller
             throw new AuthenticationException(redirectTo: route('login'));
         }
 
-        abort_unless($request->user()->is_admin, 403);
+        abort_unless($request->user()->isAdmin(), 403);
     }
 }

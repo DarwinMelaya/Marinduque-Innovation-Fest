@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\Staff;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can see the staff list with default passwords', function () {
-    Staff::factory()->create(['booth_name' => 'DOST Booth', 'name' => 'Maria Santos']);
+    User::factory()->staff('DOST Booth')->create(['name' => 'Maria Santos']);
 
     $this->actingAs(User::factory()->admin()->create())
         ->get(route('admin.staff.index'))
@@ -20,7 +20,7 @@ test('admins can see the staff list with default passwords', function () {
         );
 });
 
-test('admins can add staff with a password generated from the booth name', function () {
+test('admins can add staff as users with a password generated from the booth name', function () {
     $this->actingAs(User::factory()->admin()->create())
         ->post(route('admin.staff.store'), [
             'booth_name' => 'Robotics Den',
@@ -28,14 +28,16 @@ test('admins can add staff with a password generated from the booth name', funct
         ])
         ->assertRedirect(route('admin.staff.index'));
 
-    $staff = Staff::sole();
+    $staff = User::where('role', UserRole::Staff)->sole();
     expect($staff->booth_name)->toBe('Robotics Den')
         ->and($staff->name)->toBe('Juan Dela Cruz')
+        ->and($staff->email)->toBeNull()
+        ->and($staff->hasVerifiedEmail())->toBeTrue()
         ->and(Hash::check('RoboticsDen123', $staff->password))->toBeTrue();
 });
 
 test('each booth can only have one staff account', function () {
-    Staff::factory()->create(['booth_name' => 'Robotics Den']);
+    User::factory()->staff('Robotics Den')->create();
 
     $this->actingAs(User::factory()->admin()->create())
         ->post(route('admin.staff.store'), [
@@ -59,5 +61,5 @@ test('non admins cannot add staff', function () {
         ])
         ->assertForbidden();
 
-    expect(Staff::count())->toBe(0);
+    expect(User::where('role', UserRole::Staff)->exists())->toBeFalse();
 });

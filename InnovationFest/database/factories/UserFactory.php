@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -49,8 +50,25 @@ class UserFactory extends Factory
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_admin' => true,
+            'role' => UserRole::Admin,
         ]);
+    }
+
+    /**
+     * Indicate that the user is a booth staff member, who signs in with the booth name instead of an email.
+     */
+    public function staff(?string $boothName = null): static
+    {
+        return $this->state(function (array $attributes) use ($boothName) {
+            $boothName ??= fake()->unique()->company();
+
+            return [
+                'booth_name' => $boothName,
+                'email' => null,
+                'password' => User::staffPassword($boothName),
+                'role' => UserRole::Staff,
+            ];
+        });
     }
 
     /**

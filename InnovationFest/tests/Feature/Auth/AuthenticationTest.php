@@ -22,6 +22,40 @@ test('users can authenticate using the login screen', function () {
     $response->assertRedirect(route('admin.dashboard', absolute: false));
 });
 
+test('staff authenticate with their booth name and are sent to their booth', function () {
+    $staff = User::factory()->staff('Robotics Den')->create();
+
+    $response = $this->post(route('login.store'), [
+        'email' => 'robotics den',
+        'password' => 'RoboticsDen123',
+    ]);
+
+    $this->assertAuthenticatedAs($staff);
+    $response->assertRedirect(route('booth.home', absolute: false));
+});
+
+test('staff ignore admin pages they were heading to before logging in', function () {
+    User::factory()->staff('Robotics Den')->create();
+
+    $this->get(route('admin.dashboard'))->assertRedirect(route('login'));
+
+    $this->post(route('login.store'), [
+        'email' => 'Robotics Den',
+        'password' => 'RoboticsDen123',
+    ])->assertRedirect(route('booth.home', absolute: false));
+});
+
+test('staff can not authenticate with an invalid password', function () {
+    User::factory()->staff('Robotics Den')->create();
+
+    $this->post(route('login.store'), [
+        'email' => 'Robotics Den',
+        'password' => 'wrong-password',
+    ])->assertSessionHasErrors('email');
+
+    $this->assertGuest();
+});
+
 test('users with two factor enabled are redirected to two factor challenge', function () {
     $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
 

@@ -27,7 +27,7 @@ export default function RegisteredStaff({ staff }: Props) {
                     <AdminPageHeading
                         eyebrow="Staff"
                         title="Registered staff"
-                        description={`${staff.length} ${staff.length === 1 ? 'booth' : 'booths'}`}
+                        description={`${staff.length} ${staff.length === 1 ? 'booth' : 'booths'} · Staff log in with their booth name and password`}
                     />
                     <AddStaff />
                 </div>

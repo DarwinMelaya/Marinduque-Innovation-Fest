@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -14,10 +15,11 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $name
- * @property string $email
+ * @property string|null $booth_name
+ * @property string|null $email
  * @property Carbon|null $email_verified_at
  * @property string $password
- * @property bool $is_admin
+ * @property UserRole|null $role
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
@@ -42,7 +44,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean',
+            'role' => UserRole::class,
         ];
     }
 
@@ -51,6 +53,24 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public static function adminExists(): bool
     {
-        return static::query()->where('is_admin', true)->exists();
+        return static::query()->where('role', UserRole::Admin)->exists();
+    }
+
+    /**
+     * The default password of a booth staff account: the booth name without spaces, followed by "123".
+     */
+    public static function staffPassword(string $boothName): string
+    {
+        return preg_replace('/\s+/', '', $boothName).'123';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::Admin;
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->role === UserRole::Staff;
     }
 }

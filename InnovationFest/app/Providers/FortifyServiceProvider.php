@@ -3,14 +3,17 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\ResetUserPassword;
+use App\Http\Responses\LoginResponse;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 
@@ -21,7 +24,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
     }
 
     /**
@@ -40,6 +43,20 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureActions(): void
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+
+        // Admins sign in with their email; booth staff have no email and sign in with their booth name.
+        Fortify::authenticateUsing(function (Request $request): ?User {
+            $login = Str::lower((string) $request->input(Fortify::username()));
+
+            $user = User::query()
+                ->where('email', $login)
+                ->orWhereRaw('LOWER(booth_name) = ?', [$login])
+                ->first();
+
+            return $user && Hash::check((string) $request->input('password'), $user->password)
+                ? $user
+                : null;
+        });
     }
 
     /**

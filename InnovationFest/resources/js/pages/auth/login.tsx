@@ -46,17 +46,17 @@ export default function Login({
                     <>
                         <div className="grid gap-2">
                             <Label htmlFor="email" className={authLabelClass}>
-                                Email address
+                                Email or booth name
                             </Label>
                             <Input
                                 id="email"
-                                type="email"
+                                type="text"
                                 name="email"
                                 required
                                 autoFocus
                                 tabIndex={1}
-                                autoComplete="email"
-                                placeholder="you@example.com"
+                                autoComplete="username"
+                                placeholder="you@example.com or your booth name"
                                 className={authInputClass}
                             />
                             <InputError message={errors.email} />
@@ -134,5 +134,6 @@ export default function Login({
 
 Login.layout = {
     title: "Welcome back",
-    description: "Log in to manage the Marinduque Innovation Fest.",
+    description:
+        "Admins log in with their email. Booth staff log in with their booth name.",
 };

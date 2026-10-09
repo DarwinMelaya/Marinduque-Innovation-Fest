@@ -29,4 +29,12 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
     });
 
+Route::middleware(['auth', 'can:access-booth'])
+    ->prefix('booth')
+    ->name('booth.')
+    ->group(function () {
+        Route::inertia('/', 'boothstaff/BoothHome')->name('home');
+        Route::inertia('visits', 'boothstaff/BoothListVisits')->name('visits');
+    });
+
 require __DIR__.'/settings.php';
