@@ -1,18 +1,19 @@
-import { Form, Head, Link } from "@inertiajs/react";
-import InputError from "@/components/input-error";
-import PasswordInput from "@/components/password-input";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
+import { Form, Head, Link } from '@inertiajs/react';
+import InputError from '@/components/input-error';
+import PasswordInput from '@/components/password-input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 import {
     authButtonClass,
     authInputClass,
     authLabelClass,
     authLinkClass,
-} from "@/lib/auth-styles";
-import { dashboard, login } from "@/routes";
-import { store } from "@/routes/admin/register";
+} from '@/lib/auth-styles';
+import { login } from '@/routes';
+import { dashboard } from '@/routes/admin';
+import { store } from '@/routes/admin/register';
 
 type Props = {
     isFirstAdmin: boolean;
@@ -125,7 +126,7 @@ export default function AdminRegister({ isFirstAdmin }: Props) {
             <p className="mt-8 text-center text-sm text-white/50">
                 {isFirstAdmin ? (
                     <>
-                        Already have an account?{" "}
+                        Already have an account?{' '}
                         <Link href={login()} className={authLinkClass}>
                             Log in
                         </Link>
@@ -141,7 +142,7 @@ export default function AdminRegister({ isFirstAdmin }: Props) {
 }
 
 AdminRegister.layout = {
-    title: "Register an admin",
+    title: 'Register an admin',
     description:
-        "Create an account that can manage the Marinduque Innovation Fest.",
+        'Create an account that can manage the Marinduque Innovation Fest.',
 };

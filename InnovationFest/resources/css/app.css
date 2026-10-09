@@ -5,7 +5,7 @@
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *, .admin-theme *));
 
 @theme {
     --font-sans:
@@ -172,6 +172,36 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(0.269 0 0);
     --sidebar-ring: oklch(0.439 0 0);
+}
+
+/* Landing page palette for the admin area; must stay after .dark so it wins on <html>. */
+.admin-theme {
+    color-scheme: dark;
+    --background: #000;
+    --foreground: #fff;
+    --card: #0a0a0a;
+    --card-foreground: #fff;
+    --popover: #0a0a0a;
+    --popover-foreground: #fff;
+    --primary: #f15e00;
+    --primary-foreground: #fff;
+    --secondary: oklch(1 0 0 / 10%);
+    --secondary-foreground: #fff;
+    --muted: oklch(1 0 0 / 10%);
+    --muted-foreground: oklch(1 0 0 / 60%);
+    --accent: oklch(1 0 0 / 10%);
+    --accent-foreground: #fff;
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: #f7b600;
+    --sidebar: #000;
+    --sidebar-foreground: #fff;
+    --sidebar-primary: #f15e00;
+    --sidebar-primary-foreground: #fff;
+    --sidebar-accent: oklch(1 0 0 / 10%);
+    --sidebar-accent-foreground: #fff;
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: #f7b600;
 }
 
 @layer base {

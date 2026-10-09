@@ -16,7 +16,7 @@ test('admin registration screen is open while no admin exists', function () {
 test('the first admin can register and is logged in', function () use ($newAdmin) {
     $response = $this->post(route('admin.register.store'), $newAdmin);
 
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('admin.dashboard', absolute: false));
     $this->assertAuthenticated();
 
     $admin = User::where('email', 'admin@example.com')->first();

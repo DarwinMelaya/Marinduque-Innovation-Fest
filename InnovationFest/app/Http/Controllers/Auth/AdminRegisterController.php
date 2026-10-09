@@ -51,7 +51,7 @@ class AdminRegisterController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return to_route('dashboard');
+            return to_route('admin.dashboard');
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Admin account created.')]);
