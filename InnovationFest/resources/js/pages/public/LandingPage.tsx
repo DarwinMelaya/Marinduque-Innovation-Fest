@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import {
     ArrowRight,
     Award,
@@ -275,12 +275,12 @@ function Header() {
                 </nav>
 
                 <div className="flex items-center gap-2">
-                    <a
-                        href="#schedule"
+                    <Link
+                        href="/register"
                         className="hidden rounded-full bg-[#F15E00] px-5 py-2.5 text-sm font-bold tracking-wide uppercase transition-colors hover:bg-[#FA0A00] focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none sm:inline-flex"
                     >
                         Register
-                    </a>
+                    </Link>
 
                     <Sheet>
                         <SheetTrigger
@@ -314,12 +314,12 @@ function Header() {
                             </nav>
                             <div className="mt-auto p-6">
                                 <SheetClose asChild>
-                                    <a
-                                        href="#schedule"
+                                    <Link
+                                        href="/register"
                                         className="flex w-full items-center justify-center rounded-full bg-[#F15E00] px-5 py-3 font-bold tracking-wide uppercase hover:bg-[#FA0A00]"
                                     >
                                         Register
-                                    </a>
+                                    </Link>
                                 </SheetClose>
                             </div>
                         </SheetContent>

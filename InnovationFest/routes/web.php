@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/LandingPage')->name('home');
 
+Route::inertia('register', 'auth/ParticipantsRegistration')->name('participants.register');
+
 Route::get('admin/register', [AdminRegisterController::class, 'create'])->name('admin.register');
 Route::post('admin/register', [AdminRegisterController::class, 'store'])
     ->middleware('throttle:6,1')
