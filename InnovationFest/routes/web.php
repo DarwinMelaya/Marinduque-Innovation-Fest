@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\Auth\AdminRegisterController;
+use App\Http\Controllers\ParticipantRegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/LandingPage')->name('home');
 
-Route::inertia('register', 'auth/ParticipantsRegistration')->name('participants.register');
+Route::get('register', [ParticipantRegistrationController::class, 'create'])->name('participants.register');
+Route::post('register', [ParticipantRegistrationController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('participants.register.store');
 
 Route::get('admin/register', [AdminRegisterController::class, 'create'])->name('admin.register');
 Route::post('admin/register', [AdminRegisterController::class, 'store'])

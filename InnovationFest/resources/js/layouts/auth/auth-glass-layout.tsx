@@ -8,6 +8,7 @@ export default function AuthGlassLayout({
     children,
     title,
     description,
+    wide = false,
 }: AuthLayoutProps) {
     return (
         <div className="dark relative flex min-h-svh items-center justify-center overflow-hidden bg-[#0B0A0A] px-6 py-12 text-white">
@@ -16,7 +17,9 @@ export default function AuthGlassLayout({
                 className="pointer-events-none absolute -top-[24rem] -left-[20rem] size-[50rem] rounded-full bg-[radial-gradient(circle,transparent_40%,#FFE4A3_46%,#F7B600_51%,#F15E00_58%,transparent_67%)] blur-[40px]"
             />
 
-            <div className="relative flex w-full max-w-md flex-col gap-4">
+            <div
+                className={`relative flex w-full flex-col gap-4 ${wide ? "max-w-2xl" : "max-w-md"}`}
+            >
                 <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 shadow-2xl shadow-black/50 backdrop-blur-xl sm:p-10">
                     <div className="mb-8 flex flex-col gap-6">
                         <Link
