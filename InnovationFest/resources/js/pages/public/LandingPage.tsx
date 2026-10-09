@@ -13,7 +13,7 @@ import {
     Plus,
     Users,
 } from "lucide-react";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
     Sheet,
     SheetClose,
@@ -28,8 +28,9 @@ const EVENT = {
     name: "Marinduque Innovation Fest 2026",
     theme: "From Ideas to Solutions: Connect, Innovate, Transform",
     dates: "October 30-31, 2026",
+    startsAt: "2026-10-30T08:00:00+08:00",
     venue: "Marinduque State University",
-    organizer: "DOST MIMAROPA – PSTO Marinduque",
+    organizer: "DOST MIMAROPA – DOST Marinduque",
 };
 
 const NAV_LINKS = [
@@ -44,8 +45,8 @@ const SOCIALS = [
 ];
 
 const STATS = [
-    { value: "10+", label: "Speakers", icon: Mic },
-    { value: "500+", label: "Attendees", icon: Users },
+    { value: "10+", label: "Speakers", icon: Mic, color: "text-[#229D1C]" },
+    { value: "500+", label: "Attendees", icon: Users, color: "text-[#F7B600]" },
 ];
 
 const PERKS = [
@@ -54,12 +55,14 @@ const PERKS = [
         description:
             "Merch, freebies, and more from our partners and sponsors.",
         icon: Gift,
+        color: "text-[#F15E00]",
     },
     {
         title: "Certificate of Attendance",
         description:
             "All attendees will receive their own e-certificate of participation.",
         icon: Award,
+        color: "text-[#FA0A00]",
     },
 ];
 
@@ -167,8 +170,7 @@ const FAQS: { question: string; answer: ReactNode }[] = [
 
 const ORGANIZER_SLOTS = 8;
 
-const BRAND_GRADIENT =
-    "bg-[linear-gradient(to_right,#030209,#3230C1)]";
+const BRAND_GRADIENT = "bg-[linear-gradient(to_right,#030209,#3230C1)]";
 
 /** Moves the element at a different speed than the page once its parent scrolls past the top of the viewport. */
 function useParallax<T extends HTMLElement>(speed: number) {
@@ -226,7 +228,7 @@ function SectionHeading({
 }) {
     return (
         <div className="flex flex-col gap-4">
-            <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B500] uppercase">
+            <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
                 {eyebrow}
             </p>
             <h2 className="text-3xl font-black tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
@@ -243,7 +245,7 @@ function Header() {
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:h-20">
                 <a
                     href="#home"
-                    className="flex items-center gap-3 rounded-md focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:outline-none"
+                    className="flex items-center gap-3 rounded-md focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
                 >
                     <img
                         src={logoIcon}
@@ -263,7 +265,7 @@ function Header() {
                             <li key={link.href}>
                                 <a
                                     href={link.href}
-                                    className="rounded-md px-4 py-2 text-sm font-semibold tracking-wide text-white/70 uppercase transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:outline-none"
+                                    className="rounded-md px-4 py-2 text-sm font-semibold tracking-wide text-white/70 uppercase transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
                                 >
                                     {link.label}
                                 </a>
@@ -275,14 +277,14 @@ function Header() {
                 <div className="flex items-center gap-2">
                     <a
                         href="#schedule"
-                        className="hidden rounded-full bg-[#F2701E] px-5 py-2.5 text-sm font-bold tracking-wide uppercase transition-colors hover:bg-[#E3262E] focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none sm:inline-flex"
+                        className="hidden rounded-full bg-[#F15E00] px-5 py-2.5 text-sm font-bold tracking-wide uppercase transition-colors hover:bg-[#FA0A00] focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none sm:inline-flex"
                     >
                         Register
                     </a>
 
                     <Sheet>
                         <SheetTrigger
-                            className="inline-flex size-11 items-center justify-center rounded-md text-white/80 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:outline-none lg:hidden"
+                            className="inline-flex size-11 items-center justify-center rounded-md text-white/80 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none lg:hidden"
                             aria-label="Open menu"
                         >
                             <Menu className="size-6" />
@@ -314,7 +316,7 @@ function Header() {
                                 <SheetClose asChild>
                                     <a
                                         href="#schedule"
-                                        className="flex w-full items-center justify-center rounded-full bg-[#F2701E] px-5 py-3 font-bold tracking-wide uppercase hover:bg-[#E3262E]"
+                                        className="flex w-full items-center justify-center rounded-full bg-[#F15E00] px-5 py-3 font-bold tracking-wide uppercase hover:bg-[#FA0A00]"
                                     >
                                         Register
                                     </a>
@@ -329,8 +331,58 @@ function Header() {
     );
 }
 
+function getTimeLeft(target: number, now: number) {
+    const total = Math.max(target - now, 0);
+    return {
+        total,
+        units: [
+            { label: "Days", value: Math.floor(total / 86_400_000) },
+            { label: "Hours", value: Math.floor(total / 3_600_000) % 24 },
+            { label: "Minutes", value: Math.floor(total / 60_000) % 60 },
+            { label: "Seconds", value: Math.floor(total / 1000) % 60 },
+        ],
+    };
+}
+
+function Countdown({ target }: { target: string }) {
+    const targetTime = new Date(target).getTime();
+    // Starts null so server-rendered HTML matches the first client render.
+    const [now, setNow] = useState<number | null>(null);
+
+    useEffect(() => {
+        setNow(Date.now());
+        const id = window.setInterval(() => setNow(Date.now()), 1000);
+        return () => window.clearInterval(id);
+    }, []);
+
+    const { total, units } = getTimeLeft(targetTime, now ?? 0);
+    if (now !== null && total === 0) return null;
+
+    return (
+        <div role="timer" aria-label="Countdown to the festival">
+            <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
+                Festival starts in
+            </p>
+            <ul className="mt-3 flex gap-6 sm:gap-10">
+                {units.map(({ label, value }) => (
+                    <li key={label}>
+                        <span className="block text-4xl font-black tabular-nums sm:text-5xl">
+                            {now === null
+                                ? "--"
+                                : String(value).padStart(2, "0")}
+                        </span>
+                        <span className="text-xs font-semibold tracking-wider text-white/50 uppercase">
+                            {label}
+                        </span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
 function Hero() {
-    const contentRef = useParallax<HTMLDivElement>(0.35);
+    const contentRef = useParallax<HTMLDivElement>(0.12);
 
     return (
         <section
@@ -339,58 +391,69 @@ function Hero() {
         >
             <div
                 ref={contentRef}
-                className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-6 pt-16 pb-24 text-center will-change-transform lg:pt-24 lg:pb-32"
+                className="mx-auto max-w-7xl px-6 pt-14 pb-28 will-change-transform lg:pt-20 lg:pb-32"
             >
-                <h1 className="sr-only">{EVENT.name}</h1>
-                <img
-                    src={logoName}
-                    alt={`${EVENT.name} — ${EVENT.theme}`}
-                    className="w-full max-w-4xl"
-                />
+                <p className="text-sm font-semibold tracking-[0.2em] text-white/60 uppercase">
+                    {EVENT.organizer} presents
+                </p>
 
-                <div className="flex flex-col items-center gap-3 text-base text-white/80 sm:flex-row sm:gap-8 sm:text-lg">
-                    <span className="inline-flex items-center gap-2">
-                        <CalendarDays className="size-5 text-[#F7B500]" />
-                        {EVENT.dates}
-                    </span>
-                    <span className="inline-flex items-center gap-2">
-                        <MapPin className="size-5 text-[#F7B500]" />
-                        {EVENT.venue}
-                    </span>
+                <h1 className="sr-only">{EVENT.name}</h1>
+                {/* Pulls the image left by its built-in transparent margin so the artwork lines up with the text. */}
+                <div className="mt-6 max-w-4xl">
+                    <img
+                        src={logoName}
+                        alt={`${EVENT.name} — ${EVENT.theme}`}
+                        className="-ml-[2.6%] aspect-[4524/1360] w-[102.6%] max-w-none object-cover object-[0%_23%]"
+                    />
                 </div>
 
-                <div className="flex flex-col items-center gap-4 sm:flex-row">
+                <ul className="mt-8 flex flex-col gap-3 text-lg text-white/80 sm:flex-row sm:gap-8">
+                    <li className="inline-flex items-center gap-2">
+                        <CalendarDays className="size-5 text-[#F7B600]" />
+                        {EVENT.dates}
+                    </li>
+                    <li className="inline-flex items-center gap-2">
+                        <MapPin className="size-5 text-[#F7B600]" />
+                        {EVENT.venue}
+                    </li>
+                </ul>
+
+                <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row">
                     <a
                         href="#schedule"
-                        className="group inline-flex min-h-12 items-center gap-2 rounded-full bg-[#F2701E] px-8 text-base font-bold tracking-wide uppercase transition-colors hover:bg-[#E3262E] focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none"
+                        className="group inline-flex min-h-12 items-center gap-2 rounded-full bg-[#F15E00] px-8 text-base font-bold tracking-wide uppercase transition-colors hover:bg-[#FA0A00] focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none"
                     >
                         View schedules
                         <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
                     </a>
                     <a
                         href="#events"
-                        className="inline-flex min-h-12 items-center rounded-full border border-white/25 px-8 text-base font-bold tracking-wide uppercase transition-colors hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:outline-none"
+                        className="inline-flex min-h-12 items-center rounded-full border border-white/25 px-8 text-base font-bold tracking-wide uppercase transition-colors hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
                     >
                         Explore events
                     </a>
                 </div>
 
-                <ul
-                    className="flex items-center gap-3"
-                    aria-label="Social media"
-                >
-                    {SOCIALS.map(({ label, href, icon: Icon }) => (
-                        <li key={label}>
-                            <a
-                                href={href}
-                                aria-label={label}
-                                className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition duration-300 hover:scale-90 hover:border-white hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:outline-none"
-                            >
-                                <Icon className="size-5" />
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+                <div className="mt-14 flex flex-col gap-8 border-t border-white/10 pt-8 sm:flex-row sm:items-end sm:justify-between">
+                    <Countdown target={EVENT.startsAt} />
+
+                    <ul
+                        className="flex items-center gap-3"
+                        aria-label="Social media"
+                    >
+                        {SOCIALS.map(({ label, href, icon: Icon }) => (
+                            <li key={label}>
+                                <a
+                                    href={href}
+                                    aria-label={label}
+                                    className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition duration-300 hover:scale-90 hover:border-white hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
+                                >
+                                    <Icon className="size-5" />
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </section>
     );
@@ -454,9 +517,9 @@ function Schedule() {
         <section id="schedule" className="scroll-mt-20 bg-black">
             <div className="mx-auto max-w-7xl px-6 py-24 lg:py-32">
                 <div className="grid gap-6 lg:grid-cols-3">
-                    <div className="flex flex-col justify-between gap-10 rounded-3xl bg-[#1E73E8] p-8 lg:col-span-2 lg:p-12">
+                    <div className="flex flex-col justify-between gap-10 rounded-3xl bg-[#0078D9] p-8 lg:col-span-2 lg:p-12">
                         <div className="flex flex-col gap-3">
-                            <p className="text-sm font-semibold tracking-[0.2em] text-white/80 uppercase">
+                            <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
                                 Schedule
                             </p>
                             <p className="text-4xl font-black tracking-tight uppercase sm:text-6xl">
@@ -464,7 +527,7 @@ function Schedule() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-3">
-                            <p className="text-sm font-semibold tracking-[0.2em] text-white/80 uppercase">
+                            <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
                                 Venue
                             </p>
                             <p className="max-w-xl text-xl font-semibold sm:text-2xl">
@@ -474,12 +537,12 @@ function Schedule() {
                     </div>
 
                     <div className="grid gap-6">
-                        {STATS.map(({ value, label, icon: Icon }) => (
+                        {STATS.map(({ value, label, icon: Icon, color }) => (
                             <div
                                 key={label}
                                 className="flex items-center gap-6 rounded-3xl border border-white/10 bg-neutral-950 p-8"
                             >
-                                <Icon className="size-8 shrink-0 text-[#F7B500]" />
+                                <Icon className={`size-8 shrink-0 ${color}`} />
                                 <div>
                                     <p className="text-4xl font-black tracking-tight">
                                         {value}
@@ -500,12 +563,14 @@ function Schedule() {
                             students, innovators, and more.
                         </p>
                     </div>
-                    {PERKS.map(({ title, description, icon: Icon }) => (
+                    {PERKS.map(({ title, description, icon: Icon, color }) => (
                         <div
                             key={title}
                             className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-neutral-950 p-8"
                         >
-                            <Icon className="size-7 text-[#2E9E3A] group-hover:animate-hang motion-reduce:animate-none" />
+                            <Icon
+                                className={`size-7 ${color} group-hover:animate-hang motion-reduce:animate-none`}
+                            />
                             <h3 className="text-xl font-bold">{title}</h3>
                             <p className="text-white/60">{description}</p>
                         </div>
@@ -554,7 +619,7 @@ function MajorEvents() {
                                 className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/50"
                             />
 
-                            <span className="absolute top-3 left-3 rounded-md bg-black/60 px-2 py-1 text-sm font-black text-[#F7B500] tabular-nums backdrop-blur-sm">
+                            <span className="absolute top-3 left-3 rounded-md bg-black/60 px-2 py-1 text-sm font-black text-[#F7B600] tabular-nums backdrop-blur-sm">
                                 {String(index + 1).padStart(2, "0")}
                             </span>
 
@@ -562,7 +627,7 @@ function MajorEvents() {
                                 <p className="max-h-0 overflow-hidden text-sm leading-relaxed text-white/85 opacity-0 transition-all duration-300 group-hover:max-h-48 group-hover:opacity-100">
                                     {event.description}
                                 </p>
-                                <h3 className="rounded-md bg-[#3230C1] px-3 py-2 text-sm font-bold tracking-wide transition-colors duration-300 group-hover:bg-[#E3262E]">
+                                <h3 className="rounded-md bg-[#0078D9] px-3 py-2 text-sm font-bold tracking-wide transition-colors duration-300 group-hover:bg-[#FA0A00]">
                                     {event.title}
                                 </h3>
                             </div>
@@ -585,13 +650,10 @@ function Faqs() {
 
                 <div className="divide-y divide-white/10 border-y border-white/10">
                     {FAQS.map((faq) => (
-                        <details
-                            key={faq.question}
-                            className="faq-item group"
-                        >
-                            <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-semibold focus-visible:ring-2 focus-visible:ring-[#F7B500] focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+                        <details key={faq.question} className="faq-item group">
+                            <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-semibold focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none [&::-webkit-details-marker]:hidden">
                                 {faq.question}
-                                <Plus className="size-5 shrink-0 text-[#F7B500] transition-transform group-open:rotate-45" />
+                                <Plus className="size-5 shrink-0 text-[#F7B600] transition-transform group-open:rotate-45" />
                             </summary>
                             <p className="pb-6 leading-relaxed text-white/60">
                                 {faq.answer}
@@ -608,7 +670,7 @@ function Organizers() {
     return (
         <section className="border-t border-white/10 bg-neutral-950">
             <div className="mx-auto max-w-7xl px-6 py-24 text-center lg:py-32">
-                <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B500] uppercase">
+                <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
                     Organized by
                 </p>
                 <h2 className="mt-4 text-2xl font-black tracking-tight uppercase sm:text-3xl">
