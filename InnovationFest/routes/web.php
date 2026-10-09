@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ParticipantController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\ParticipantRegistrationController;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,8 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
     ->group(function () {
         Route::get('dashboard', DashboardController::class)->name('dashboard');
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
-        Route::inertia('staff', 'admin/RegisteredStaff')->name('staff.index');
+        Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
+        Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
     });
 
 require __DIR__.'/settings.php';
