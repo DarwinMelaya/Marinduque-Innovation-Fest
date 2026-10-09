@@ -7,6 +7,7 @@ use Inertia\Testing\AssertableInertia as Assert;
 test('guests are redirected to the login page', function () {
     $this->get(route('admin.dashboard'))->assertRedirect(route('login'));
     $this->get(route('admin.participants.index'))->assertRedirect(route('login'));
+    $this->get(route('admin.staff.index'))->assertRedirect(route('login'));
 });
 
 test('non admin users cannot visit the admin pages', function () {
@@ -14,6 +15,14 @@ test('non admin users cannot visit the admin pages', function () {
 
     $this->actingAs($user)->get(route('admin.dashboard'))->assertForbidden();
     $this->actingAs($user)->get(route('admin.participants.index'))->assertForbidden();
+    $this->actingAs($user)->get(route('admin.staff.index'))->assertForbidden();
+});
+
+test('admins can visit the registered staff page', function () {
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('admin.staff.index'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->component('admin/RegisteredStaff'));
 });
 
 test('admins can visit the dashboard', function () {

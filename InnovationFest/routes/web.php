@@ -24,6 +24,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
     ->group(function () {
         Route::get('dashboard', DashboardController::class)->name('dashboard');
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
+        Route::inertia('staff', 'admin/RegisteredStaff')->name('staff.index');
     });
 
 require __DIR__.'/settings.php';

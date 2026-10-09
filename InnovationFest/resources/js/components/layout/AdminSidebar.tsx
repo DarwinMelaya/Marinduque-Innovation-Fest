@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, Users } from 'lucide-react';
+import { LayoutGrid, UserCog, Users } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
@@ -15,6 +15,7 @@ import {
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { dashboard } from '@/routes/admin';
 import { index as participantsIndex } from '@/routes/admin/participants';
+import { index as staffIndex } from '@/routes/admin/staff';
 import type { NavItem } from '@/types';
 import logo from '../../../pictures/Marinduque Innovation Fest 206 logo.png';
 
@@ -28,6 +29,11 @@ const navItems: NavItem[] = [
         title: 'Registered Participants',
         href: participantsIndex(),
         icon: Users,
+    },
+    {
+        title: 'Registered Staff',
+        href: staffIndex(),
+        icon: UserCog,
     },
 ];
 
