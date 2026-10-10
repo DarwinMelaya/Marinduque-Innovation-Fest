@@ -10,6 +10,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import type { NavItem } from '@/types';
@@ -22,6 +23,8 @@ type Props = {
 
 const PanelSidebar = ({ homeHref, navItems }: Props) => {
     const { isCurrentUrl } = useCurrentUrl();
+    const { setOpenMobile } = useSidebar();
+    const closeMobileSidebar = () => setOpenMobile(false);
 
     return (
         <Sidebar collapsible="offcanvas" variant="inset">
@@ -33,7 +36,11 @@ const PanelSidebar = ({ homeHref, navItems }: Props) => {
                             asChild
                             className="hover:bg-transparent active:bg-transparent"
                         >
-                            <Link href={homeHref} prefetch>
+                            <Link
+                                href={homeHref}
+                                prefetch
+                                onClick={closeMobileSidebar}
+                            >
                                 <img
                                     src={logo}
                                     alt="Marinduque Innovation Fest"
@@ -65,7 +72,11 @@ const PanelSidebar = ({ homeHref, navItems }: Props) => {
                                     isActive={isCurrentUrl(item.href)}
                                     className="h-11 rounded-lg px-3 text-[15px] font-medium text-white/90 hover:bg-white/10 hover:text-white data-[active=true]:bg-white/15 data-[active=true]:font-semibold data-[active=true]:text-white [&>svg]:size-5 data-[active=true]:[&>svg]:text-[#F15E00]"
                                 >
-                                    <Link href={item.href} prefetch>
+                                    <Link
+                                        href={item.href}
+                                        prefetch
+                                        onClick={closeMobileSidebar}
+                                    >
                                         {item.icon && <item.icon />}
                                         <span>{item.title}</span>
                                     </Link>
