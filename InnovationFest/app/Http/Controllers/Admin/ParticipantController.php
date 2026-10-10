@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\Participant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -34,6 +35,8 @@ class ParticipantController extends Controller
                 });
             })
             ->when($filters['municipality'] ?? null, fn (Builder $query, string $municipality) => $query->where('municipality', $municipality))
+            ->withCount('attendances')
+            ->withExists(['attendances as present_today' => fn (Builder $query) => $query->where('attended_on', Attendance::today())])
             ->latest()
             ->latest('id')
             ->paginate(15)
@@ -56,6 +59,8 @@ class ParticipantController extends Controller
                     'Senior' => $participant->is_senior_citizen,
                     '4Ps' => $participant->is_4ps_member,
                 ])),
+                'daysAttended' => $participant->attendances_count,
+                'presentToday' => (bool) $participant->present_today,
                 'registeredAt' => $participant->created_at?->toIso8601String(),
             ]);
 

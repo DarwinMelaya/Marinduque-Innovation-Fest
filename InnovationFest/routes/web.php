@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\BonusCodeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ParticipantController;
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('dashboard', DashboardController::class)->name('dashboard');
+        Route::post('attendance', [AttendanceController::class, 'store'])
+            ->middleware('throttle:60,1')
+            ->name('attendance.store');
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
         Route::get('qr-codes', [BonusCodeController::class, 'index'])->name('qr-codes.index');
         Route::post('qr-codes', [BonusCodeController::class, 'store'])->name('qr-codes.store');

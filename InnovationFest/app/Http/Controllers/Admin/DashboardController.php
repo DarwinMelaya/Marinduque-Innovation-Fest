@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\Participant;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -57,6 +58,7 @@ class DashboardController extends Controller
             'stats' => [
                 'total' => $total,
                 'today' => Participant::whereDate('created_at', today())->count(),
+                'presentToday' => Attendance::where('attended_on', Attendance::today())->count(),
                 'lastSevenDays' => Participant::where('created_at', '>=', today()->subDays(6))->count(),
                 'students' => $highSchool + $college,
                 'averageAge' => round((float) Participant::avg('age'), 1),

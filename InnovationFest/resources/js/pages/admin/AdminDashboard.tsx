@@ -9,6 +9,7 @@ import {
     TrendChart,
 } from '@/components/admin/DashboardCharts';
 import type { Datum } from '@/components/admin/DashboardCharts';
+import ScanAttendance from '@/components/admin/ScanAttendance';
 import AdminPageHeading from '@/components/layout/AdminPageHeading';
 import { dashboard } from '@/routes/admin';
 import { index as participantsIndex } from '@/routes/admin/participants';
@@ -18,6 +19,7 @@ type Props = {
     stats: {
         total: number;
         today: number;
+        presentToday: number;
         lastSevenDays: number;
         students: number;
         averageAge: number;
@@ -161,9 +163,12 @@ export default function AdminDashboard({
             <Head title="Admin Dashboard" />
 
             <div className="flex flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
-                <AdminPageHeading eyebrow="Admin" title="Dashboard" />
+                <div className="flex flex-wrap items-end justify-between gap-4">
+                    <AdminPageHeading eyebrow="Admin" title="Dashboard" />
+                    <ScanAttendance />
+                </div>
 
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-6">
                     <StatCard
                         label="Total registered"
                         value={numberFormat.format(stats.total)}
@@ -172,6 +177,10 @@ export default function AdminDashboard({
                     <StatCard
                         label="Today"
                         value={numberFormat.format(stats.today)}
+                    />
+                    <StatCard
+                        label="Present today"
+                        value={numberFormat.format(stats.presentToday)}
                     />
                     <StatCard
                         label="Last 7 days"

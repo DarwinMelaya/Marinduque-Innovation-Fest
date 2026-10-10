@@ -26,6 +26,8 @@ type Participant = {
     contactNumber: string;
     email: string;
     sectors: string[];
+    daysAttended: number;
+    presentToday: boolean;
     registeredAt: string | null;
 };
 
@@ -191,6 +193,9 @@ export default function RegisteredParticipants({
                                             Contact
                                         </th>
                                         <th className="px-5 py-4 font-semibold">
+                                            Attendance
+                                        </th>
+                                        <th className="px-5 py-4 font-semibold">
                                             Registered
                                         </th>
                                     </tr>
@@ -243,6 +248,11 @@ export default function RegisteredParticipants({
                                                     {participant.email}
                                                 </div>
                                             </td>
+                                            <td className="px-5 py-4 whitespace-nowrap">
+                                                <AttendanceBadge
+                                                    participant={participant}
+                                                />
+                                            </td>
                                             <td className="px-5 py-4 whitespace-nowrap text-white/60">
                                                 {formatDate(
                                                     participant.registeredAt,
@@ -287,6 +297,26 @@ export default function RegisteredParticipants({
 
 function formatDate(value: string | null) {
     return value ? dateFormat.format(new Date(value)) : null;
+}
+
+function AttendanceBadge({ participant }: { participant: Participant }) {
+    return (
+        <div className="flex flex-col gap-1">
+            <span
+                className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                    participant.presentToday
+                        ? 'bg-[#229D1C]/20 text-[#6FD66A]'
+                        : 'bg-white/10 text-white/50'
+                }`}
+            >
+                {participant.presentToday ? 'Present today' : 'Not yet today'}
+            </span>
+            <span className="text-xs text-white/50">
+                {participant.daysAttended}{' '}
+                {participant.daysAttended === 1 ? 'day' : 'days'} attended
+            </span>
+        </div>
+    );
 }
 
 function SectorTags({ sectors }: { sectors: string[] }) {
@@ -341,6 +371,7 @@ function ParticipantCard({ participant }: { participant: Participant }) {
             </div>
 
             <SectorTags sectors={participant.sectors} />
+            <AttendanceBadge participant={participant} />
 
             <dl className="grid gap-3 border-t border-white/10 pt-4 text-sm">
                 {details.map(({ label, value }) => (

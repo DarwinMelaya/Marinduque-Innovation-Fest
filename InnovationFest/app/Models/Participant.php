@@ -145,6 +145,14 @@ class Participant extends Model implements AuthenticatableContract
     }
 
     /**
+     * @return HasMany<Attendance, $this>
+     */
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    /**
      * Bonus QR codes this participant scanned.
      *
      * @return HasMany<BonusCode, $this>
