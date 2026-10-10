@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
         Route::patch('staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
+        Route::delete('staff/{staff}', [StaffController::class, 'destroy'])->name('staff.destroy');
     });
 
 Route::middleware(['auth', 'can:access-booth'])

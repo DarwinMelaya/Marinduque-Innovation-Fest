@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import InputError from "@/components/input-error";
+import CourseCombobox from "@/components/participants/CourseCombobox";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -136,11 +137,7 @@ function RegistrationConfirmed({
                     disabled={opening}
                     className="h-11 w-full rounded-lg border border-white/15 bg-white/5 text-sm font-semibold text-white hover:bg-white/10"
                 >
-                    {opening ? (
-                        <Spinner />
-                    ) : (
-                        <UserRound className="size-4" />
-                    )}
+                    {opening ? <Spinner /> : <UserRound className="size-4" />}
                     Go to my account
                 </Button>
             </div>
@@ -154,6 +151,14 @@ function RegistrationConfirmed({
                 </Link>
             </div>
         </div>
+    );
+}
+
+function RequiredMark() {
+    return (
+        <span aria-hidden="true" className="text-[#F15E00]">
+            *
+        </span>
     );
 }
 
@@ -195,7 +200,10 @@ function PrivacyNotice({
     const [agreed, setAgreed] = useState(false);
 
     return (
-        <section aria-labelledby="privacy-title" className="flex flex-col gap-5">
+        <section
+            aria-labelledby="privacy-title"
+            className="flex flex-col gap-5"
+        >
             <Head title="Privacy Notice" />
 
             <AlreadyRegistered signedIn={visitorSignedIn} />
@@ -268,9 +276,9 @@ function PrivacyNotice({
                 <h3 className={NOTICE_HEADING_CLASS}>Consent</h3>
                 <p>
                     By proceeding with registration, you acknowledge that you
-                    have read and understood this Privacy Notice and
-                    voluntarily consent to the collection and processing of
-                    your personal information for the purposes stated above.
+                    have read and understood this Privacy Notice and voluntarily
+                    consent to the collection and processing of your personal
+                    information for the purposes stated above.
                 </p>
             </div>
 
@@ -280,9 +288,9 @@ function PrivacyNotice({
                     onCheckedChange={(checked) => setAgreed(checked === true)}
                     className="mt-0.5 border-white/30 data-[state=checked]:border-[#F15E00] data-[state=checked]:bg-[#F15E00] data-[state=checked]:text-white"
                 />
-                I have read and understood the Privacy Notice, and I
-                voluntarily consent to the collection and processing of my
-                personal information as described above.
+                I have read and understood the Privacy Notice, and I voluntarily
+                consent to the collection and processing of my personal
+                information as described above.
             </label>
 
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
@@ -348,6 +356,11 @@ export default function ParticipantsRegistration({
                     <>
                         <input type="hidden" name="privacy_consent" value="1" />
                         <InputError message={errors.privacy_consent} />
+                        <p className="-mb-4 text-sm text-white/50">
+                            Fields marked{" "}
+                            <span className="text-[#F15E00]">*</span> are
+                            required.
+                        </p>
 
                         <fieldset className="flex flex-col gap-5">
                             <legend className={`mb-5 ${SECTION_TITLE_CLASS}`}>
@@ -360,7 +373,7 @@ export default function ParticipantsRegistration({
                                         htmlFor="first_name"
                                         className={authLabelClass}
                                     >
-                                        First name
+                                        First name <RequiredMark />
                                     </Label>
                                     <Input
                                         id="first_name"
@@ -378,7 +391,7 @@ export default function ParticipantsRegistration({
                                         htmlFor="last_name"
                                         className={authLabelClass}
                                     >
-                                        Last name
+                                        Last name <RequiredMark />
                                     </Label>
                                     <Input
                                         id="last_name"
@@ -398,7 +411,7 @@ export default function ParticipantsRegistration({
                                         htmlFor="age"
                                         className={authLabelClass}
                                     >
-                                        Age
+                                        Age <RequiredMark />
                                     </Label>
                                     <Input
                                         id="age"
@@ -422,7 +435,7 @@ export default function ParticipantsRegistration({
                                         id="sex-label"
                                         className={`text-sm leading-none font-medium ${authLabelClass}`}
                                     >
-                                        Sex
+                                        Sex <RequiredMark />
                                     </span>
                                     <div className="grid grid-cols-2 gap-2">
                                         {SEXES.map((sex) => (
@@ -480,7 +493,7 @@ export default function ParticipantsRegistration({
                                         htmlFor="municipality"
                                         className={authLabelClass}
                                     >
-                                        Municipality
+                                        Municipality <RequiredMark />
                                     </Label>
                                     <div className="relative">
                                         <select
@@ -516,7 +529,7 @@ export default function ParticipantsRegistration({
                                         htmlFor="barangay"
                                         className={authLabelClass}
                                     >
-                                        Barangay
+                                        Barangay <RequiredMark />
                                     </Label>
                                     <div className="relative">
                                         <select
@@ -592,15 +605,13 @@ export default function ParticipantsRegistration({
                             </div>
 
                             {educationLevel && (
-                                <div className="grid gap-5 sm:grid-cols-2">
-                                    <div
-                                        className={`grid gap-2 ${educationLevel === "College" ? "" : "sm:col-span-2"}`}
-                                    >
+                                <div className="grid gap-5">
+                                    <div className="grid gap-2">
                                         <Label
                                             htmlFor="school"
                                             className={authLabelClass}
                                         >
-                                            School
+                                            School <RequiredMark />
                                         </Label>
                                         <Input
                                             id="school"
@@ -621,15 +632,15 @@ export default function ParticipantsRegistration({
                                                 htmlFor="course"
                                                 className={authLabelClass}
                                             >
-                                                Course
+                                                Course <RequiredMark />
                                             </Label>
-                                            <Input
+                                            <CourseCombobox
                                                 id="course"
                                                 name="course"
-                                                required
-                                                placeholder="e.g. BS Information Technology"
-                                                className={authInputClass}
                                             />
+                                            <p className="text-xs text-white/40">
+                                                Not listed? Type your course.
+                                            </p>
                                             <InputError
                                                 message={errors.course}
                                             />
@@ -700,7 +711,7 @@ export default function ParticipantsRegistration({
                                         htmlFor="contact_number"
                                         className={authLabelClass}
                                     >
-                                        Contact number
+                                        Contact number <RequiredMark />
                                     </Label>
                                     <Input
                                         id="contact_number"
@@ -721,7 +732,7 @@ export default function ParticipantsRegistration({
                                         htmlFor="email"
                                         className={authLabelClass}
                                     >
-                                        Email
+                                        Email <RequiredMark />
                                     </Label>
                                     <Input
                                         id="email"
@@ -756,6 +767,6 @@ export default function ParticipantsRegistration({
 ParticipantsRegistration.layout = {
     title: "Register",
     description:
-        "Join the Marinduque Innovation Fest 2026 on October 30-31 at Marinduque State University.",
+        "Join the Marinduque Innovation Fest 2026 at Marinduque State University.",
     wide: true,
 };

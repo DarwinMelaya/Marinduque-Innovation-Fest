@@ -1,7 +1,12 @@
 import { Form } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { useState } from 'react';
 import InputError from '@/components/input-error';
+import {
+    INPUT_CLASS,
+    MAX_SCAN_POINTS,
+    defaultPassword,
+} from '@/components/modals/admin/AddStaff';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -15,130 +20,128 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { store } from '@/routes/admin/staff';
+import { update } from '@/routes/admin/staff';
 
-export const INPUT_CLASS =
-    'h-11 rounded-lg border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30';
+type Props = {
+    staff: {
+        id: number;
+        boothName: string;
+        name: string;
+        scanPoints: number;
+    };
+};
 
-/** Mirrors User::MAX_SCAN_POINTS. */
-export const MAX_SCAN_POINTS = 1000;
-
-/** Mirrors User::staffPassword() so admins can see the password before saving. */
-export function defaultPassword(boothName: string) {
-    return `${boothName.replace(/\s+/g, '')}123`;
-}
-
-const AddStaff = () => {
+const EditStaff = ({ staff }: Props) => {
     const [open, setOpen] = useState(false);
-    const [boothName, setBoothName] = useState('');
+    const [boothName, setBoothName] = useState(staff.boothName);
 
     const handleOpenChange = (next: boolean) => {
         setOpen(next);
 
-        if (!next) {
-            setBoothName('');
+        if (next) {
+            setBoothName(staff.boothName);
         }
     };
+
+    const boothRenamed = boothName.trim() !== staff.boothName;
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-                <Button className="h-11 rounded-full bg-[#F15E00] px-5 text-sm font-bold tracking-wide text-white uppercase hover:bg-[#FA0A00]">
-                    <Plus className="size-4" />
-                    Add staff
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label={`Edit ${staff.boothName}`}
+                    className="h-8 rounded-full px-3 text-white/70 hover:bg-white/10 hover:text-white"
+                >
+                    <Pencil className="size-3.5" />
+                    Edit
                 </Button>
             </DialogTrigger>
 
             <DialogContent className="rounded-3xl border-white/10 bg-neutral-950 text-white sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-black tracking-tight uppercase">
-                        Add staff
+                        Edit staff
                     </DialogTitle>
                     <DialogDescription className="text-white/60">
-                        Create an account for the person manning a booth.
+                        Visits already recorded keep their points.
                     </DialogDescription>
                 </DialogHeader>
 
                 <Form
-                    {...store.form()}
-                    resetOnSuccess
+                    {...update.form(staff.id)}
                     disableWhileProcessing
-                    onSuccess={() => handleOpenChange(false)}
+                    onSuccess={() => setOpen(false)}
                     className="flex flex-col gap-5"
                 >
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
-                                <Label htmlFor="booth_name">Booth name</Label>
+                                <Label htmlFor={`booth_name_${staff.id}`}>
+                                    Booth name
+                                </Label>
                                 <Input
-                                    id="booth_name"
+                                    id={`booth_name_${staff.id}`}
                                     name="booth_name"
                                     required
-                                    autoFocus
                                     maxLength={100}
                                     value={boothName}
                                     onChange={(event) =>
                                         setBoothName(event.target.value)
                                     }
-                                    placeholder="e.g. DOST Booth"
                                     className={INPUT_CLASS}
                                 />
                                 <InputError message={errors.booth_name} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Staff name</Label>
+                                <Label htmlFor={`name_${staff.id}`}>
+                                    Staff name
+                                </Label>
                                 <Input
-                                    id="name"
+                                    id={`name_${staff.id}`}
                                     name="name"
                                     required
                                     maxLength={255}
-                                    placeholder="e.g. Juan Dela Cruz"
+                                    defaultValue={staff.name}
                                     className={INPUT_CLASS}
                                 />
                                 <InputError message={errors.name} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="scan_points">
+                                <Label htmlFor={`scan_points_${staff.id}`}>
                                     Points per scan
                                 </Label>
                                 <Input
-                                    id="scan_points"
+                                    id={`scan_points_${staff.id}`}
                                     name="scan_points"
                                     type="number"
                                     required
                                     min={0}
                                     max={MAX_SCAN_POINTS}
-                                    defaultValue={10}
+                                    defaultValue={staff.scanPoints}
                                     className={INPUT_CLASS}
                                 />
-                                <p className="text-xs text-white/50">
-                                    Points a participant earns each time this
-                                    booth scans them.
-                                </p>
                                 <InputError message={errors.scan_points} />
                             </div>
 
-                            <div className="grid gap-2">
-                                <span className="text-sm font-medium">
-                                    Password
-                                </span>
-                                <p className="flex h-11 items-center rounded-lg border border-dashed border-white/15 px-3 font-mono text-sm text-[#F7B600]">
-                                    {boothName.trim()
-                                        ? defaultPassword(boothName)
-                                        : 'Booth name + 123'}
+                            {boothRenamed && boothName.trim() && (
+                                <p className="rounded-lg border border-[#F7B600]/30 bg-[#F7B600]/10 px-3 py-2 text-xs text-[#FFD66B]">
+                                    Renaming the booth changes the password to{' '}
+                                    <span className="font-mono font-bold">
+                                        {defaultPassword(boothName)}
+                                    </span>
+                                    . Let the staff know.
                                 </p>
-                                <p className="text-xs text-white/50">
-                                    Generated automatically from the booth name.
-                                </p>
-                            </div>
+                            )}
 
                             <DialogFooter className="gap-2">
                                 <Button
                                     type="button"
                                     variant="ghost"
-                                    onClick={() => handleOpenChange(false)}
+                                    onClick={() => setOpen(false)}
                                     className="h-11 rounded-full text-white/80 hover:bg-white/10 hover:text-white"
                                 >
                                     Cancel
@@ -149,7 +152,7 @@ const AddStaff = () => {
                                     className="h-11 rounded-full bg-[#F15E00] px-6 font-bold text-white hover:bg-[#FA0A00]"
                                 >
                                     {processing && <Spinner />}
-                                    Save staff
+                                    Save changes
                                 </Button>
                             </DialogFooter>
                         </>
@@ -160,4 +163,4 @@ const AddStaff = () => {
     );
 };
 
-export default AddStaff;
+export default EditStaff;

@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRole;
+use App\Models\BoothVisit;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -55,40 +56,110 @@ test('booth name and staff name are required', function () {
         ->assertSessionHasErrors(['booth_name', 'name', 'scan_points']);
 });
 
-test('admins can change the points a booth gives per scan', function () {
-    $staff = User::factory()->staff()->create();
+test('admins can edit a staff member without changing the password', function () {
+    $staff = User::factory()->staff('DOST Booth')->create(['name' => 'Maria Santos']);
 
     $this->actingAs(User::factory()->admin()->create())
-        ->patch(route('admin.staff.update', $staff), ['scan_points' => 25])
+        ->patch(route('admin.staff.update', $staff), [
+            'booth_name' => 'DOST Booth',
+            'name' => 'Juan Dela Cruz',
+            'scan_points' => 25,
+        ])
         ->assertRedirect(route('admin.staff.index'));
 
-    expect($staff->fresh()->scan_points)->toBe(25);
+    $staff->refresh();
+    expect($staff->name)->toBe('Juan Dela Cruz')
+        ->and($staff->scan_points)->toBe(25)
+        ->and(Hash::check('DOSTBooth123', $staff->password))->toBeTrue();
+});
+
+test('renaming a booth resets the password to the new booth default', function () {
+    $staff = User::factory()->staff('DOST Booth')->create();
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->patch(route('admin.staff.update', $staff), [
+            'booth_name' => 'Robotics Den',
+            'name' => $staff->name,
+            'scan_points' => 10,
+        ])
+        ->assertRedirect(route('admin.staff.index'));
+
+    $staff->refresh();
+    expect($staff->booth_name)->toBe('Robotics Den')
+        ->and(Hash::check('RoboticsDen123', $staff->password))->toBeTrue();
+});
+
+test('a booth can not be renamed to another booth that already has staff', function () {
+    User::factory()->staff('Robotics Den')->create();
+    $staff = User::factory()->staff('DOST Booth')->create();
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->patch(route('admin.staff.update', $staff), [
+            'booth_name' => 'Robotics Den',
+            'name' => $staff->name,
+            'scan_points' => 10,
+        ])
+        ->assertSessionHasErrors('booth_name');
 });
 
 test('scan points must be a whole number within range', function (mixed $points) {
-    $staff = User::factory()->staff()->create();
+    $staff = User::factory()->staff('DOST Booth')->create();
 
     $this->actingAs(User::factory()->admin()->create())
-        ->patch(route('admin.staff.update', $staff), ['scan_points' => $points])
+        ->patch(route('admin.staff.update', $staff), [
+            'booth_name' => 'DOST Booth',
+            'name' => $staff->name,
+            'scan_points' => $points,
+        ])
         ->assertSessionHasErrors('scan_points');
 })->with([-1, 1.5, User::MAX_SCAN_POINTS + 1, 'abc']);
 
-test('only staff accounts have editable scan points', function () {
+test('only staff accounts can be edited or deleted', function () {
     $admin = User::factory()->admin()->create();
 
     $this->actingAs($admin)
-        ->patch(route('admin.staff.update', $admin), ['scan_points' => 25])
+        ->patch(route('admin.staff.update', $admin), [
+            'booth_name' => 'DOST Booth',
+            'name' => 'Admin',
+            'scan_points' => 25,
+        ])
         ->assertNotFound();
+
+    $this->actingAs($admin)
+        ->delete(route('admin.staff.destroy', $admin))
+        ->assertNotFound();
+
+    expect($admin->fresh())->not->toBeNull();
 });
 
-test('staff can not change scan points', function () {
-    $staff = User::factory()->staff()->create();
+test('staff can not edit or delete staff accounts', function () {
+    $staff = User::factory()->staff('DOST Booth')->create();
 
     $this->actingAs($staff)
-        ->patch(route('admin.staff.update', $staff), ['scan_points' => 999])
+        ->patch(route('admin.staff.update', $staff), [
+            'booth_name' => 'DOST Booth',
+            'name' => $staff->name,
+            'scan_points' => 999,
+        ])
+        ->assertForbidden();
+
+    $this->actingAs($staff)
+        ->delete(route('admin.staff.destroy', $staff))
         ->assertForbidden();
 
     expect($staff->fresh()->scan_points)->toBe(0);
+});
+
+test('admins can delete a staff member along with their booth visits', function () {
+    $staff = User::factory()->staff()->create();
+    $visit = BoothVisit::factory()->for($staff, 'booth')->create();
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->delete(route('admin.staff.destroy', $staff))
+        ->assertRedirect(route('admin.staff.index'));
+
+    expect($staff->fresh())->toBeNull()
+        ->and($visit->fresh())->toBeNull();
 });
 
 test('non admins cannot add staff', function () {

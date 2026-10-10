@@ -1,7 +1,8 @@
 import { Head } from '@inertiajs/react';
 import AdminPageHeading from '@/components/layout/AdminPageHeading';
 import AddStaff from '@/components/modals/admin/AddStaff';
-import EditStaffPoints from '@/components/modals/admin/EditStaffPoints';
+import DeleteStaff from '@/components/modals/admin/DeleteStaff';
+import EditStaff from '@/components/modals/admin/EditStaff';
 import { index as staffIndex } from '@/routes/admin/staff';
 
 type Staff = {
@@ -10,6 +11,7 @@ type Staff = {
     name: string;
     password: string;
     scanPoints: number;
+    visits: number;
     createdAt: string | null;
 };
 
@@ -62,20 +64,17 @@ export default function RegisteredStaff({ staff }: Props) {
                                             {member.password}
                                         </span>
                                     </p>
-                                    <div className="flex items-center justify-between gap-3 text-sm">
-                                        <p>
-                                            <span className="text-white/50">
-                                                Points per scan:{' '}
-                                            </span>
-                                            <span className="font-bold">
-                                                {member.scanPoints}
-                                            </span>
-                                        </p>
-                                        <EditStaffPoints
-                                            staffId={member.id}
-                                            boothName={member.boothName}
-                                            scanPoints={member.scanPoints}
-                                        />
+                                    <p className="text-sm">
+                                        <span className="text-white/50">
+                                            Points per scan:{' '}
+                                        </span>
+                                        <span className="font-bold">
+                                            {member.scanPoints}
+                                        </span>
+                                    </p>
+                                    <div className="flex justify-end gap-1 border-t border-white/10 pt-3">
+                                        <EditStaff staff={member} />
+                                        <DeleteStaff staff={member} />
                                     </div>
                                 </li>
                             ))}
@@ -100,6 +99,9 @@ export default function RegisteredStaff({ staff }: Props) {
                                         <th className="px-5 py-4 font-semibold">
                                             Added
                                         </th>
+                                        <th className="px-5 py-4 text-right font-semibold">
+                                            Actions
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/10">
@@ -117,21 +119,8 @@ export default function RegisteredStaff({ staff }: Props) {
                                             <td className="px-5 py-4 font-mono text-[#F7B600]">
                                                 {member.password}
                                             </td>
-                                            <td className="px-5 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <span className="font-bold tabular-nums">
-                                                        {member.scanPoints}
-                                                    </span>
-                                                    <EditStaffPoints
-                                                        staffId={member.id}
-                                                        boothName={
-                                                            member.boothName
-                                                        }
-                                                        scanPoints={
-                                                            member.scanPoints
-                                                        }
-                                                    />
-                                                </div>
+                                            <td className="px-5 py-4 font-bold tabular-nums">
+                                                {member.scanPoints}
                                             </td>
                                             <td className="px-5 py-4 whitespace-nowrap text-white/60">
                                                 {member.createdAt &&
@@ -140,6 +129,14 @@ export default function RegisteredStaff({ staff }: Props) {
                                                             member.createdAt,
                                                         ),
                                                     )}
+                                            </td>
+                                            <td className="px-5 py-4">
+                                                <div className="flex justify-end gap-1">
+                                                    <EditStaff staff={member} />
+                                                    <DeleteStaff
+                                                        staff={member}
+                                                    />
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
