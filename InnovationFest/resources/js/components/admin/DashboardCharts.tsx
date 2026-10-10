@@ -226,10 +226,12 @@ export function HorizontalBarChart({
     data,
     color,
     emptyText,
+    valueName = 'Participants',
 }: {
     data: Datum[];
     color: string;
     emptyText?: string;
+    valueName?: string;
 }) {
     if (data.length === 0) {
         return <EmptyChart text={emptyText} />;
@@ -255,7 +257,7 @@ export function HorizontalBarChart({
                 <Tooltip {...TOOLTIP_PROPS} />
                 <Bar
                     dataKey="total"
-                    name="Participants"
+                    name={valueName}
                     fill={color}
                     radius={[0, 6, 6, 0]}
                     barSize={20}

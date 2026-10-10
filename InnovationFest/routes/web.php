@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Booth\HomeController as BoothHomeController;
 use App\Http\Controllers\Booth\VisitController;
@@ -40,6 +41,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
     ->group(function () {
         Route::get('dashboard', DashboardController::class)->name('dashboard');
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
+        Route::get('visitors', [VisitorController::class, 'index'])->name('visitors.index');
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
         Route::patch('staff/{staff}', [StaffController::class, 'update'])->name('staff.update');

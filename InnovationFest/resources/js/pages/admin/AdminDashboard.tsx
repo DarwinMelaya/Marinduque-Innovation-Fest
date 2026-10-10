@@ -12,6 +12,7 @@ import type { Datum } from '@/components/admin/DashboardCharts';
 import AdminPageHeading from '@/components/layout/AdminPageHeading';
 import { dashboard } from '@/routes/admin';
 import { index as participantsIndex } from '@/routes/admin/participants';
+import { index as visitorsIndex } from '@/routes/admin/visitors';
 
 type Props = {
     stats: {
@@ -38,6 +39,7 @@ type Props = {
     topSchools: Datum[];
     topCourses: Datum[];
     topAgencies: Datum[];
+    topEarners: Datum[];
     recentParticipants: {
         id: number;
         festId: string | null;
@@ -57,6 +59,9 @@ const PARTICIPANT_TYPE_COLORS = [
     CHART_COLORS.green,
     CHART_COLORS.blue,
 ];
+
+const VIEW_ALL_CLASS =
+    'inline-flex min-h-10 items-center gap-2 rounded-full border border-white/25 px-5 text-xs font-bold tracking-wide uppercase hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none';
 
 const numberFormat = new Intl.NumberFormat('en-PH');
 
@@ -128,6 +133,7 @@ export default function AdminDashboard({
     topSchools,
     topCourses,
     topAgencies,
+    topEarners,
     recentParticipants,
 }: Props) {
     const sectors: Datum[] = [
@@ -183,6 +189,26 @@ export default function AdminDashboard({
 
                 <Panel title="Registrations, last 14 days">
                     <TrendChart data={trend} />
+                </Panel>
+
+                <Panel
+                    title="Top points earners"
+                    action={
+                        <Link
+                            href={visitorsIndex()}
+                            className={VIEW_ALL_CLASS}
+                        >
+                            Leaderboard
+                            <ArrowRight className="size-4" />
+                        </Link>
+                    }
+                >
+                    <HorizontalBarChart
+                        data={topEarners}
+                        color={CHART_COLORS.yellow}
+                        valueName="Points"
+                        emptyText="No one has earned points yet."
+                    />
                 </Panel>
 
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -288,7 +314,7 @@ export default function AdminDashboard({
                     action={
                         <Link
                             href={participantsIndex()}
-                            className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/25 px-5 text-xs font-bold tracking-wide uppercase hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
+                            className={VIEW_ALL_CLASS}
                         >
                             View all
                             <ArrowRight className="size-4" />

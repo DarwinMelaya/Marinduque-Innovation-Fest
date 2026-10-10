@@ -108,6 +108,14 @@ class DashboardController extends Controller
             'topSchools' => $this->topValues('school'),
             'topCourses' => $this->topValues('course'),
             'topAgencies' => $this->topValues('coalesce(agency, organization)'),
+            'topEarners' => Participant::query()
+                ->rankedByPoints()
+                ->limit(VisitorController::LEADERBOARD_SIZE)
+                ->get()
+                ->map(fn (Participant $participant) => [
+                    'name' => $participant->fullName(),
+                    'total' => (int) $participant->points,
+                ]),
             'recentParticipants' => Participant::query()
                 ->latest()
                 ->latest('id')

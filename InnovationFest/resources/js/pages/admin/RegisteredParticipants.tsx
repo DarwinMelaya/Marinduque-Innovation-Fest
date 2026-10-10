@@ -1,7 +1,7 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { useRef, useState } from 'react';
-import type { ReactNode } from 'react';
+import PageLink from '@/components/admin/PageLink';
 import AdminPageHeading from '@/components/layout/AdminPageHeading';
 import { Input } from '@/components/ui/input';
 import {
@@ -359,42 +359,6 @@ function ParticipantCard({ participant }: { participant: Participant }) {
                 </p>
             )}
         </article>
-    );
-}
-
-const PAGE_LINK_CLASS =
-    'inline-flex min-h-10 items-center gap-1.5 rounded-full border border-white/25 px-4 text-xs font-bold tracking-wide uppercase transition-colors';
-
-function PageLink({
-    href,
-    label,
-    children,
-}: {
-    href: string | null;
-    label: string;
-    children: ReactNode;
-}) {
-    if (href === null) {
-        return (
-            <span
-                aria-disabled="true"
-                aria-label={label}
-                className={`${PAGE_LINK_CLASS} cursor-not-allowed opacity-40`}
-            >
-                {children}
-            </span>
-        );
-    }
-
-    return (
-        <Link
-            href={href}
-            preserveScroll
-            aria-label={label}
-            className={`${PAGE_LINK_CLASS} hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none`}
-        >
-            {children}
-        </Link>
     );
 }
 

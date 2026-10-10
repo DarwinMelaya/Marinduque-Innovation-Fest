@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BoothVisit;
 use App\Models\Participant;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -102,6 +103,23 @@ test('the dashboard breaks down participants by registration details', function 
             ->where('topCourses', [['name' => 'BS Computer Science', 'total' => 2]])
             ->where('topAgencies.0', ['name' => 'DOST Marinduque', 'total' => 1])
         );
+});
+
+test('the dashboard charts the participants with the most points', function () {
+    $juan = Participant::factory()->create(['first_name' => 'Juan', 'last_name' => 'Cruz']);
+    $maria = Participant::factory()->create(['first_name' => 'Maria', 'last_name' => 'Santos']);
+    Participant::factory()->create();
+
+    BoothVisit::factory()->for($juan)->create(['points' => 10]);
+    BoothVisit::factory()->for($maria)->create(['points' => 10]);
+    BoothVisit::factory()->for($maria)->create(['points' => 20]);
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('admin.dashboard'))
+        ->assertInertia(fn (Assert $page) => $page->where('topEarners', [
+            ['name' => 'Maria Santos', 'total' => 30],
+            ['name' => 'Juan Cruz', 'total' => 10],
+        ]));
 });
 
 test('admins can search registered participants', function () {

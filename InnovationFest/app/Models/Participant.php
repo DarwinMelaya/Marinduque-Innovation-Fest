@@ -7,6 +7,8 @@ use Database\Factories\ParticipantFactory;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -103,6 +105,22 @@ class Participant extends Model implements AuthenticatableContract
     public static function findByFestId(string $festId): ?self
     {
         return static::query()->where('fest_id', Str::upper(trim($festId)))->first();
+    }
+
+    /**
+     * Participants who visited at least one booth, highest total points first, with `points` and `visits` loaded.
+     *
+     * @param  Builder<Participant>  $query
+     */
+    #[Scope]
+    protected function rankedByPoints(Builder $query): void
+    {
+        $query->whereHas('boothVisits')
+            ->withSum('boothVisits as points', 'points')
+            ->withCount('boothVisits as visits')
+            ->orderByDesc('points')
+            ->orderByDesc('visits')
+            ->orderBy('id');
     }
 
     /**
