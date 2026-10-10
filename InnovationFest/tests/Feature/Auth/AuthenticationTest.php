@@ -10,6 +10,16 @@ test('login screen can be rendered', function () {
     $response->assertOk();
 });
 
+test('logged in users visiting the login screen are sent to their own home', function () {
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('login'))
+        ->assertRedirect(route('admin.dashboard'));
+
+    $this->actingAs(User::factory()->staff()->create())
+        ->get(route('login'))
+        ->assertRedirect(route('booth.home'));
+});
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 

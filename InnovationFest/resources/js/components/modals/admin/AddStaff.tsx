@@ -20,7 +20,7 @@ import { store } from '@/routes/admin/staff';
 const INPUT_CLASS =
     'h-11 rounded-lg border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30';
 
-/** Mirrors Staff::defaultPassword() so admins can see the password before saving. */
+/** Mirrors User::staffPassword() so admins can see the password before saving. */
 function defaultPassword(boothName: string) {
     return `${boothName.replace(/\s+/g, '')}123`;
 }

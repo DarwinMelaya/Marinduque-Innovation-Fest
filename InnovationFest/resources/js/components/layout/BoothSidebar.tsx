@@ -1,6 +1,7 @@
 import { ClipboardList, House } from 'lucide-react';
 import PanelSidebar from '@/components/layout/PanelSidebar';
-import { home, visits } from '@/routes/booth';
+import { home } from '@/routes/booth';
+import { index as visitsIndex } from '@/routes/booth/visits';
 import type { NavItem } from '@/types';
 
 const navItems: NavItem[] = [
@@ -11,7 +12,7 @@ const navItems: NavItem[] = [
     },
     {
         title: 'Visits',
-        href: visits(),
+        href: visitsIndex(),
         icon: ClipboardList,
     },
 ];

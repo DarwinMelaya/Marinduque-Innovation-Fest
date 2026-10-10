@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminRegisterController;
+use App\Http\Controllers\Booth\HomeController as BoothHomeController;
+use App\Http\Controllers\Booth\VisitController;
 use App\Http\Controllers\ParticipantRegistrationController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,8 +35,11 @@ Route::middleware(['auth', 'can:access-booth'])
     ->prefix('booth')
     ->name('booth.')
     ->group(function () {
-        Route::inertia('/', 'boothstaff/BoothHome')->name('home');
-        Route::inertia('visits', 'boothstaff/BoothListVisits')->name('visits');
+        Route::get('/', BoothHomeController::class)->name('home');
+        Route::get('visits', [VisitController::class, 'index'])->name('visits.index');
+        Route::post('visits', [VisitController::class, 'store'])
+            ->middleware('throttle:60,1')
+            ->name('visits.store');
     });
 
 require __DIR__.'/settings.php';

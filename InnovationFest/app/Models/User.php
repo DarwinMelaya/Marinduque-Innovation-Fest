@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -62,6 +63,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public static function staffPassword(string $boothName): string
     {
         return preg_replace('/\s+/', '', $boothName).'123';
+    }
+
+    /**
+     * Visitors scanned at this staff member's booth.
+     *
+     * @return HasMany<BoothVisit, $this>
+     */
+    public function boothVisits(): HasMany
+    {
+        return $this->hasMany(BoothVisit::class);
     }
 
     public function isAdmin(): bool
