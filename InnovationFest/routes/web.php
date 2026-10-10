@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
+        Route::patch('staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
     });
 
 Route::middleware(['auth', 'can:access-booth'])

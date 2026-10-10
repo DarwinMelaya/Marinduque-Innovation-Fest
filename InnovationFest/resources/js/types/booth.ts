@@ -3,5 +3,6 @@ export type BoothVisit = {
     name: string;
     festId: string | null;
     municipality: string;
+    points: number;
     visitedAt: string | null;
 };

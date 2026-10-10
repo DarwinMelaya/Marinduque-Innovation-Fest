@@ -17,8 +17,11 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/admin/staff';
 
-const INPUT_CLASS =
+export const INPUT_CLASS =
     'h-11 rounded-lg border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30';
+
+/** Mirrors User::MAX_SCAN_POINTS. */
+export const MAX_SCAN_POINTS = 1000;
 
 /** Mirrors User::staffPassword() so admins can see the password before saving. */
 function defaultPassword(boothName: string) {
@@ -94,6 +97,27 @@ const AddStaff = () => {
                                     className={INPUT_CLASS}
                                 />
                                 <InputError message={errors.name} />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="scan_points">
+                                    Points per scan
+                                </Label>
+                                <Input
+                                    id="scan_points"
+                                    name="scan_points"
+                                    type="number"
+                                    required
+                                    min={0}
+                                    max={MAX_SCAN_POINTS}
+                                    defaultValue={10}
+                                    className={INPUT_CLASS}
+                                />
+                                <p className="text-xs text-white/50">
+                                    Points a participant earns each time this
+                                    booth scans them.
+                                </p>
+                                <InputError message={errors.scan_points} />
                             </div>
 
                             <div className="grid gap-2">

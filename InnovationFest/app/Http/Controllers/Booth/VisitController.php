@@ -52,6 +52,8 @@ class VisitController extends Controller
         $visit = $request->user()->boothVisits()->createOrFirst([
             'participant_id' => $participant->id,
             'visited_on' => BoothVisit::today(),
+        ], [
+            'points' => $request->user()->scan_points,
         ]);
 
         if (! $visit->wasRecentlyCreated) {
@@ -66,7 +68,7 @@ class VisitController extends Controller
     }
 
     /**
-     * @return array{id: int, name: string, festId: string|null, municipality: string, visitedAt: string|null}
+     * @return array{id: int, name: string, festId: string|null, municipality: string, points: int, visitedAt: string|null}
      */
     public static function present(BoothVisit $visit): array
     {
@@ -75,6 +77,7 @@ class VisitController extends Controller
             'name' => $visit->participant->fullName(),
             'festId' => $visit->participant->fest_id,
             'municipality' => $visit->participant->municipality,
+            'points' => $visit->points,
             'visitedAt' => $visit->created_at?->toIso8601String(),
         ];
     }

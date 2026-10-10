@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string|null $booth_name
+ * @property int $scan_points Points a participant earns each time this booth scans them.
  * @property string|null $email
  * @property Carbon|null $email_verified_at
  * @property string $password
@@ -35,6 +36,15 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public const MAX_SCAN_POINTS = 1000;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'scan_points' => 0,
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -46,6 +56,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'scan_points' => 'integer',
         ];
     }
 

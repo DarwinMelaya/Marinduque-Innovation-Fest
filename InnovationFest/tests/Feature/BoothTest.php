@@ -49,6 +49,19 @@ test('scanning a participant QR code records a visit', function () {
         ->and($visit->visited_on)->toBe(BoothVisit::today());
 });
 
+test('visits keep the points the booth gave at scan time', function () {
+    $staff = User::factory()->staff()->create();
+    $staff->forceFill(['scan_points' => 20])->save();
+
+    $this->actingAs($staff)
+        ->post(route('booth.visits.store'), ['fest_id' => Participant::factory()->create()->fest_id])
+        ->assertInertiaFlash('visit.points', 20);
+
+    $staff->forceFill(['scan_points' => 5])->save();
+
+    expect(BoothVisit::sole()->points)->toBe(20);
+});
+
 test('a participant is counted once per booth per day', function () {
     $staff = User::factory()->staff()->create();
     $participant = Participant::factory()->create(['first_name' => 'Juan', 'last_name' => 'Dela Cruz']);

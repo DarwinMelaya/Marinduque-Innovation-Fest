@@ -165,6 +165,9 @@ function VisitorScanner() {
                                 {result.visit.festId} ·{' '}
                                 {result.visit.municipality} · Visit recorded
                             </p>
+                            <p className="mt-1 text-sm font-bold text-[#F7B600]">
+                                +{result.visit.points} points
+                            </p>
                         </div>
                     </div>
                 ) : result?.type === 'error' ? (
