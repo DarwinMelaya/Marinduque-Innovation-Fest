@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Booth\HomeController as BoothHomeController;
 use App\Http\Controllers\Booth\VisitController;
 use App\Http\Controllers\ParticipantRegistrationController;
+use App\Http\Controllers\Visitor\AccountController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/LandingPage')->name('home');
@@ -15,6 +16,18 @@ Route::get('register', [ParticipantRegistrationController::class, 'create'])->na
 Route::post('register', [ParticipantRegistrationController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('participants.register.store');
+
+Route::post('visitor/login', [AccountController::class, 'store'])
+    ->middleware('throttle:30,1')
+    ->name('visitor.login');
+
+Route::middleware('auth:participant')
+    ->prefix('visitor')
+    ->name('visitor.')
+    ->group(function () {
+        Route::get('/', [AccountController::class, 'show'])->name('home');
+        Route::post('logout', [AccountController::class, 'destroy'])->name('logout');
+    });
 
 Route::get('admin/register', [AdminRegisterController::class, 'create'])->name('admin.register');
 Route::post('admin/register', [AdminRegisterController::class, 'store'])

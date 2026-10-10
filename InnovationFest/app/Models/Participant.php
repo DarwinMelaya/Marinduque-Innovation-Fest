@@ -4,10 +4,14 @@ namespace App\Models;
 
 use App\Support\FestQrCode;
 use Database\Factories\ParticipantFactory;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -51,10 +55,18 @@ use Illuminate\Support\Carbon;
     'contact_number',
     'email',
 ])]
-class Participant extends Model
+class Participant extends Model implements AuthenticatableContract
 {
     /** @use HasFactory<ParticipantFactory> */
-    use HasFactory;
+    use Authenticatable, HasFactory;
+
+    /**
+     * Participants have no password; they sign in with their fest ID only, so there is no "remember me" token either.
+     */
+    public function getRememberTokenName(): string
+    {
+        return '';
+    }
 
     public const SEXES = ['Male', 'Female'];
 
@@ -83,6 +95,24 @@ class Participant extends Model
     public function qrTicketPng(): string
     {
         return FestQrCode::ticketPng($this->fest_id, $this->fullName());
+    }
+
+    /**
+     * Find a participant by the fest ID printed on, or encoded in, their QR code.
+     */
+    public static function findByFestId(string $festId): ?self
+    {
+        return static::query()->where('fest_id', Str::upper(trim($festId)))->first();
+    }
+
+    /**
+     * Booths that scanned this participant.
+     *
+     * @return HasMany<BoothVisit, $this>
+     */
+    public function boothVisits(): HasMany
+    {
+        return $this->hasMany(BoothVisit::class);
     }
 
     public function fullName(): string

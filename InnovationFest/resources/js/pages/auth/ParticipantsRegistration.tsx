@@ -1,10 +1,11 @@
-import { Form, Head, Link } from "@inertiajs/react";
+import { Form, Head, Link, router } from "@inertiajs/react";
 import {
     ArrowLeft,
     ArrowRight,
     CheckCircle2,
     ChevronDown,
     Download,
+    UserRound,
 } from "lucide-react";
 import { useState } from "react";
 import InputError from "@/components/input-error";
@@ -13,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import VisitorSignIn from "@/components/visitors/VisitorSignIn";
 import {
     authButtonClass,
     authInputClass,
@@ -21,6 +23,7 @@ import {
 import { home } from "@/routes";
 import { register as create } from "@/routes/participants";
 import { store } from "@/routes/participants/register";
+import { home as visitorHome, login as visitorLogin } from "@/routes/visitor";
 
 const SEXES = ["Male", "Female"];
 
@@ -51,6 +54,7 @@ type Registration = {
 
 type Props = {
     registration: Registration | null;
+    visitorSignedIn: boolean;
     barangays: Record<string, string[]>;
     educationLevels: string[];
 };
@@ -60,6 +64,18 @@ function RegistrationConfirmed({
 }: {
     registration: Registration;
 }) {
+    const [opening, setOpening] = useState(false);
+
+    const openAccount = () =>
+        router.post(
+            visitorLogin.url(),
+            { fest_id: registration.festId },
+            {
+                onStart: () => setOpening(true),
+                onFinish: () => setOpening(false),
+            },
+        );
+
     return (
         <div className="flex flex-col items-center gap-6 text-center">
             <Head title="Registered" />
@@ -114,6 +130,22 @@ function RegistrationConfirmed({
                     <Download className="size-4" />
                     Download QR code
                 </a>
+                <Button
+                    type="button"
+                    onClick={openAccount}
+                    disabled={opening}
+                    className="h-11 w-full rounded-lg border border-white/15 bg-white/5 text-sm font-semibold text-white hover:bg-white/10"
+                >
+                    {opening ? (
+                        <Spinner />
+                    ) : (
+                        <UserRound className="size-4" />
+                    )}
+                    Go to my account
+                </Button>
+            </div>
+
+            <div className="flex w-full">
                 <Link
                     href={create()}
                     className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-white/15 text-sm font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
@@ -129,12 +161,44 @@ const NOTICE_HEADING_CLASS = "font-semibold text-white";
 
 const NOTICE_LIST_CLASS = "flex list-disc flex-col gap-1 pl-5";
 
-function PrivacyNotice({ onAccept }: { onAccept: () => void }) {
+function AlreadyRegistered({ signedIn }: { signedIn: boolean }) {
+    return (
+        <div className="flex flex-col gap-4 rounded-2xl border border-[#F7B600]/25 bg-[#F7B600]/[0.06] p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-1">
+                <p className="font-semibold">Already registered?</p>
+                <p className="text-sm text-white/60">
+                    See your booth visits and the points you've earned.
+                </p>
+            </div>
+            {signedIn ? (
+                <Link
+                    href={visitorHome()}
+                    className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-white/15 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/5"
+                >
+                    <UserRound className="size-4" />
+                    Go to my account
+                </Link>
+            ) : (
+                <VisitorSignIn />
+            )}
+        </div>
+    );
+}
+
+function PrivacyNotice({
+    onAccept,
+    visitorSignedIn,
+}: {
+    onAccept: () => void;
+    visitorSignedIn: boolean;
+}) {
     const [agreed, setAgreed] = useState(false);
 
     return (
         <section aria-labelledby="privacy-title" className="flex flex-col gap-5">
             <Head title="Privacy Notice" />
+
+            <AlreadyRegistered signedIn={visitorSignedIn} />
 
             <div className="flex flex-col gap-1">
                 <h2 id="privacy-title" className="text-xl font-bold">
@@ -245,6 +309,7 @@ function PrivacyNotice({ onAccept }: { onAccept: () => void }) {
 
 export default function ParticipantsRegistration({
     registration,
+    visitorSignedIn,
     barangays,
     educationLevels,
 }: Props) {
@@ -257,7 +322,12 @@ export default function ParticipantsRegistration({
     }
 
     if (!consented) {
-        return <PrivacyNotice onAccept={() => setConsented(true)} />;
+        return (
+            <PrivacyNotice
+                onAccept={() => setConsented(true)}
+                visitorSignedIn={visitorSignedIn}
+            />
+        );
     }
 
     return (

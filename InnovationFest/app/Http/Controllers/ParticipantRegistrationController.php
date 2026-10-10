@@ -30,6 +30,7 @@ class ParticipantRegistrationController extends Controller
                 'qrTicket' => 'data:image/png;base64,'.base64_encode($participant->qrTicketPng()),
                 'emailSent' => (bool) $request->session()->get('registration_email_sent', false),
             ] : null,
+            'visitorSignedIn' => $request->user('participant') !== null,
             'barangays' => config('marinduque.barangays'),
             'educationLevels' => Participant::EDUCATION_LEVELS,
         ]);

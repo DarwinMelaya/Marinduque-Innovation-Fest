@@ -17,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
+        $middleware->redirectGuestsTo(fn (Request $request): string => $request->routeIs('visitor.*')
+            ? route('participants.register')
+            : route('login'));
+
         $middleware->redirectUsersTo(fn (Request $request): string => match (true) {
             $request->user()?->isAdmin() => route('admin.dashboard'),
             $request->user()?->isStaff() => route('booth.home'),

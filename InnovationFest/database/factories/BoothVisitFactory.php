@@ -23,6 +23,7 @@ class BoothVisitFactory extends Factory
             'user_id' => User::factory()->staff(),
             'participant_id' => Participant::factory(),
             'visited_on' => BoothVisit::today(),
+            'points' => 10,
         ];
     }
 }

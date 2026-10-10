@@ -7,7 +7,6 @@ use App\Models\BoothVisit;
 use App\Models\Participant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -39,9 +38,7 @@ class VisitController extends Controller
             'fest_id' => ['required', 'string', 'max:50'],
         ]);
 
-        $participant = Participant::query()
-            ->where('fest_id', Str::upper(trim($validated['fest_id'])))
-            ->first();
+        $participant = Participant::findByFestId($validated['fest_id']);
 
         if ($participant === null) {
             throw ValidationException::withMessages([
