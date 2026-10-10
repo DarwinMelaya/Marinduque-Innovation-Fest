@@ -1,6 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import {
     Download,
+    Gift,
     LogOut,
     Maximize2,
     QrCode,
@@ -20,6 +21,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
+import ScanBonusQr from '@/components/visitors/ScanBonusQr';
 import { logout } from '@/routes/visitor';
 import logoIcon from '../../../pictures/Marinduque Innovation Fest 206 logo.png';
 
@@ -28,6 +30,13 @@ type Visit = {
     boothName: string;
     points: number;
     visitedAt: string | null;
+};
+
+type Bonus = {
+    id: number;
+    label: string;
+    points: number;
+    redeemedAt: string | null;
 };
 
 type Props = {
@@ -44,6 +53,7 @@ type Props = {
         booths: number;
     };
     visits: Visit[];
+    bonuses: Bonus[];
 };
 
 const dateFormat = new Intl.DateTimeFormat('en-PH', {
@@ -174,80 +184,108 @@ function PointsSummary({ stats }: Pick<Props, 'stats'>) {
             <div className="grid grid-cols-2 gap-4">
                 <div className={`${CARD_CLASS} p-5`}>
                     <p className={LABEL_CLASS}>Booths</p>
-                    <p className="mt-1 text-4xl font-black">
-                        {stats.booths}
-                    </p>
+                    <p className="mt-1 text-4xl font-black">{stats.booths}</p>
                 </div>
                 <div className={`${CARD_CLASS} p-5`}>
                     <p className={LABEL_CLASS}>Visits</p>
-                    <p className="mt-1 text-4xl font-black">
-                        {stats.visits}
-                    </p>
+                    <p className="mt-1 text-4xl font-black">{stats.visits}</p>
                 </div>
             </div>
+
+            <ScanBonusQr />
         </section>
     );
 }
 
-function VisitList({ visits }: Pick<Props, 'visits'>) {
+function PointsHistory({ visits, bonuses }: Pick<Props, 'visits' | 'bonuses'>) {
+    const entries = [
+        ...visits.map((visit) => ({
+            key: `visit-${visit.id}`,
+            title: visit.boothName,
+            points: visit.points,
+            at: visit.visitedAt,
+            bonus: false,
+        })),
+        ...bonuses.map((bonus) => ({
+            key: `bonus-${bonus.id}`,
+            title: bonus.label,
+            points: bonus.points,
+            at: bonus.redeemedAt,
+            bonus: true,
+        })),
+    ].sort((a, b) => (b.at ?? '').localeCompare(a.at ?? ''));
+
     return (
         <section
-            aria-labelledby="visits-title"
+            aria-labelledby="history-title"
             className={`${CARD_CLASS} flex flex-col gap-2 p-6 sm:p-8`}
         >
             <div className="flex items-center justify-between gap-4">
-                <h2 id="visits-title" className="text-lg font-bold">
-                    My visits
+                <h2 id="history-title" className="text-lg font-bold">
+                    Points history
                 </h2>
-                {visits.length > 0 && (
+                {entries.length > 0 && (
                     <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-semibold text-white/70 tabular-nums">
-                        {visits.length}
+                        {entries.length}
                     </span>
                 )}
             </div>
 
-            {visits.length === 0 ? (
+            {entries.length === 0 ? (
                 <div className="flex flex-col items-center gap-3 py-10 text-center">
                     <span className="flex size-14 items-center justify-center rounded-full bg-white/5 text-white/40">
                         <Store className="size-6" />
                     </span>
-                    <p className="font-semibold">No visits yet</p>
+                    <p className="font-semibold">No points yet</p>
                     <p className="max-w-xs text-sm text-white/50">
-                        Head to a booth and show your QR code to start earning
-                        points.
+                        Head to a booth and show your QR code, or scan a bonus
+                        QR code to start earning points.
                     </p>
                 </div>
             ) : (
                 <ul className="divide-y divide-white/10">
-                    {visits.map((visit) => (
+                    {entries.map((entry) => (
                         <li
-                            key={visit.id}
+                            key={entry.key}
                             className="flex items-center gap-3 py-3.5"
                         >
-                            <span
-                                aria-hidden
-                                className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#F15E00]/15 text-base font-black text-[#FF8A3D] uppercase"
-                            >
-                                {visit.boothName.charAt(0)}
-                            </span>
+                            {entry.bonus ? (
+                                <span
+                                    aria-hidden
+                                    className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#F7B600]/15 text-[#F7B600]"
+                                >
+                                    <Gift className="size-5" />
+                                </span>
+                            ) : (
+                                <span
+                                    aria-hidden
+                                    className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#F15E00]/15 text-base font-black text-[#FF8A3D] uppercase"
+                                >
+                                    {entry.title.charAt(0)}
+                                </span>
+                            )}
                             <div className="min-w-0 flex-1">
                                 <p className="truncate font-semibold">
-                                    {visit.boothName}
+                                    {entry.title}
                                 </p>
-                                {visit.visitedAt && (
-                                    <p className="text-sm text-white/50">
-                                        {dateFormat.format(
-                                            new Date(visit.visitedAt),
-                                        )}{' '}
-                                        ·{' '}
-                                        {timeFormat.format(
-                                            new Date(visit.visitedAt),
-                                        )}
-                                    </p>
-                                )}
+                                <p className="text-sm text-white/50">
+                                    {entry.bonus ? 'Bonus QR' : 'Booth visit'}
+                                    {entry.at && (
+                                        <>
+                                            {' · '}
+                                            {dateFormat.format(
+                                                new Date(entry.at),
+                                            )}{' '}
+                                            ·{' '}
+                                            {timeFormat.format(
+                                                new Date(entry.at),
+                                            )}
+                                        </>
+                                    )}
+                                </p>
                             </div>
                             <span className="shrink-0 rounded-full bg-[#F7B600]/15 px-3 py-1 text-sm font-bold text-[#F7B600] tabular-nums">
-                                +{visit.points}
+                                +{entry.points}
                             </span>
                         </li>
                     ))}
@@ -321,7 +359,7 @@ function LogoutButton({ festId }: { festId: string }) {
     );
 }
 
-const VisitorsHome = ({ participant, stats, visits }: Props) => (
+const VisitorsHome = ({ participant, stats, visits, bonuses }: Props) => (
     <>
         <Head title="My account" />
 
@@ -338,11 +376,7 @@ const VisitorsHome = ({ participant, stats, visits }: Props) => (
             <div className="relative mx-auto flex w-full max-w-4xl flex-col gap-6">
                 <header className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <img
-                            src={logoIcon}
-                            alt=""
-                            className="h-10 w-auto"
-                        />
+                        <img src={logoIcon} alt="" className="h-10 w-auto" />
                         <span className="text-sm leading-tight font-extrabold tracking-wide uppercase">
                             Marinduque
                             <br />
@@ -368,7 +402,7 @@ const VisitorsHome = ({ participant, stats, visits }: Props) => (
 
                     <div className="flex flex-col gap-6">
                         <PointsSummary stats={stats} />
-                        <VisitList visits={visits} />
+                        <PointsHistory visits={visits} bonuses={bonuses} />
                     </div>
                 </div>
             </div>

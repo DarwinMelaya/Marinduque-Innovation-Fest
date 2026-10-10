@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\BonusCode;
 use App\Models\BoothVisit;
 use App\Models\Participant;
 use App\Models\User;
@@ -73,7 +74,10 @@ class VisitorController extends Controller
             'stats' => [
                 'visits' => BoothVisit::count(),
                 'visitors' => BoothVisit::distinct()->count('participant_id'),
-                'points' => (int) BoothVisit::sum('points'),
+                'points' => (int) BoothVisit::sum('points') + (int) BonusCode::query()
+                    ->join('bonus_code_batches', 'bonus_code_batches.id', '=', 'bonus_codes.bonus_code_batch_id')
+                    ->whereNotNull('bonus_codes.redeemed_at')
+                    ->sum('bonus_code_batches.points'),
             ],
             'leaderboard' => $leaderboard,
             'visits' => $visits,

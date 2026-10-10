@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Visitor;
 
 use App\Http\Controllers\Controller;
+use App\Models\BonusCode;
 use App\Models\BoothVisit;
 use App\Models\Participant;
 use Illuminate\Http\RedirectResponse;
@@ -28,6 +29,12 @@ class AccountController extends Controller
             ->latest('id')
             ->get();
 
+        $bonuses = $participant->bonusCodes()
+            ->with('batch')
+            ->latest('redeemed_at')
+            ->latest('id')
+            ->get();
+
         return Inertia::render('visitors/VisitorsHome', [
             'participant' => [
                 'name' => $participant->fullName(),
@@ -37,7 +44,7 @@ class AccountController extends Controller
                 'qrTicket' => 'data:image/png;base64,'.base64_encode($participant->qrTicketPng()),
             ],
             'stats' => [
-                'points' => $visits->sum('points'),
+                'points' => $visits->sum('points') + $bonuses->sum('batch.points'),
                 'visits' => $visits->count(),
                 'booths' => $visits->unique('user_id')->count(),
             ],
@@ -46,6 +53,12 @@ class AccountController extends Controller
                 'boothName' => $visit->booth->booth_name,
                 'points' => $visit->points,
                 'visitedAt' => $visit->created_at?->toIso8601String(),
+            ]),
+            'bonuses' => $bonuses->map(fn (BonusCode $bonus) => [
+                'id' => $bonus->id,
+                'label' => $bonus->batch->label,
+                'points' => $bonus->batch->points,
+                'redeemedAt' => $bonus->redeemed_at?->toIso8601String(),
             ]),
         ]);
     }

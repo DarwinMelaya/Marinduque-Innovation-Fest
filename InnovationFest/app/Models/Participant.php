@@ -108,15 +108,26 @@ class Participant extends Model implements AuthenticatableContract
     }
 
     /**
-     * Participants who visited at least one booth, highest total points first, with `points` and `visits` loaded.
+     * Participants who earned any points, highest total first, with `points` (booth visits plus bonus codes)
+     * and `visits` loaded.
      *
      * @param  Builder<Participant>  $query
      */
     #[Scope]
     protected function rankedByPoints(Builder $query): void
     {
-        $query->whereHas('boothVisits')
-            ->withSum('boothVisits as points', 'points')
+        $visitPoints = BoothVisit::query()
+            ->selectRaw('coalesce(sum(booth_visits.points), 0)')
+            ->whereColumn('booth_visits.participant_id', 'participants.id');
+
+        $bonusPoints = BonusCode::query()
+            ->join('bonus_code_batches', 'bonus_code_batches.id', '=', 'bonus_codes.bonus_code_batch_id')
+            ->selectRaw('coalesce(sum(bonus_code_batches.points), 0)')
+            ->whereColumn('bonus_codes.participant_id', 'participants.id');
+
+        $query->where(fn (Builder $query) => $query->has('boothVisits')->orHas('bonusCodes'))
+            ->select('participants.*')
+            ->selectRaw("({$visitPoints->toSql()}) + ({$bonusPoints->toSql()}) as points")
             ->withCount('boothVisits as visits')
             ->orderByDesc('points')
             ->orderByDesc('visits')
@@ -131,6 +142,16 @@ class Participant extends Model implements AuthenticatableContract
     public function boothVisits(): HasMany
     {
         return $this->hasMany(BoothVisit::class);
+    }
+
+    /**
+     * Bonus QR codes this participant scanned.
+     *
+     * @return HasMany<BonusCode, $this>
+     */
+    public function bonusCodes(): HasMany
+    {
+        return $this->hasMany(BonusCode::class);
     }
 
     public function fullName(): string

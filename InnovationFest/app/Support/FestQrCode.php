@@ -79,6 +79,82 @@ class FestQrCode
     }
 
     /**
+     * Render the same branded design as a vector SVG, sharp at any print size. The logo itself is left out to keep
+     * hundreds of codes on one page light: lay it over the white center box, sized with logoBoxRatio().
+     */
+    public static function svg(string $data): string
+    {
+        $matrix = Encoder::encode($data, ErrorCorrectionLevel::H())->getMatrix();
+        $modules = $matrix->getWidth();
+        $total = $modules + self::QUIET_ZONE * 2;
+        $q = self::QUIET_ZONE;
+
+        $logoModules = self::logoModules($modules);
+        $logoStart = intdiv($modules - $logoModules, 2);
+        $logoEnd = $logoStart + $logoModules;
+
+        $dots = '';
+
+        for ($y = 0; $y < $modules; $y++) {
+            for ($x = 0; $x < $modules; $x++) {
+                if ($matrix->get($x, $y) !== 1 || self::isFinder($x, $y, $modules)) {
+                    continue;
+                }
+
+                if ($x >= $logoStart && $x < $logoEnd && $y >= $logoStart && $y < $logoEnd) {
+                    continue;
+                }
+
+                $dots .= sprintf('<rect x="%d" y="%d" width="1" height="1" rx="0.32"/>', $x + $q, $y + $q);
+            }
+        }
+
+        $eyes = '';
+
+        foreach ([[0, 0], [$modules - 7, 0], [0, $modules - 7]] as [$ex, $ey]) {
+            $ex += $q;
+            $ey += $q;
+            $eyes .= sprintf('<rect x="%d" y="%d" width="7" height="7" rx="2.4" fill="%s"/>', $ex, $ey, self::hex(self::EYE_OUTER_COLOR))
+                .sprintf('<rect x="%d" y="%d" width="5" height="5" rx="1.6" fill="#fff"/>', $ex + 1, $ey + 1)
+                .sprintf('<rect x="%d" y="%d" width="3" height="3" rx="1" fill="%s"/>', $ex + 2, $ey + 2, self::hex(self::EYE_INNER_COLOR));
+        }
+
+        $logoBox = sprintf(
+            '<rect x="%1$d" y="%1$d" width="%2$d" height="%2$d" rx="%3$s" fill="#fff"/>',
+            $logoStart + $q,
+            $logoModules,
+            round($logoModules * 0.22, 2),
+        );
+
+        return sprintf(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %1$d %1$d"><rect width="%1$d" height="%1$d" fill="#fff"/><g fill="%2$s">%3$s</g>%4$s%5$s</svg>',
+            $total,
+            self::hex(self::DOT_COLOR),
+            $dots,
+            $eyes,
+            $logoBox,
+        );
+    }
+
+    /**
+     * The logo's share of the QR code's width, as drawn in png(): 86% of the white center box.
+     */
+    public static function logoRatio(string $data): float
+    {
+        $modules = Encoder::encode($data, ErrorCorrectionLevel::H())->getMatrix()->getWidth();
+
+        return round(self::logoModules($modules) * 0.86 / ($modules + self::QUIET_ZONE * 2), 4);
+    }
+
+    /**
+     * @param  array{int, int, int}  $rgb
+     */
+    private static function hex(array $rgb): string
+    {
+        return sprintf('#%02x%02x%02x', ...$rgb);
+    }
+
+    /**
      * Render the QR code as a printable pass with the ID and name underneath.
      */
     public static function ticketPng(string $data, string $name, int $width = 600): string

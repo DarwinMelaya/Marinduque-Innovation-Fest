@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BonusCodeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\StaffController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Booth\HomeController as BoothHomeController;
 use App\Http\Controllers\Booth\VisitController;
 use App\Http\Controllers\ParticipantRegistrationController;
 use App\Http\Controllers\Visitor\AccountController;
+use App\Http\Controllers\Visitor\BonusCodeController as VisitorBonusCodeController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/LandingPage')->name('home');
@@ -27,6 +29,9 @@ Route::middleware('auth:participant')
     ->name('visitor.')
     ->group(function () {
         Route::get('/', [AccountController::class, 'show'])->name('home');
+        Route::post('bonus', [VisitorBonusCodeController::class, 'store'])
+            ->middleware('throttle:20,1')
+            ->name('bonus.store');
         Route::post('logout', [AccountController::class, 'destroy'])->name('logout');
     });
 
@@ -41,7 +46,10 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
     ->group(function () {
         Route::get('dashboard', DashboardController::class)->name('dashboard');
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
-        Route::inertia('qr-codes', 'admin/GenerateQrCode')->name('qr-codes.index');
+        Route::get('qr-codes', [BonusCodeController::class, 'index'])->name('qr-codes.index');
+        Route::post('qr-codes', [BonusCodeController::class, 'store'])->name('qr-codes.store');
+        Route::get('qr-codes/{batch}/print', [BonusCodeController::class, 'print'])->name('qr-codes.print');
+        Route::delete('qr-codes/{batch}', [BonusCodeController::class, 'destroy'])->name('qr-codes.destroy');
         Route::get('visitors', [VisitorController::class, 'index'])->name('visitors.index');
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
