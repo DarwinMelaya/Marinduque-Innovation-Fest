@@ -1,7 +1,8 @@
-import { LayoutGrid, Trophy, UserCog, Users } from 'lucide-react';
+import { LayoutGrid, QrCode, Trophy, UserCog, Users } from 'lucide-react';
 import PanelSidebar from '@/components/layout/PanelSidebar';
 import { dashboard } from '@/routes/admin';
 import { index as participantsIndex } from '@/routes/admin/participants';
+import { index as qrCodesIndex } from '@/routes/admin/qr-codes';
 import { index as staffIndex } from '@/routes/admin/staff';
 import { index as visitorsIndex } from '@/routes/admin/visitors';
 import type { NavItem } from '@/types';
@@ -16,6 +17,11 @@ const navItems: NavItem[] = [
         title: 'Registered Participants',
         href: participantsIndex(),
         icon: Users,
+    },
+    {
+        title: 'Generate QR Code',
+        href: qrCodesIndex(),
+        icon: QrCode,
     },
     {
         title: 'Visitors & Points',

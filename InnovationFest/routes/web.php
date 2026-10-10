@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
     ->group(function () {
         Route::get('dashboard', DashboardController::class)->name('dashboard');
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
+        Route::inertia('qr-codes', 'admin/GenerateQrCode')->name('qr-codes.index');
         Route::get('visitors', [VisitorController::class, 'index'])->name('visitors.index');
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
