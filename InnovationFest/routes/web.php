@@ -16,6 +16,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/LandingPage')->name('home');
 
+foreach ([
+    'ihub-launching' => 'IhubLaunching',
+    'forums-panel-discussions' => 'ForumsPanelDiscussions',
+    'hackathon' => 'Hackton',
+    'idea-pitching' => 'IdeaPitching',
+    'e-games' => 'Egames',
+    'kuwentolohiya' => 'Kunwentolohiya',
+    'exhibits' => 'Exhibits',
+    'closing-awarding' => 'ClosingAwardings',
+] as $slug => $page) {
+    Route::inertia("events/{$slug}", "public/events/{$page}")->name("events.{$slug}");
+}
+
 Route::get('register', [ParticipantRegistrationController::class, 'create'])->name('participants.register');
 Route::post('register', [ParticipantRegistrationController::class, 'store'])
     ->middleware('throttle:10,1')

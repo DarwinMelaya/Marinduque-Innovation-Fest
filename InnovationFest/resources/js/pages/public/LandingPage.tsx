@@ -3,6 +3,7 @@ import {
     ArrowRight,
     Award,
     CalendarDays,
+    ChevronDown,
     Facebook,
     Gift,
     ImageIcon,
@@ -114,6 +115,18 @@ const MAJOR_EVENTS: MajorEvent[] = [
             "Official recognition and awarding of prize money, medals, and certificates to winning teams and participating qualifiers across all challenge components.",
     },
 ];
+
+/** Maps each major event to its page under /events/{slug}. */
+const EVENT_SLUGS: Record<string, string> = {
+    "Launching of Marinduque Innovation Hub (iHUB)": "ihub-launching",
+    "Forums and Panel Discussions": "forums-panel-discussions",
+    "Innovation Fest Hackathon": "hackathon",
+    "Idea Pitching Competition": "idea-pitching",
+    "E-Games Sports Development Challenge": "e-games",
+    "Kuwentolohiya: Short Video Contest": "kuwentolohiya",
+    "Technology Exhibits, Gamers Den, and Robots Den": "exhibits",
+    "Closing Ceremonies and Awarding": "closing-awarding",
+};
 
 const EMAIL_LINK_CLASS =
     "font-medium text-white underline decoration-white/30 underline-offset-4 hover:decoration-white";
@@ -262,13 +275,32 @@ function Header() {
                 <nav aria-label="Main" className="hidden lg:block">
                     <ul className="flex items-center gap-1">
                         {NAV_LINKS.map((link) => (
-                            <li key={link.href}>
+                            <li key={link.href} className="group relative">
                                 <a
                                     href={link.href}
-                                    className="rounded-md px-4 py-2 text-sm font-semibold tracking-wide text-white/70 uppercase transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
+                                    className="inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-semibold tracking-wide text-white/70 uppercase transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
                                 >
                                     {link.label}
+                                    {link.href === "#events" && (
+                                        <ChevronDown className="size-4 transition-transform group-focus-within:rotate-180 group-hover:rotate-180" />
+                                    )}
                                 </a>
+                                {link.href === "#events" && (
+                                    <div className="invisible absolute top-full left-0 z-50 w-80 pt-2 opacity-0 transition-opacity group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                                        <ul className="overflow-hidden rounded-xl border border-white/10 bg-black py-2 shadow-2xl">
+                                            {MAJOR_EVENTS.map((event) => (
+                                                <li key={event.title}>
+                                                    <a
+                                                        href={`/events/${EVENT_SLUGS[event.title]}`}
+                                                        className="block px-5 py-2.5 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-[#F7B600] focus-visible:bg-white/10 focus-visible:outline-none"
+                                                    >
+                                                        {event.title}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>
