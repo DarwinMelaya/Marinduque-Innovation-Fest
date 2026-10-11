@@ -316,14 +316,14 @@ function Header() {
 
                     <Sheet>
                         <SheetTrigger
-                            className="inline-flex size-11 items-center justify-center rounded-md text-white/80 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none lg:hidden"
+                            className="inline-flex size-11 items-center justify-center rounded-md border border-white/20 text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none lg:hidden"
                             aria-label="Open menu"
                         >
                             <Menu className="size-6" />
                         </SheetTrigger>
                         <SheetContent
                             side="right"
-                            className="border-white/10 bg-black text-white"
+                            className="overflow-y-auto border-white/10 bg-black text-white"
                         >
                             <SheetTitle className="px-6 pt-6 text-white">
                                 Menu
@@ -332,14 +332,58 @@ function Header() {
                                 <ul className="flex flex-col">
                                     {NAV_LINKS.map((link) => (
                                         <li key={link.href}>
-                                            <SheetClose asChild>
-                                                <a
-                                                    href={link.href}
-                                                    className="block rounded-md px-3 py-3 text-base font-semibold tracking-wide uppercase hover:bg-white/10"
-                                                >
-                                                    {link.label}
-                                                </a>
-                                            </SheetClose>
+                                            {link.href === "#events" ? (
+                                                <details className="group">
+                                                    <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-3 text-base font-semibold tracking-wide uppercase hover:bg-white/10 [&::-webkit-details-marker]:hidden">
+                                                        {link.label}
+                                                        <ChevronDown className="size-5 transition-transform group-open:rotate-180" />
+                                                    </summary>
+                                                    <ul className="mb-2 ml-3 flex flex-col border-l border-white/15 pl-3">
+                                                        <li>
+                                                            <SheetClose asChild>
+                                                                <a
+                                                                    href="#events"
+                                                                    className="block rounded-md px-3 py-2.5 text-sm font-bold text-[#F7B600] hover:bg-white/10"
+                                                                >
+                                                                    View all
+                                                                    events
+                                                                </a>
+                                                            </SheetClose>
+                                                        </li>
+                                                        {MAJOR_EVENTS.map(
+                                                            (event) => (
+                                                                <li
+                                                                    key={
+                                                                        event.title
+                                                                    }
+                                                                >
+                                                                    <SheetClose
+                                                                        asChild
+                                                                    >
+                                                                        <a
+                                                                            href={`/events/${EVENT_SLUGS[event.title]}`}
+                                                                            className="block rounded-md px-3 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white"
+                                                                        >
+                                                                            {
+                                                                                event.title
+                                                                            }
+                                                                        </a>
+                                                                    </SheetClose>
+                                                                </li>
+                                                            ),
+                                                        )}
+                                                    </ul>
+                                                </details>
+                                            ) : (
+                                                <SheetClose asChild>
+                                                    <a
+                                                        href={link.href}
+                                                        className="block rounded-md px-3 py-3 text-base font-semibold tracking-wide uppercase hover:bg-white/10"
+                                                    >
+                                                        {link.label}
+                                                    </a>
+                                                </SheetClose>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>
