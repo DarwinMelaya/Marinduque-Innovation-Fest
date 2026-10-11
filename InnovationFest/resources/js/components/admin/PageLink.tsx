@@ -1,8 +1,8 @@
-import { Link } from '@inertiajs/react';
-import type { ReactNode } from 'react';
+import { Link } from "@inertiajs/react";
+import type { ReactNode } from "react";
 
 const PAGE_LINK_CLASS =
-    'inline-flex min-h-10 items-center gap-1.5 rounded-full border border-white/25 px-4 text-xs font-bold tracking-wide uppercase transition-colors';
+    "inline-flex min-h-10 items-center gap-1.5 rounded-full border border-white/25 px-4 text-xs font-bold tracking-wide uppercase transition-colors";
 
 export default function PageLink({
     href,

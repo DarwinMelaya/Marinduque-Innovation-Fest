@@ -12,7 +12,7 @@ import { update as updateForum } from "@/routes/admin/evaluations/forums";
 type Question = {
     key: string;
     label: string;
-    type: "choice" | "rating";
+    type: "choice" | "rating" | "text";
 };
 
 type Evaluation = {

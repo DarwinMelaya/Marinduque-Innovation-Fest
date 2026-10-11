@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-const BRAND_GRADIENT = 'bg-[linear-gradient(to_right,#030209,#3230C1)]';
+const BRAND_GRADIENT = "bg-[linear-gradient(to_right,#030209,#3230C1)]";
 
 type Props = {
     eyebrow: string;

@@ -1,5 +1,5 @@
-import type QrScanner from 'qr-scanner';
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import type QrScanner from "qr-scanner";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 /**
  * Stream the back camera into the returned video element and call `onScan` with every QR code it reads.
@@ -24,14 +24,14 @@ export function useQrCamera(onScan: (code: string) => void, fallback: string) {
             return;
         }
 
-        import('qr-scanner')
+        import("qr-scanner")
             .then(({ default: Scanner }) => {
                 if (cancelled) {
                     return;
                 }
 
                 scanner = new Scanner(video, (scan) => handleScan(scan.data), {
-                    preferredCamera: 'environment',
+                    preferredCamera: "environment",
                     maxScansPerSecond: 5,
                     returnDetailedScanResult: true,
                 });

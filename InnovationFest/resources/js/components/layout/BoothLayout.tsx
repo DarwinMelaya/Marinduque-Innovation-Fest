@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
-import BoothSidebar from '@/components/layout/BoothSidebar';
-import PanelLayout from '@/components/layout/PanelLayout';
-import type { BreadcrumbItem } from '@/types';
+import type { ReactNode } from "react";
+import BoothSidebar from "@/components/layout/BoothSidebar";
+import PanelLayout from "@/components/layout/PanelLayout";
+import type { BreadcrumbItem } from "@/types";
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];

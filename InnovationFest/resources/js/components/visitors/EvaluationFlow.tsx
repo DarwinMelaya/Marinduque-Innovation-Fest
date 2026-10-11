@@ -8,7 +8,8 @@ import { home } from "@/routes/visitor";
 type Question = {
     key: string;
     label: string;
-    type: "choice" | "rating";
+    type: "choice" | "rating" | "text";
+    section?: string;
     options?: string[];
 };
 
@@ -73,7 +74,10 @@ function Survey({
     const question = questions[step];
     const isLast = step === questions.length - 1;
     const answer = answers[question.key];
-    const progress = ((step + (answer ? 1 : 0)) / questions.length) * 100;
+    const optional = question.type === "text";
+    const canContinue = optional || Boolean(answer);
+    const progress =
+        ((step + (answer || optional ? 1 : 0)) / questions.length) * 100;
 
     const choose = (value: string) => {
         setError(null);
@@ -95,25 +99,31 @@ function Survey({
     };
 
     const submit = () => {
-        router.post(submitUrl, answers, {
-            preserveScroll: true,
-            onStart: () => setProcessing(true),
-            onFinish: () => setProcessing(false),
-            onError: (errors) => {
-                const firstBad = questions.findIndex(
-                    (item) => errors[item.key],
-                );
+        router.post(
+            submitUrl,
+            Object.fromEntries(
+                Object.entries(answers).filter(([, value]) => value !== ""),
+            ),
+            {
+                preserveScroll: true,
+                onStart: () => setProcessing(true),
+                onFinish: () => setProcessing(false),
+                onError: (errors) => {
+                    const firstBad = questions.findIndex(
+                        (item) => errors[item.key],
+                    );
 
-                if (firstBad >= 0) {
-                    setStep(firstBad);
-                }
+                    if (firstBad >= 0) {
+                        setStep(firstBad);
+                    }
 
-                setError(
-                    Object.values(errors)[0] ??
-                        "Something went wrong. Please try again.",
-                );
+                    setError(
+                        Object.values(errors)[0] ??
+                            "Something went wrong. Please try again.",
+                    );
+                },
             },
-        });
+        );
     };
 
     const options =
@@ -166,6 +176,11 @@ function Survey({
                 className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 duration-300 animate-in fade-in slide-in-from-right-6 sm:p-8"
             >
                 <div className="flex flex-col gap-2">
+                    {question.section && (
+                        <p className="text-xs font-semibold tracking-[0.2em] text-[#5CB3FF] uppercase">
+                            {question.section}
+                        </p>
+                    )}
                     <h2
                         id="question-title"
                         className="text-xl leading-snug font-bold sm:text-2xl"
@@ -179,7 +194,22 @@ function Survey({
                     )}
                 </div>
 
-                {question.type === "rating" ? (
+                {question.type === "text" ? (
+                    <textarea
+                        aria-labelledby="question-title"
+                        rows={6}
+                        maxLength={2000}
+                        value={answer ?? ""}
+                        onChange={(event) =>
+                            setAnswers((current) => ({
+                                ...current,
+                                [question.key]: event.target.value,
+                            }))
+                        }
+                        placeholder="Type your answer here (optional)"
+                        className={`w-full resize-none rounded-2xl border border-white/15 bg-white/5 p-4 text-white placeholder:text-white/40 ${FOCUS_RING}`}
+                    />
+                ) : question.type === "rating" ? (
                     <div
                         role="radiogroup"
                         aria-labelledby="question-title"
@@ -295,7 +325,7 @@ function Survey({
                         <button
                             type="button"
                             onClick={submit}
-                            disabled={!answer || processing}
+                            disabled={!canContinue || processing}
                             className={`inline-flex h-12 items-center gap-2 rounded-full bg-linear-to-r from-[#F15E00] to-[#FF8A3D] px-7 font-semibold text-white shadow-lg shadow-[#F15E00]/20 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 ${FOCUS_RING}`}
                         >
                             {processing && <Spinner />}
@@ -305,7 +335,7 @@ function Survey({
                         <button
                             type="button"
                             onClick={() => goTo(step + 1)}
-                            disabled={!answer}
+                            disabled={!canContinue}
                             className={`inline-flex h-11 items-center gap-2 rounded-full border border-white/20 px-5 text-sm font-semibold hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40 ${FOCUS_RING}`}
                         >
                             Next

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import type { ReactElement } from 'react';
+import { useEffect, useState } from "react";
+import type { ReactElement } from "react";
 import {
     Bar,
     BarChart,
@@ -15,46 +15,46 @@ import {
     Tooltip,
     XAxis,
     YAxis,
-} from 'recharts';
+} from "recharts";
 
 export const CHART_COLORS = {
-    blue: '#0078D9',
-    yellow: '#F7B600',
-    orange: '#F15E00',
-    red: '#FA0A00',
-    green: '#229D1C',
+    blue: "#0078D9",
+    yellow: "#F7B600",
+    orange: "#F15E00",
+    red: "#FA0A00",
+    green: "#229D1C",
 };
 
 export type Datum = { name: string; total: number };
 
 export type Series = { key: string; name: string; color: string };
 
-const numberFormat = new Intl.NumberFormat('en-PH');
+const numberFormat = new Intl.NumberFormat("en-PH");
 
-const AXIS_TICK = { fill: 'rgb(255 255 255 / 0.6)', fontSize: 12 };
+const AXIS_TICK = { fill: "rgb(255 255 255 / 0.6)", fontSize: 12 };
 
-const GRID_STROKE = 'rgb(255 255 255 / 0.08)';
+const GRID_STROKE = "rgb(255 255 255 / 0.08)";
 
 const TOOLTIP_PROPS = {
     contentStyle: {
-        backgroundColor: '#0a0a0a',
-        border: '1px solid rgb(255 255 255 / 0.1)',
+        backgroundColor: "#0a0a0a",
+        border: "1px solid rgb(255 255 255 / 0.1)",
         borderRadius: 12,
         fontSize: 13,
     },
-    labelStyle: { color: '#fff', fontWeight: 700, marginBottom: 4 },
-    itemStyle: { color: '#fff' },
-    cursor: { fill: 'rgb(255 255 255 / 0.05)' },
-    separator: ': ',
+    labelStyle: { color: "#fff", fontWeight: 700, marginBottom: 4 },
+    itemStyle: { color: "#fff" },
+    cursor: { fill: "rgb(255 255 255 / 0.05)" },
+    separator: ": ",
     formatter: (value: unknown) => numberFormat.format(Number(value)),
 };
 
 const LEGEND_PROPS = {
-    iconType: 'circle' as const,
+    iconType: "circle" as const,
     iconSize: 10,
     wrapperStyle: { fontSize: 12, paddingTop: 12 },
     formatter: (value: string) => (
-        <span style={{ color: 'rgb(255 255 255 / 0.7)' }}>{value}</span>
+        <span style={{ color: "rgb(255 255 255 / 0.7)" }}>{value}</span>
     ),
 };
 
@@ -62,7 +62,7 @@ function truncate(value: string, length = 18) {
     return value.length > length ? `${value.slice(0, length - 1)}…` : value;
 }
 
-function EmptyChart({ text = 'No data yet.' }: { text?: string }) {
+function EmptyChart({ text = "No data yet." }: { text?: string }) {
     return <p className="py-6 text-sm text-white/50">{text}</p>;
 }
 
@@ -149,11 +149,7 @@ export function TrendChart({
     );
 }
 
-export function DonutChart({
-    data,
-}: {
-    data: (Datum & { color: string })[];
-}) {
+export function DonutChart({ data }: { data: (Datum & { color: string })[] }) {
     const total = data.reduce((sum, item) => sum + item.total, 0);
 
     if (total === 0) {
@@ -226,7 +222,7 @@ export function HorizontalBarChart({
     data,
     color,
     emptyText,
-    valueName = 'Participants',
+    valueName = "Participants",
 }: {
     data: Datum[];
     color: string;
@@ -291,8 +287,13 @@ export function StackedBarChart({
         <ChartFrame height={horizontal ? data.length * 44 + 48 : 300}>
             <BarChart
                 data={data}
-                layout={horizontal ? 'vertical' : 'horizontal'}
-                margin={{ top: 10, right: 8, bottom: 0, left: horizontal ? 0 : -10 }}
+                layout={horizontal ? "vertical" : "horizontal"}
+                margin={{
+                    top: 10,
+                    right: 8,
+                    bottom: 0,
+                    left: horizontal ? 0 : -10,
+                }}
             >
                 <CartesianGrid
                     stroke={GRID_STROKE}

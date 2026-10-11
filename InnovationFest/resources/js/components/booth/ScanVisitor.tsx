@@ -1,8 +1,8 @@
-import { router } from '@inertiajs/react';
-import { Camera, CircleAlert, CircleCheck } from 'lucide-react';
-import { useRef, useState } from 'react';
-import type { FormEvent } from 'react';
-import { Button } from '@/components/ui/button';
+import { router } from "@inertiajs/react";
+import { Camera, CircleAlert, CircleCheck } from "lucide-react";
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -10,15 +10,15 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
-import { useQrCamera } from '@/hooks/use-qr-camera';
-import { store } from '@/routes/booth/visits';
-import type { BoothVisit } from '@/types';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { useQrCamera } from "@/hooks/use-qr-camera";
+import { store } from "@/routes/booth/visits";
+import type { BoothVisit } from "@/types";
 
 type ScanResult =
-    { type: 'success'; visit: BoothVisit } | { type: 'error'; message: string };
+    { type: "success"; visit: BoothVisit } | { type: "error"; message: string };
 
 /** The camera keeps seeing the same QR code after a scan; ignore it for this long instead of re-submitting. */
 const REPEAT_SCAN_MS = 4000;
@@ -28,7 +28,7 @@ function VisitorScanner() {
     const lastScan = useRef<{ code: string; at: number } | null>(null);
     const [processing, setProcessing] = useState(false);
     const [result, setResult] = useState<ScanResult | null>(null);
-    const [manualId, setManualId] = useState('');
+    const [manualId, setManualId] = useState("");
 
     const record = (festId: string) => {
         const code = festId.trim();
@@ -59,13 +59,13 @@ function VisitorScanner() {
                     const visit = (flash as { visit?: BoothVisit }).visit;
 
                     if (visit) {
-                        setResult({ type: 'success', visit });
-                        setManualId('');
+                        setResult({ type: "success", visit });
+                        setManualId("");
                     }
                 },
                 onError: (errors) =>
                     setResult({
-                        type: 'error',
+                        type: "error",
                         message:
                             errors.fest_id ?? "Couldn't record this visit.",
                     }),
@@ -79,7 +79,7 @@ function VisitorScanner() {
 
     const { videoRef, cameraError } = useQrCamera(
         record,
-        'type the fest ID below',
+        "type the fest ID below",
     );
 
     const submitManual = (event: FormEvent) => {
@@ -115,13 +115,13 @@ function VisitorScanner() {
                         <Spinner />
                         Checking…
                     </p>
-                ) : result?.type === 'success' ? (
+                ) : result?.type === "success" ? (
                     <div className="flex items-start gap-3 rounded-2xl border border-[#229D1C]/40 bg-[#229D1C]/10 px-4 py-3">
                         <CircleCheck className="mt-0.5 size-5 shrink-0 text-[#6FD66A]" />
                         <div>
                             <p className="font-bold">{result.visit.name}</p>
                             <p className="text-sm text-white/60">
-                                {result.visit.festId} ·{' '}
+                                {result.visit.festId} ·{" "}
                                 {result.visit.municipality} · Visit recorded
                             </p>
                             <p className="mt-1 text-sm font-bold text-[#F7B600]">
@@ -129,7 +129,7 @@ function VisitorScanner() {
                             </p>
                         </div>
                     </div>
-                ) : result?.type === 'error' ? (
+                ) : result?.type === "error" ? (
                     <p className="flex items-start gap-3 rounded-2xl border border-[#FA0A00]/40 bg-[#FA0A00]/10 px-4 py-3 text-sm">
                         <CircleAlert className="mt-0.5 size-5 shrink-0 text-[#FF6B5F]" />
                         {result.message}

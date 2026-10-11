@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import type { ReactNode } from 'react';
-import { AppContent } from '@/components/app-content';
-import { AppShell } from '@/components/app-shell';
-import { AppSidebarHeader } from '@/components/app-sidebar-header';
-import type { BreadcrumbItem } from '@/types';
+import { useEffect } from "react";
+import type { ReactNode } from "react";
+import { AppContent } from "@/components/app-content";
+import { AppShell } from "@/components/app-shell";
+import { AppSidebarHeader } from "@/components/app-sidebar-header";
+import type { BreadcrumbItem } from "@/types";
 
 type Props = {
     sidebar: ReactNode;
@@ -14,9 +14,9 @@ type Props = {
 const PanelLayout = ({ sidebar, breadcrumbs = [], children }: Props) => {
     // The wrapper themes server-rendered markup; <html> covers portalled menus, selects, and the mobile sidebar sheet.
     useEffect(() => {
-        document.documentElement.classList.add('admin-theme');
+        document.documentElement.classList.add("admin-theme");
 
-        return () => document.documentElement.classList.remove('admin-theme');
+        return () => document.documentElement.classList.remove("admin-theme");
     }, []);
 
     return (

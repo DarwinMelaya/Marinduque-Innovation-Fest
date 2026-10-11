@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
-import AdminSidebar from '@/components/layout/AdminSidebar';
-import PanelLayout from '@/components/layout/PanelLayout';
-import type { BreadcrumbItem } from '@/types';
+import type { ReactNode } from "react";
+import AdminSidebar from "@/components/layout/AdminSidebar";
+import PanelLayout from "@/components/layout/PanelLayout";
+import type { BreadcrumbItem } from "@/types";
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];

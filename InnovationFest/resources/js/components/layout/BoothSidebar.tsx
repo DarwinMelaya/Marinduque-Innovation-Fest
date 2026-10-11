@@ -1,17 +1,17 @@
-import { ClipboardList, House } from 'lucide-react';
-import PanelSidebar from '@/components/layout/PanelSidebar';
-import { home } from '@/routes/booth';
-import { index as visitsIndex } from '@/routes/booth/visits';
-import type { NavItem } from '@/types';
+import { ClipboardList, House } from "lucide-react";
+import PanelSidebar from "@/components/layout/PanelSidebar";
+import { home } from "@/routes/booth";
+import { index as visitsIndex } from "@/routes/booth/visits";
+import type { NavItem } from "@/types";
 
 const navItems: NavItem[] = [
     {
-        title: 'Home',
+        title: "Home",
         href: home(),
         icon: House,
     },
     {
-        title: 'Visits',
+        title: "Visits",
         href: visitsIndex(),
         icon: ClipboardList,
     },

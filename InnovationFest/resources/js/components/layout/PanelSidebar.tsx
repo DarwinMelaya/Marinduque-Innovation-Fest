@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { NavUser } from '@/components/nav-user';
+import { Link } from "@inertiajs/react";
+import { NavUser } from "@/components/nav-user";
 import {
     Sidebar,
     SidebarContent,
@@ -11,13 +11,13 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from '@/components/ui/sidebar';
-import { useCurrentUrl } from '@/hooks/use-current-url';
-import type { NavItem } from '@/types';
-import logo from '../../../pictures/Marinduque Innovation Fest 206 logo.png';
+} from "@/components/ui/sidebar";
+import { useCurrentUrl } from "@/hooks/use-current-url";
+import type { NavItem } from "@/types";
+import logo from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 
 type Props = {
-    homeHref: NavItem['href'];
+    homeHref: NavItem["href"];
     navItems: NavItem[];
 };
 

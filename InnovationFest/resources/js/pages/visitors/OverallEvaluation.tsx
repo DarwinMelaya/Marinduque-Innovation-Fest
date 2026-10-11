@@ -6,7 +6,7 @@ type Props = {
     questions: {
         key: string;
         label: string;
-        type: "choice" | "rating";
+        type: "choice" | "rating" | "text";
         options?: string[];
     }[];
     submitted: { points: number } | null;
