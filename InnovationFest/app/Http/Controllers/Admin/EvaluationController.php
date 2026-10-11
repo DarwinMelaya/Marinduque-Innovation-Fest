@@ -8,41 +8,64 @@ use App\Models\Evaluation;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class EvaluationController extends Controller
 {
+    private const RECENT_LIMIT = 100;
+
     /**
-     * Show the evaluation reward setting and the evaluations participants submitted.
+     * Show the overall and forum (activity) evaluations, each with reward points, KPIs, per-question charts and responses.
      */
     public function index(): Response
     {
-        $evaluations = Evaluation::query()
-            ->with('participant')
-            ->latest()
-            ->latest('id')
-            ->limit(100)
-            ->get();
+        $overall = Evaluation::query()->with('participant')->latest()->latest('id')->get();
+        $activity = ActivityEvaluation::query()->with(['participant', 'forum:id,booth_name'])->latest()->latest('id')->get();
 
         return Inertia::render('admin/Evaluations', [
-            'points' => Evaluation::rewardPoints(),
             'maxPoints' => Evaluation::MAX_POINTS,
-            'questions' => Evaluation::QUESTIONS,
-            'stats' => [
-                'total' => Evaluation::count(),
-                'average' => round((float) Evaluation::all()->avg(fn (Evaluation $evaluation) => $evaluation->averageRating()), 1),
+            'overall' => [
+                'points' => Evaluation::rewardPoints(),
+                'questions' => Evaluation::QUESTIONS,
+                'stats' => [
+                    'total' => $overall->count(),
+                    'average' => $this->average($overall),
+                    'firstTime' => $overall->where('answers.first_time', 'Yes')->count(),
+                    'highlyRecommended' => $overall->where('answers.recommend', 'Very much Recommended')->count(),
+                ],
+                'analytics' => $this->analytics($overall, Evaluation::QUESTIONS),
+                'evaluations' => $overall->take(self::RECENT_LIMIT)->map(fn (Evaluation $evaluation) => [
+                    'id' => $evaluation->id,
+                    'forum' => null,
+                    'festId' => $evaluation->participant->fest_id,
+                    'name' => $evaluation->participant->fullName(),
+                    'average' => $evaluation->averageRating(),
+                    'answers' => $evaluation->answers,
+                    'points' => $evaluation->points,
+                    'submittedAt' => $evaluation->created_at?->toIso8601String(),
+                ])->values(),
             ],
-            'forumPoints' => ActivityEvaluation::rewardPoints(),
-            'forumQuestions' => ActivityEvaluation::QUESTIONS,
-            'forumStats' => $this->forumStats(),
-            'forumEvaluations' => ActivityEvaluation::query()
-                ->with(['participant', 'forum:id,booth_name'])
-                ->latest()
-                ->latest('id')
-                ->limit(100)
-                ->get()
-                ->map(fn (ActivityEvaluation $evaluation) => [
+            'activity' => [
+                'points' => ActivityEvaluation::rewardPoints(),
+                'questions' => ActivityEvaluation::QUESTIONS,
+                'stats' => [
+                    'total' => $activity->count(),
+                    'average' => $this->average($activity),
+                    'forums' => $activity->unique('user_id')->count(),
+                    'comments' => $activity->filter(fn (ActivityEvaluation $evaluation) => filled($evaluation->answers['comments'] ?? null))->count(),
+                ],
+                'forums' => $activity->groupBy('user_id')
+                    ->map(fn (Collection $group) => [
+                        'forum' => $group->first()->forum->booth_name,
+                        'total' => $group->count(),
+                        'average' => $this->average($group),
+                    ])
+                    ->sortByDesc('total')
+                    ->values(),
+                'analytics' => $this->analytics($activity, ActivityEvaluation::QUESTIONS),
+                'evaluations' => $activity->take(self::RECENT_LIMIT)->map(fn (ActivityEvaluation $evaluation) => [
                     'id' => $evaluation->id,
                     'forum' => $evaluation->forum->booth_name,
                     'festId' => $evaluation->participant->fest_id,
@@ -51,16 +74,8 @@ class EvaluationController extends Controller
                     'answers' => $evaluation->answers,
                     'points' => $evaluation->points,
                     'submittedAt' => $evaluation->created_at?->toIso8601String(),
-                ]),
-            'evaluations' => $evaluations->map(fn (Evaluation $evaluation) => [
-                'id' => $evaluation->id,
-                'festId' => $evaluation->participant->fest_id,
-                'name' => $evaluation->participant->fullName(),
-                'average' => $evaluation->averageRating(),
-                'answers' => $evaluation->answers,
-                'points' => $evaluation->points,
-                'submittedAt' => $evaluation->created_at?->toIso8601String(),
-            ]),
+                ])->values(),
+            ],
         ]);
     }
 
@@ -103,23 +118,40 @@ class EvaluationController extends Controller
     }
 
     /**
-     * Per-forum evaluation counts and average rating.
-     *
-     * @return list<array{forum: string, total: int, average: float}>
+     * @param  Collection<int, Evaluation|ActivityEvaluation>  $evaluations
      */
-    private function forumStats(): array
+    private function average(Collection $evaluations): float
     {
-        return ActivityEvaluation::query()
-            ->with('forum:id,booth_name')
-            ->get()
-            ->groupBy('user_id')
-            ->map(fn ($group) => [
-                'forum' => $group->first()->forum->booth_name,
-                'total' => $group->count(),
-                'average' => round((float) $group->avg(fn (ActivityEvaluation $e) => $e->averageRating()), 1),
-            ])
-            ->sortByDesc('total')
-            ->values()
-            ->all();
+        return round((float) $evaluations->avg(fn (Evaluation|ActivityEvaluation $evaluation) => $evaluation->averageRating()), 2);
+    }
+
+    /**
+     * One chart's worth of data per question: answer counts for choice/rating questions, recent replies for text ones.
+     *
+     * @param  Collection<int, Evaluation|ActivityEvaluation>  $evaluations
+     * @param  list<array{key: string, label: string, type: string, section?: string, options?: list<string>}>  $questions
+     * @return list<array<string, mixed>>
+     */
+    private function analytics(Collection $evaluations, array $questions): array
+    {
+        $answers = $evaluations->pluck('answers');
+
+        return array_map(function (array $question) use ($answers) {
+            $values = $answers->pluck($question['key'])->filter(fn ($value) => filled($value));
+
+            if ($question['type'] === 'text') {
+                return [...$question, 'total' => $values->count(), 'responses' => $values->take(self::RECENT_LIMIT)->values()];
+            }
+
+            $options = $question['type'] === 'rating' ? ['1', '2', '3', '4', '5'] : $question['options'];
+            $counts = $values->countBy(fn ($value) => (string) $value);
+
+            return [
+                ...$question,
+                'total' => $values->count(),
+                'average' => $question['type'] === 'rating' ? round((float) $values->avg(), 2) : null,
+                'counts' => array_map(fn (string $option) => ['name' => $option, 'total' => $counts[$option] ?? 0], $options),
+            ];
+        }, $questions);
     }
 }

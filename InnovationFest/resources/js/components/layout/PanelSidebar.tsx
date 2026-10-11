@@ -16,12 +16,17 @@ import { useCurrentUrl } from "@/hooks/use-current-url";
 import type { NavItem } from "@/types";
 import logo from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 
-type Props = {
-    homeHref: NavItem["href"];
-    navItems: NavItem[];
+export type NavGroup = {
+    label: string;
+    items: NavItem[];
 };
 
-const PanelSidebar = ({ homeHref, navItems }: Props) => {
+type Props = {
+    homeHref: NavItem["href"];
+    navGroups: NavGroup[];
+};
+
+const PanelSidebar = ({ homeHref, navGroups }: Props) => {
     const { isCurrentUrl } = useCurrentUrl();
     const { setOpenMobile } = useSidebar();
     const closeMobileSidebar = () => setOpenMobile(false);
@@ -60,31 +65,33 @@ const PanelSidebar = ({ homeHref, navItems }: Props) => {
             </SidebarHeader>
 
             <SidebarContent className="pt-2">
-                <SidebarGroup>
-                    <SidebarGroupLabel className="text-xs font-semibold tracking-[0.2em] text-white/70 uppercase">
-                        Menu
-                    </SidebarGroupLabel>
-                    <SidebarMenu className="gap-1">
-                        {navItems.map((item) => (
-                            <SidebarMenuItem key={item.title}>
-                                <SidebarMenuButton
-                                    asChild
-                                    isActive={isCurrentUrl(item.href)}
-                                    className="h-11 rounded-lg px-3 text-[15px] font-medium text-white/90 hover:bg-white/10 hover:text-white data-[active=true]:bg-white/15 data-[active=true]:font-semibold data-[active=true]:text-white [&>svg]:size-5 data-[active=true]:[&>svg]:text-[#F15E00]"
-                                >
-                                    <Link
-                                        href={item.href}
-                                        prefetch
-                                        onClick={closeMobileSidebar}
+                {navGroups.map((group) => (
+                    <SidebarGroup key={group.label}>
+                        <SidebarGroupLabel className="text-xs font-semibold tracking-[0.2em] text-white/70 uppercase">
+                            {group.label}
+                        </SidebarGroupLabel>
+                        <SidebarMenu className="gap-1">
+                            {group.items.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton
+                                        asChild
+                                        isActive={isCurrentUrl(item.href)}
+                                        className="h-11 rounded-lg px-3 text-[15px] font-medium text-white/90 hover:bg-white/10 hover:text-white data-[active=true]:bg-white/15 data-[active=true]:font-semibold data-[active=true]:text-white [&>svg]:size-5 data-[active=true]:[&>svg]:text-[#F15E00]"
                                     >
-                                        {item.icon && <item.icon />}
-                                        <span>{item.title}</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        ))}
-                    </SidebarMenu>
-                </SidebarGroup>
+                                        <Link
+                                            href={item.href}
+                                            prefetch
+                                            onClick={closeMobileSidebar}
+                                        >
+                                            {item.icon && <item.icon />}
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroup>
+                ))}
             </SidebarContent>
 
             <SidebarFooter className="border-t border-white/10">

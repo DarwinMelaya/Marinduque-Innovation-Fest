@@ -270,6 +270,52 @@ export function HorizontalBarChart({
     );
 }
 
+export function ColumnChart({
+    data,
+    colors,
+    valueName = "Responses",
+}: {
+    data: Datum[];
+    colors: string[];
+    valueName?: string;
+}) {
+    return (
+        <ChartFrame height={180}>
+            <BarChart
+                data={data}
+                margin={{ top: 20, right: 0, bottom: 0, left: 0 }}
+            >
+                <XAxis
+                    dataKey="name"
+                    tick={AXIS_TICK}
+                    axisLine={false}
+                    tickLine={false}
+                />
+                <Tooltip {...TOOLTIP_PROPS} />
+                <Bar
+                    dataKey="total"
+                    name={valueName}
+                    radius={[6, 6, 0, 0]}
+                    maxBarSize={36}
+                >
+                    {data.map((item, index) => (
+                        <Cell
+                            key={item.name}
+                            fill={colors[index % colors.length]}
+                        />
+                    ))}
+                    <LabelList
+                        dataKey="total"
+                        position="top"
+                        fill="#fff"
+                        fontSize={11}
+                    />
+                </Bar>
+            </BarChart>
+        </ChartFrame>
+    );
+}
+
 export function StackedBarChart({
     data,
     series,

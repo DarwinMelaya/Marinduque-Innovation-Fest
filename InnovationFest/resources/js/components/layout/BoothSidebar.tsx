@@ -18,7 +18,10 @@ const navItems: NavItem[] = [
 ];
 
 const BoothSidebar = () => (
-    <PanelSidebar homeHref={home()} navItems={navItems} />
+    <PanelSidebar
+        homeHref={home()}
+        navGroups={[{ label: "Menu", items: navItems }]}
+    />
 );
 
 export default BoothSidebar;
