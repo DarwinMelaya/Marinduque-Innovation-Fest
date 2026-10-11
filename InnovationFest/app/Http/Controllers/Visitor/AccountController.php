@@ -24,7 +24,7 @@ class AccountController extends Controller
         $participant = $request->user('participant');
 
         $visits = $participant->boothVisits()
-            ->with('booth:id,booth_name')
+            ->with('booth:id,booth_name,category')
             ->latest()
             ->latest('id')
             ->get();
@@ -51,6 +51,7 @@ class AccountController extends Controller
             'visits' => $visits->map(fn (BoothVisit $visit) => [
                 'id' => $visit->id,
                 'boothName' => $visit->booth->booth_name,
+                'category' => $visit->booth->category->value,
                 'points' => $visit->points,
                 'visitedAt' => $visit->created_at?->toIso8601String(),
             ]),

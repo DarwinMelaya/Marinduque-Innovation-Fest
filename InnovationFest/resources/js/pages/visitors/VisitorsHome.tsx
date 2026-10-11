@@ -1,15 +1,16 @@
-import { Head, router } from '@inertiajs/react';
+import { Head, router } from "@inertiajs/react";
 import {
     Download,
     Gift,
     LogOut,
     Maximize2,
+    Mic,
     QrCode,
     Sparkles,
     Star,
     Store,
-} from 'lucide-react';
-import { useState } from 'react';
+} from "lucide-react";
+import { useState } from "react";
 import {
     Dialog,
     DialogClose,
@@ -19,15 +20,16 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Spinner } from '@/components/ui/spinner';
-import ScanBonusQr from '@/components/visitors/ScanBonusQr';
-import { logout } from '@/routes/visitor';
-import logoIcon from '../../../pictures/Marinduque Innovation Fest 206 logo.png';
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
+import ScanBonusQr from "@/components/visitors/ScanBonusQr";
+import { logout } from "@/routes/visitor";
+import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 
 type Visit = {
     id: number;
     boothName: string;
+    category: "booth" | "forum";
     points: number;
     visitedAt: string | null;
 };
@@ -56,27 +58,27 @@ type Props = {
     bonuses: Bonus[];
 };
 
-const dateFormat = new Intl.DateTimeFormat('en-PH', {
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'Asia/Manila',
+const dateFormat = new Intl.DateTimeFormat("en-PH", {
+    month: "short",
+    day: "numeric",
+    timeZone: "Asia/Manila",
 });
 
-const timeFormat = new Intl.DateTimeFormat('en-PH', {
-    timeStyle: 'short',
-    timeZone: 'Asia/Manila',
+const timeFormat = new Intl.DateTimeFormat("en-PH", {
+    timeStyle: "short",
+    timeZone: "Asia/Manila",
 });
 
 const CARD_CLASS =
-    'rounded-3xl border border-white/10 bg-white/[0.03] shadow-2xl shadow-black/40 backdrop-blur-xl';
+    "rounded-3xl border border-white/10 bg-white/[0.03] shadow-2xl shadow-black/40 backdrop-blur-xl";
 
 const LABEL_CLASS =
-    'text-[11px] font-semibold tracking-[0.2em] text-white/50 uppercase';
+    "text-[11px] font-semibold tracking-[0.2em] text-white/50 uppercase";
 
 const FOCUS_RING =
-    'focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none';
+    "focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none";
 
-function FestPass({ participant }: Pick<Props, 'participant'>) {
+function FestPass({ participant }: Pick<Props, "participant">) {
     return (
         <section
             aria-labelledby="pass-title"
@@ -156,7 +158,7 @@ function FestPass({ participant }: Pick<Props, 'participant'>) {
     );
 }
 
-function PointsSummary({ stats }: Pick<Props, 'stats'>) {
+function PointsSummary({ stats }: Pick<Props, "stats">) {
     return (
         <section aria-label="Points summary" className="flex flex-col gap-4">
             <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#F15E00] via-[#FF8A3D] to-[#F7B600] p-6 text-white shadow-2xl shadow-[#F15E00]/25 sm:p-8">
@@ -176,8 +178,8 @@ function PointsSummary({ stats }: Pick<Props, 'stats'>) {
                 <p className="mt-3 flex items-center gap-1.5 text-sm font-medium text-white/90">
                     <Sparkles className="size-4" />
                     {stats.points > 0
-                        ? 'Great job! Keep exploring.'
-                        : 'Visit a booth to earn your first points.'}
+                        ? "Great job! Keep exploring."
+                        : "Visit a booth to earn your first points."}
                 </p>
             </div>
 
@@ -197,7 +199,7 @@ function PointsSummary({ stats }: Pick<Props, 'stats'>) {
     );
 }
 
-function PointsHistory({ visits, bonuses }: Pick<Props, 'visits' | 'bonuses'>) {
+function PointsHistory({ visits, bonuses }: Pick<Props, "visits" | "bonuses">) {
     const entries = [
         ...visits.map((visit) => ({
             key: `visit-${visit.id}`,
@@ -205,6 +207,7 @@ function PointsHistory({ visits, bonuses }: Pick<Props, 'visits' | 'bonuses'>) {
             points: visit.points,
             at: visit.visitedAt,
             bonus: false,
+            forum: visit.category === "forum",
         })),
         ...bonuses.map((bonus) => ({
             key: `bonus-${bonus.id}`,
@@ -212,8 +215,9 @@ function PointsHistory({ visits, bonuses }: Pick<Props, 'visits' | 'bonuses'>) {
             points: bonus.points,
             at: bonus.redeemedAt,
             bonus: true,
+            forum: false,
         })),
-    ].sort((a, b) => (b.at ?? '').localeCompare(a.at ?? ''));
+    ].sort((a, b) => (b.at ?? "").localeCompare(a.at ?? ""));
 
     return (
         <section
@@ -256,6 +260,13 @@ function PointsHistory({ visits, bonuses }: Pick<Props, 'visits' | 'bonuses'>) {
                                 >
                                     <Gift className="size-5" />
                                 </span>
+                            ) : entry.forum ? (
+                                <span
+                                    aria-hidden
+                                    className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#0078D9]/20 text-[#5CB3FF]"
+                                >
+                                    <Mic className="size-5" />
+                                </span>
                             ) : (
                                 <span
                                     aria-hidden
@@ -269,14 +280,18 @@ function PointsHistory({ visits, bonuses }: Pick<Props, 'visits' | 'bonuses'>) {
                                     {entry.title}
                                 </p>
                                 <p className="text-sm text-white/50">
-                                    {entry.bonus ? 'Bonus QR' : 'Booth visit'}
+                                    {entry.bonus
+                                        ? "Bonus QR"
+                                        : entry.forum
+                                          ? "Forum session"
+                                          : "Booth visit"}
                                     {entry.at && (
                                         <>
-                                            {' · '}
+                                            {" · "}
                                             {dateFormat.format(
                                                 new Date(entry.at),
-                                            )}{' '}
-                                            ·{' '}
+                                            )}{" "}
+                                            ·{" "}
                                             {timeFormat.format(
                                                 new Date(entry.at),
                                             )}
@@ -328,10 +343,10 @@ function LogoutButton({ festId }: { festId: string }) {
                         Log out?
                     </DialogTitle>
                     <DialogDescription className="text-white/60">
-                        You'll need your Innovation Fest ID{' '}
+                        You'll need your Innovation Fest ID{" "}
                         <span className="font-mono font-semibold whitespace-nowrap text-white">
                             {festId}
-                        </span>{' '}
+                        </span>{" "}
                         or your QR code to open your account again.
                     </DialogDescription>
                 </DialogHeader>
