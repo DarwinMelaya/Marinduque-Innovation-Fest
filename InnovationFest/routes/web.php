@@ -68,6 +68,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
         Route::get('qr-codes/{batch}/print', [BonusCodeController::class, 'print'])->name('qr-codes.print');
         Route::delete('qr-codes/{batch}', [BonusCodeController::class, 'destroy'])->name('qr-codes.destroy');
         Route::get('visitors', [VisitorController::class, 'index'])->name('visitors.index');
+        Route::inertia('evaluations', 'admin/Evaluations')->name('evaluations.index');
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
         Route::patch('staff/{staff}', [StaffController::class, 'update'])->name('staff.update');
