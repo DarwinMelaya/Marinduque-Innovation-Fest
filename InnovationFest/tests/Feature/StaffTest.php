@@ -27,6 +27,7 @@ test('admins can add staff as users with a password generated from the booth nam
             'booth_name' => 'Robotics Den',
             'name' => 'Juan Dela Cruz',
             'scan_points' => 15,
+            'category' => 'booth',
         ])
         ->assertRedirect(route('admin.staff.index'));
 
@@ -64,6 +65,7 @@ test('admins can edit a staff member without changing the password', function ()
             'booth_name' => 'DOST Booth',
             'name' => 'Juan Dela Cruz',
             'scan_points' => 25,
+            'category' => 'booth',
         ])
         ->assertRedirect(route('admin.staff.index'));
 
@@ -81,6 +83,7 @@ test('renaming a booth resets the password to the new booth default', function (
             'booth_name' => 'Robotics Den',
             'name' => $staff->name,
             'scan_points' => 10,
+            'category' => 'booth',
         ])
         ->assertRedirect(route('admin.staff.index'));
 
@@ -98,6 +101,7 @@ test('a booth can not be renamed to another booth that already has staff', funct
             'booth_name' => 'Robotics Den',
             'name' => $staff->name,
             'scan_points' => 10,
+            'category' => 'booth',
         ])
         ->assertSessionHasErrors('booth_name');
 });
@@ -110,6 +114,7 @@ test('scan points must be a whole number within range', function (mixed $points)
             'booth_name' => 'DOST Booth',
             'name' => $staff->name,
             'scan_points' => $points,
+            'category' => 'booth',
         ])
         ->assertSessionHasErrors('scan_points');
 })->with([-1, 1.5, User::MAX_SCAN_POINTS + 1, 'abc']);
@@ -122,6 +127,7 @@ test('only staff accounts can be edited or deleted', function () {
             'booth_name' => 'DOST Booth',
             'name' => 'Admin',
             'scan_points' => 25,
+            'category' => 'booth',
         ])
         ->assertNotFound();
 
@@ -140,6 +146,7 @@ test('staff can not edit or delete staff accounts', function () {
             'booth_name' => 'DOST Booth',
             'name' => $staff->name,
             'scan_points' => 999,
+            'category' => 'booth',
         ])
         ->assertForbidden();
 

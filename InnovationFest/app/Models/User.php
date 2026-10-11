@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StaffCategory;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string|null $booth_name
+ * @property StaffCategory $category Whether a staff account mans a booth or the forums.
  * @property int $scan_points Points a participant earns each time this booth scans them.
  * @property string|null $email
  * @property Carbon|null $email_verified_at
@@ -57,6 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'role' => UserRole::class,
             'scan_points' => 'integer',
+            'category' => StaffCategory::class,
         ];
     }
 

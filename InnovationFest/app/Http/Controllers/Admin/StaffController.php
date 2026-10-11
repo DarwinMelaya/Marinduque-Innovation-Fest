@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\StaffCategory;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -28,6 +29,7 @@ class StaffController extends Controller
                 ->map(fn (User $staff) => [
                     'id' => $staff->id,
                     'boothName' => $staff->booth_name,
+                    'category' => $staff->category->value,
                     'name' => $staff->name,
                     'password' => User::staffPassword($staff->booth_name),
                     'scanPoints' => $staff->scan_points,
@@ -115,6 +117,7 @@ class StaffController extends Controller
     {
         return [
             'booth_name' => ['required', 'string', 'max:100', Rule::unique(User::class)->ignore($staff)],
+            'category' => ['required', Rule::enum(StaffCategory::class)],
             'name' => ['required', 'string', 'max:255'],
             'scan_points' => ['required', 'integer', 'min:0', 'max:'.User::MAX_SCAN_POINTS],
         ];

@@ -1,13 +1,15 @@
-import { Form } from '@inertiajs/react';
-import { Pencil } from 'lucide-react';
-import { useState } from 'react';
-import InputError from '@/components/input-error';
+import { Form } from "@inertiajs/react";
+import { Pencil } from "lucide-react";
+import { useState } from "react";
+import InputError from "@/components/input-error";
 import {
+    CategoryField,
     INPUT_CLASS,
     MAX_SCAN_POINTS,
     defaultPassword,
-} from '@/components/modals/admin/AddStaff';
-import { Button } from '@/components/ui/button';
+} from "@/components/modals/admin/AddStaff";
+import type { StaffCategory } from "@/components/modals/admin/AddStaff";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -16,16 +18,17 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { update } from '@/routes/admin/staff';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { update } from "@/routes/admin/staff";
 
 type Props = {
     staff: {
         id: number;
         boothName: string;
+        category: StaffCategory;
         name: string;
         scanPoints: number;
     };
@@ -77,6 +80,11 @@ const EditStaff = ({ staff }: Props) => {
                 >
                     {({ processing, errors }) => (
                         <>
+                            <CategoryField
+                                defaultValue={staff.category}
+                                error={errors.category}
+                            />
+
                             <div className="grid gap-2">
                                 <Label htmlFor={`booth_name_${staff.id}`}>
                                     Booth name
@@ -129,7 +137,7 @@ const EditStaff = ({ staff }: Props) => {
 
                             {boothRenamed && boothName.trim() && (
                                 <p className="rounded-lg border border-[#F7B600]/30 bg-[#F7B600]/10 px-3 py-2 text-xs text-[#FFD66B]">
-                                    Renaming the booth changes the password to{' '}
+                                    Renaming the booth changes the password to{" "}
                                     <span className="font-mono font-bold">
                                         {defaultPassword(boothName)}
                                     </span>

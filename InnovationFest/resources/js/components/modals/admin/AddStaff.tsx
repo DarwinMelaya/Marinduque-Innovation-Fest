@@ -1,8 +1,8 @@
-import { Form } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
-import { useState } from 'react';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
+import { Form } from "@inertiajs/react";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -11,32 +11,74 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { store } from '@/routes/admin/staff';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { store } from "@/routes/admin/staff";
 
 export const INPUT_CLASS =
-    'h-11 rounded-lg border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30';
+    "h-11 rounded-lg border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30";
 
 /** Mirrors User::MAX_SCAN_POINTS. */
 export const MAX_SCAN_POINTS = 1000;
 
 /** Mirrors User::staffPassword() so admins can see the password before saving. */
 export function defaultPassword(boothName: string) {
-    return `${boothName.replace(/\s+/g, '')}123`;
+    return `${boothName.replace(/\s+/g, "")}123`;
+}
+
+export type StaffCategory = "booth" | "forum";
+
+export const CATEGORY_LABELS: Record<StaffCategory, string> = {
+    booth: "Booth",
+    forum: "Forums",
+};
+
+/** Booth or Forums radio pair; mirrors App\Enums\StaffCategory. */
+export function CategoryField({
+    defaultValue = "booth",
+    error,
+}: {
+    defaultValue?: StaffCategory;
+    error?: string;
+}) {
+    return (
+        <fieldset className="grid gap-2">
+            <legend className="mb-2 text-sm font-medium">Category</legend>
+            <div className="grid grid-cols-2 gap-2">
+                {(Object.keys(CATEGORY_LABELS) as StaffCategory[]).map(
+                    (value) => (
+                        <label
+                            key={value}
+                            className="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-white/5 text-sm font-semibold transition-colors has-[:checked]:border-[#F7B600] has-[:checked]:bg-[#F7B600]/10 has-[:checked]:text-[#F7B600] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#F7B600]/40"
+                        >
+                            <input
+                                type="radio"
+                                name="category"
+                                value={value}
+                                defaultChecked={defaultValue === value}
+                                className="sr-only"
+                            />
+                            {CATEGORY_LABELS[value]}
+                        </label>
+                    ),
+                )}
+            </div>
+            <InputError message={error} />
+        </fieldset>
+    );
 }
 
 const AddStaff = () => {
     const [open, setOpen] = useState(false);
-    const [boothName, setBoothName] = useState('');
+    const [boothName, setBoothName] = useState("");
 
     const handleOpenChange = (next: boolean) => {
         setOpen(next);
 
         if (!next) {
-            setBoothName('');
+            setBoothName("");
         }
     };
 
@@ -68,6 +110,8 @@ const AddStaff = () => {
                 >
                     {({ processing, errors }) => (
                         <>
+                            <CategoryField error={errors.category} />
+
                             <div className="grid gap-2">
                                 <Label htmlFor="booth_name">Booth name</Label>
                                 <Input
@@ -127,7 +171,7 @@ const AddStaff = () => {
                                 <p className="flex h-11 items-center rounded-lg border border-dashed border-white/15 px-3 font-mono text-sm text-[#F7B600]">
                                     {boothName.trim()
                                         ? defaultPassword(boothName)
-                                        : 'Booth name + 123'}
+                                        : "Booth name + 123"}
                                 </p>
                                 <p className="text-xs text-white/50">
                                     Generated automatically from the booth name.

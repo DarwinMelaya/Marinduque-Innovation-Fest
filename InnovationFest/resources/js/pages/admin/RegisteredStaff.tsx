@@ -1,13 +1,15 @@
-import { Head } from '@inertiajs/react';
-import AdminPageHeading from '@/components/layout/AdminPageHeading';
-import AddStaff from '@/components/modals/admin/AddStaff';
-import DeleteStaff from '@/components/modals/admin/DeleteStaff';
-import EditStaff from '@/components/modals/admin/EditStaff';
-import { index as staffIndex } from '@/routes/admin/staff';
+import { Head } from "@inertiajs/react";
+import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import AddStaff, { CATEGORY_LABELS } from "@/components/modals/admin/AddStaff";
+import type { StaffCategory } from "@/components/modals/admin/AddStaff";
+import DeleteStaff from "@/components/modals/admin/DeleteStaff";
+import EditStaff from "@/components/modals/admin/EditStaff";
+import { index as staffIndex } from "@/routes/admin/staff";
 
 type Staff = {
     id: number;
     boothName: string;
+    category: StaffCategory;
     name: string;
     password: string;
     scanPoints: number;
@@ -19,7 +21,21 @@ type Props = {
     staff: Staff[];
 };
 
-const dateFormat = new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium' });
+const dateFormat = new Intl.DateTimeFormat("en-PH", { dateStyle: "medium" });
+
+function CategoryBadge({ category }: { category: StaffCategory }) {
+    return (
+        <span
+            className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                category === "forum"
+                    ? "bg-[#0078D9]/20 text-[#5CB3FF]"
+                    : "bg-[#F7B600]/15 text-[#F7B600]"
+            }`}
+        >
+            {CATEGORY_LABELS[category]}
+        </span>
+    );
+}
 
 export default function RegisteredStaff({ staff }: Props) {
     return (
@@ -31,7 +47,7 @@ export default function RegisteredStaff({ staff }: Props) {
                     <AdminPageHeading
                         eyebrow="Staff"
                         title="Registered staff"
-                        description={`${staff.length} ${staff.length === 1 ? 'booth' : 'booths'} · Staff log in with their booth name and password`}
+                        description={`${staff.length} ${staff.length === 1 ? "booth" : "booths"} · Staff log in with their booth name and password`}
                     />
                     <AddStaff />
                 </div>
@@ -48,7 +64,10 @@ export default function RegisteredStaff({ staff }: Props) {
                                     key={member.id}
                                     className="flex flex-col gap-3 rounded-3xl border border-white/10 bg-neutral-950 p-5"
                                 >
-                                    <div>
+                                    <div className="flex flex-col items-start gap-1">
+                                        <CategoryBadge
+                                            category={member.category}
+                                        />
                                         <p className="font-bold">
                                             {member.boothName}
                                         </p>
@@ -58,7 +77,7 @@ export default function RegisteredStaff({ staff }: Props) {
                                     </div>
                                     <p className="text-sm">
                                         <span className="text-white/50">
-                                            Password:{' '}
+                                            Password:{" "}
                                         </span>
                                         <span className="font-mono text-[#F7B600]">
                                             {member.password}
@@ -66,7 +85,7 @@ export default function RegisteredStaff({ staff }: Props) {
                                     </p>
                                     <p className="text-sm">
                                         <span className="text-white/50">
-                                            Points per scan:{' '}
+                                            Points per scan:{" "}
                                         </span>
                                         <span className="font-bold">
                                             {member.scanPoints}
@@ -84,6 +103,9 @@ export default function RegisteredStaff({ staff }: Props) {
                             <table className="w-full text-left text-sm">
                                 <thead className="border-b border-white/10 text-xs tracking-[0.2em] text-white/50 uppercase">
                                     <tr>
+                                        <th className="px-5 py-4 font-semibold">
+                                            Category
+                                        </th>
                                         <th className="px-5 py-4 font-semibold">
                                             Booth
                                         </th>
@@ -110,6 +132,11 @@ export default function RegisteredStaff({ staff }: Props) {
                                             key={member.id}
                                             className="hover:bg-white/5"
                                         >
+                                            <td className="px-5 py-4">
+                                                <CategoryBadge
+                                                    category={member.category}
+                                                />
+                                            </td>
                                             <td className="px-5 py-4 font-semibold">
                                                 {member.boothName}
                                             </td>
@@ -153,7 +180,7 @@ export default function RegisteredStaff({ staff }: Props) {
 RegisteredStaff.layout = {
     breadcrumbs: [
         {
-            title: 'Registered Staff',
+            title: "Registered Staff",
             href: staffIndex(),
         },
     ],

@@ -1,7 +1,7 @@
-import { Form } from '@inertiajs/react';
-import { Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Form } from "@inertiajs/react";
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -10,9 +10,9 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Spinner } from '@/components/ui/spinner';
-import { destroy } from '@/routes/admin/staff';
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
+import { destroy } from "@/routes/admin/staff";
 
 type Props = {
     staff: {
@@ -48,7 +48,7 @@ const DeleteStaff = ({ staff }: Props) => {
                     <DialogDescription className="text-white/60">
                         <span className="font-semibold text-white">
                             {staff.boothName}
-                        </span>{' '}
+                        </span>{" "}
                         ({staff.name}) will no longer be able to log in. This
                         cannot be undone.
                     </DialogDescription>
@@ -56,8 +56,8 @@ const DeleteStaff = ({ staff }: Props) => {
 
                 {staff.visits > 0 && (
                     <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-                        This also deletes {staff.visits.toLocaleString('en-PH')}{' '}
-                        recorded {staff.visits === 1 ? 'visit' : 'visits'} and
+                        This also deletes {staff.visits.toLocaleString("en-PH")}{" "}
+                        recorded {staff.visits === 1 ? "visit" : "visits"} and
                         the points participants earned at this booth.
                     </p>
                 )}

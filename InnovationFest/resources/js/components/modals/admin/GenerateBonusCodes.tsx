@@ -1,9 +1,9 @@
-import { Form } from '@inertiajs/react';
-import { QrCode } from 'lucide-react';
-import { useState } from 'react';
-import InputError from '@/components/input-error';
-import { INPUT_CLASS } from '@/components/modals/admin/AddStaff';
-import { Button } from '@/components/ui/button';
+import { Form } from "@inertiajs/react";
+import { QrCode } from "lucide-react";
+import { useState } from "react";
+import InputError from "@/components/input-error";
+import { INPUT_CLASS } from "@/components/modals/admin/AddStaff";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -12,11 +12,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { store } from '@/routes/admin/qr-codes';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { store } from "@/routes/admin/qr-codes";
 
 type Props = {
     maxQuantity: number;

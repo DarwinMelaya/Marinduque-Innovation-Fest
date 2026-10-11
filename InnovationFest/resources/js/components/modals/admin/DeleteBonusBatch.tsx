@@ -1,7 +1,7 @@
-import { Form } from '@inertiajs/react';
-import { Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Form } from "@inertiajs/react";
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -10,9 +10,9 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Spinner } from '@/components/ui/spinner';
-import { destroy } from '@/routes/admin/qr-codes';
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
+import { destroy } from "@/routes/admin/qr-codes";
 
 type Props = {
     batch: {
@@ -46,10 +46,10 @@ const DeleteBonusBatch = ({ batch }: Props) => {
                         Delete QR codes?
                     </DialogTitle>
                     <DialogDescription className="text-white/60">
-                        All {batch.codes.toLocaleString('en-PH')}{' '}
+                        All {batch.codes.toLocaleString("en-PH")}{" "}
                         <span className="font-semibold text-white">
                             {batch.label}
-                        </span>{' '}
+                        </span>{" "}
                         codes will stop working, including printed ones. This
                         cannot be undone.
                     </DialogDescription>
@@ -57,10 +57,10 @@ const DeleteBonusBatch = ({ batch }: Props) => {
 
                 {batch.redeemed > 0 && (
                     <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
-                        {batch.redeemed.toLocaleString('en-PH')}{' '}
+                        {batch.redeemed.toLocaleString("en-PH")}{" "}
                         {batch.redeemed === 1
-                            ? 'visitor already scanned a code'
-                            : 'visitors already scanned these codes'}{' '}
+                            ? "visitor already scanned a code"
+                            : "visitors already scanned these codes"}{" "}
                         and will lose those bonus points.
                     </p>
                 )}
