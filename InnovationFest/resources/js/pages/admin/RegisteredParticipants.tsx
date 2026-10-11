@@ -1,17 +1,17 @@
-import { Head, router } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
-import { useRef, useState } from 'react';
-import PageLink from '@/components/admin/PageLink';
-import AdminPageHeading from '@/components/layout/AdminPageHeading';
-import { Input } from '@/components/ui/input';
+import { Head, router } from "@inertiajs/react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { useRef, useState } from "react";
+import PageLink from "@/components/admin/PageLink";
+import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { index as participantsIndex } from '@/routes/admin/participants';
+} from "@/components/ui/select";
+import { index as participantsIndex } from "@/routes/admin/participants";
 
 type Participant = {
     id: number;
@@ -51,12 +51,12 @@ type Props = {
     municipalities: string[];
 };
 
-const ALL_MUNICIPALITIES = 'all';
+const ALL_MUNICIPALITIES = "all";
 
-const dateFormat = new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium' });
+const dateFormat = new Intl.DateTimeFormat("en-PH", { dateStyle: "medium" });
 
 const FIELD_CLASS =
-    'h-11 rounded-full border-white/15 bg-neutral-950 text-white focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30 dark:bg-neutral-950 dark:hover:bg-neutral-900';
+    "h-11 rounded-full border-white/15 bg-neutral-950 text-white focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30 dark:bg-neutral-950 dark:hover:bg-neutral-900";
 
 export default function RegisteredParticipants({
     participants,
@@ -89,14 +89,14 @@ export default function RegisteredParticipants({
     const handleMunicipalityChange = (value: string) => {
         applyFilters({
             search,
-            municipality: value === ALL_MUNICIPALITIES ? '' : value,
+            municipality: value === ALL_MUNICIPALITIES ? "" : value,
         });
     };
 
-    const isFiltered = filters.search !== '' || filters.municipality !== '';
+    const isFiltered = filters.search !== "" || filters.municipality !== "";
     const emptyMessage = isFiltered
-        ? 'No participants match your filters.'
-        : 'No participants have registered yet.';
+        ? "No participants match your filters."
+        : "No participants have registered yet.";
 
     return (
         <>
@@ -109,12 +109,12 @@ export default function RegisteredParticipants({
                     description={
                         <>
                             <span className="font-bold text-white tabular-nums">
-                                {participants.total.toLocaleString('en-PH')}
-                            </span>{' '}
-                            {isFiltered ? 'matching' : 'total'}{' '}
+                                {participants.total.toLocaleString("en-PH")}
+                            </span>{" "}
+                            {isFiltered ? "matching" : "total"}{" "}
                             {participants.total === 1
-                                ? 'participant'
-                                : 'participants'}
+                                ? "participant"
+                                : "participants"}
                         </>
                     }
                 />
@@ -168,7 +168,9 @@ export default function RegisteredParticipants({
                         <ul className="flex flex-col gap-3 md:hidden">
                             {participants.data.map((participant) => (
                                 <li key={participant.id}>
-                                    <ParticipantCard participant={participant} />
+                                    <ParticipantCard
+                                        participant={participant}
+                                    />
                                 </li>
                             ))}
                         </ul>
@@ -214,15 +216,19 @@ export default function RegisteredParticipants({
                                                     {participant.name}
                                                 </div>
                                                 <div className="text-white/60">
-                                                    {participant.sex},{' '}
+                                                    {participant.sex},{" "}
                                                     {participant.age}
                                                 </div>
                                                 <SectorTags
-                                                    sectors={participant.sectors}
+                                                    sectors={
+                                                        participant.sectors
+                                                    }
                                                 />
                                             </td>
                                             <td className="px-5 py-4">
-                                                <div>{participant.barangay}</div>
+                                                <div>
+                                                    {participant.barangay}
+                                                </div>
                                                 <div className="text-white/60">
                                                     {participant.municipality}
                                                 </div>
@@ -230,7 +236,7 @@ export default function RegisteredParticipants({
                                             <td className="px-5 py-4">
                                                 <div>
                                                     {participant.affiliation ??
-                                                        '—'}
+                                                        "—"}
                                                 </div>
                                                 {participant.educationLevel && (
                                                     <div className="text-white/60">
@@ -269,8 +275,8 @@ export default function RegisteredParticipants({
                 {participants.last_page > 1 && (
                     <div className="flex flex-col items-center justify-between gap-4 text-sm sm:flex-row">
                         <p className="text-white/60">
-                            Showing {participants.from}–{participants.to} of{' '}
-                            {participants.total.toLocaleString('en-PH')}
+                            Showing {participants.from}–{participants.to} of{" "}
+                            {participants.total.toLocaleString("en-PH")}
                         </p>
                         <div className="flex gap-2">
                             <PageLink
@@ -305,15 +311,15 @@ function AttendanceBadge({ participant }: { participant: Participant }) {
             <span
                 className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                     participant.presentToday
-                        ? 'bg-[#229D1C]/20 text-[#6FD66A]'
-                        : 'bg-white/10 text-white/50'
+                        ? "bg-[#229D1C]/20 text-[#6FD66A]"
+                        : "bg-white/10 text-white/50"
                 }`}
             >
-                {participant.presentToday ? 'Present today' : 'Not yet today'}
+                {participant.presentToday ? "Present today" : "Not yet today"}
             </span>
             <span className="text-xs text-white/50">
-                {participant.daysAttended}{' '}
-                {participant.daysAttended === 1 ? 'day' : 'days'} attended
+                {participant.daysAttended}{" "}
+                {participant.daysAttended === 1 ? "day" : "days"} attended
             </span>
         </div>
     );
@@ -341,17 +347,17 @@ function SectorTags({ sectors }: { sectors: string[] }) {
 function ParticipantCard({ participant }: { participant: Participant }) {
     const details = [
         {
-            label: 'Address',
+            label: "Address",
             value: `${participant.barangay}, ${participant.municipality}`,
         },
         {
-            label: 'School / Agency',
-            value: [participant.affiliation ?? '—', participant.educationLevel]
+            label: "School / Agency",
+            value: [participant.affiliation ?? "—", participant.educationLevel]
                 .filter(Boolean)
-                .join(' · '),
+                .join(" · "),
         },
-        { label: 'Contact', value: participant.contactNumber },
-        { label: 'Email', value: participant.email },
+        { label: "Contact", value: participant.contactNumber },
+        { label: "Email", value: participant.email },
     ];
 
     return (
@@ -396,7 +402,7 @@ function ParticipantCard({ participant }: { participant: Participant }) {
 RegisteredParticipants.layout = {
     breadcrumbs: [
         {
-            title: 'Registered Participants',
+            title: "Registered Participants",
             href: participantsIndex(),
         },
     ],

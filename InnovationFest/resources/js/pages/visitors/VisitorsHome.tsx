@@ -25,6 +25,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import ScanBonusQr from "@/components/visitors/ScanBonusQr";
 import { logout } from "@/routes/visitor";
+import { show as activityEvaluationShow } from "@/routes/visitor/activity-evaluation";
 import { show as evaluationShow } from "@/routes/visitor/evaluation";
 import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 
@@ -33,6 +34,11 @@ type Visit = {
     boothName: string;
     category: "booth" | "forum";
     points: number;
+    evaluation: {
+        rewardPoints: number;
+        earnedPoints: number | null;
+        submittedAt: string | null;
+    } | null;
     visitedAt: string | null;
 };
 
@@ -250,6 +256,8 @@ function PointsHistory({
             at: visit.visitedAt,
             bonus: false,
             forum: visit.category === "forum",
+            visitId: visit.id,
+            evaluation: visit.evaluation,
         })),
         ...bonuses.map((bonus) => ({
             key: `bonus-${bonus.id}`,
@@ -258,6 +266,8 @@ function PointsHistory({
             at: bonus.redeemedAt,
             bonus: true,
             forum: false,
+            visitId: 0,
+            evaluation: null,
         })),
         ...(evaluation.completed
             ? [
@@ -268,6 +278,8 @@ function PointsHistory({
                       at: evaluation.submittedAt,
                       bonus: true,
                       forum: false,
+                      visitId: 0,
+                      evaluation: null,
                   },
               ]
             : []),
@@ -354,6 +366,24 @@ function PointsHistory({
                                         </>
                                     )}
                                 </p>
+                                {entry.evaluation &&
+                                    (entry.evaluation.earnedPoints === null ? (
+                                        <Link
+                                            href={activityEvaluationShow(
+                                                entry.visitId,
+                                            )}
+                                            className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-[#0078D9]/20 px-3 py-1 text-xs font-bold text-[#5CB3FF] hover:bg-[#0078D9]/30 ${FOCUS_RING}`}
+                                        >
+                                            <ClipboardCheck className="size-3.5" />
+                                            Evaluate this forum · +
+                                            {entry.evaluation.rewardPoints} pts
+                                        </Link>
+                                    ) : (
+                                        <p className="mt-1 text-xs font-semibold text-[#229D1C]">
+                                            Forum evaluated · +
+                                            {entry.evaluation.earnedPoints} pts
+                                        </p>
+                                    ))}
                             </div>
                             <span className="shrink-0 rounded-full bg-[#F7B600]/15 px-3 py-1 text-sm font-bold text-[#F7B600] tabular-nums">
                                 +{entry.points}

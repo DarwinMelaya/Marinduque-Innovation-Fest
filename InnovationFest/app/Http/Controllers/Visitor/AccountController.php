@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Visitor;
 
+use App\Enums\StaffCategory;
 use App\Http\Controllers\Controller;
+use App\Models\ActivityEvaluation;
 use App\Models\BonusCode;
 use App\Models\BoothVisit;
 use App\Models\Evaluation;
@@ -25,7 +27,7 @@ class AccountController extends Controller
         $participant = $request->user('participant');
 
         $visits = $participant->boothVisits()
-            ->with('booth:id,booth_name,category')
+            ->with(['booth:id,booth_name,category', 'evaluation'])
             ->latest()
             ->latest('id')
             ->get();
@@ -47,7 +49,7 @@ class AccountController extends Controller
                 'qrTicket' => 'data:image/png;base64,'.base64_encode($participant->qrTicketPng()),
             ],
             'stats' => [
-                'points' => $visits->sum('points') + $bonuses->sum('batch.points') + ($evaluation?->points ?? 0),
+                'points' => $visits->sum('points') + $bonuses->sum('batch.points') + ($evaluation?->points ?? 0) + $visits->sum('evaluation.points'),
                 'visits' => $visits->count(),
                 'booths' => $visits->unique('user_id')->count(),
             ],
@@ -62,6 +64,11 @@ class AccountController extends Controller
                 'boothName' => $visit->booth->booth_name,
                 'category' => $visit->booth->category->value,
                 'points' => $visit->points,
+                'evaluation' => $visit->booth->category === StaffCategory::Forum ? [
+                    'rewardPoints' => ActivityEvaluation::rewardPoints(),
+                    'earnedPoints' => $visit->evaluation?->points,
+                    'submittedAt' => $visit->evaluation?->created_at?->toIso8601String(),
+                ] : null,
                 'visitedAt' => $visit->created_at?->toIso8601String(),
             ]),
             'bonuses' => $bonuses->map(fn (BonusCode $bonus) => [

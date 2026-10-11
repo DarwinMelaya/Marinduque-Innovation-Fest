@@ -1,7 +1,7 @@
-import { router } from '@inertiajs/react';
-import { CircleAlert, Gift, ScanLine } from 'lucide-react';
-import { useRef, useState } from 'react';
-import type { FormEvent } from 'react';
+import { router } from "@inertiajs/react";
+import { CircleAlert, Gift, ScanLine } from "lucide-react";
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,29 +9,29 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
-import { useQrCamera } from '@/hooks/use-qr-camera';
-import { store } from '@/routes/visitor/bonus';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { useQrCamera } from "@/hooks/use-qr-camera";
+import { store } from "@/routes/visitor/bonus";
 
 type Bonus = { label: string; points: number };
 
 type ScanResult =
-    { type: 'success'; bonus: Bonus } | { type: 'error'; message: string };
+    { type: "success"; bonus: Bonus } | { type: "error"; message: string };
 
 /** The camera keeps seeing the same QR code after a scan; ignore it for this long instead of re-submitting. */
 const REPEAT_SCAN_MS = 4000;
 
 const FOCUS_RING =
-    'focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none';
+    "focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none";
 
 function BonusScanner() {
     const busy = useRef(false);
     const lastScan = useRef<{ code: string; at: number } | null>(null);
     const [processing, setProcessing] = useState(false);
     const [result, setResult] = useState<ScanResult | null>(null);
-    const [manualCode, setManualCode] = useState('');
+    const [manualCode, setManualCode] = useState("");
 
     const redeem = (value: string) => {
         const code = value.trim();
@@ -62,13 +62,13 @@ function BonusScanner() {
                     const bonus = (flash as { bonus?: Bonus }).bonus;
 
                     if (bonus) {
-                        setResult({ type: 'success', bonus });
-                        setManualCode('');
+                        setResult({ type: "success", bonus });
+                        setManualCode("");
                     }
                 },
                 onError: (errors) =>
                     setResult({
-                        type: 'error',
+                        type: "error",
                         message:
                             errors.code ??
                             Object.values(errors)[0] ??
@@ -84,7 +84,7 @@ function BonusScanner() {
 
     const { videoRef, cameraError } = useQrCamera(
         redeem,
-        'type the code printed under the QR code',
+        "type the code printed under the QR code",
     );
 
     const submitManual = (event: FormEvent) => {
@@ -120,7 +120,7 @@ function BonusScanner() {
                         <Spinner />
                         Checking…
                     </p>
-                ) : result?.type === 'success' ? (
+                ) : result?.type === "success" ? (
                     <div className="flex items-center gap-3 rounded-2xl border border-[#F7B600]/40 bg-[#F7B600]/10 px-4 py-3">
                         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#F7B600]/20 text-[#F7B600]">
                             <Gift className="size-5" />
@@ -134,7 +134,7 @@ function BonusScanner() {
                             </p>
                         </div>
                     </div>
-                ) : result?.type === 'error' ? (
+                ) : result?.type === "error" ? (
                     <p className="flex items-start gap-3 rounded-2xl border border-[#FA0A00]/40 bg-[#FA0A00]/10 px-4 py-3 text-sm">
                         <CircleAlert className="mt-0.5 size-5 shrink-0 text-[#FF6B5F]" />
                         {result.message}

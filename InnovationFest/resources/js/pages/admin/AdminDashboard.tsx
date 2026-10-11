@@ -1,19 +1,19 @@
-import { Head, Link } from '@inertiajs/react';
-import { ArrowRight } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { Head, Link } from "@inertiajs/react";
+import { ArrowRight } from "lucide-react";
+import type { ReactNode } from "react";
 import {
     CHART_COLORS,
     DonutChart,
     HorizontalBarChart,
     StackedBarChart,
     TrendChart,
-} from '@/components/admin/DashboardCharts';
-import type { Datum } from '@/components/admin/DashboardCharts';
-import ScanAttendance from '@/components/admin/ScanAttendance';
-import AdminPageHeading from '@/components/layout/AdminPageHeading';
-import { dashboard } from '@/routes/admin';
-import { index as participantsIndex } from '@/routes/admin/participants';
-import { index as visitorsIndex } from '@/routes/admin/visitors';
+} from "@/components/admin/DashboardCharts";
+import type { Datum } from "@/components/admin/DashboardCharts";
+import ScanAttendance from "@/components/admin/ScanAttendance";
+import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import { dashboard } from "@/routes/admin";
+import { index as participantsIndex } from "@/routes/admin/participants";
+import { index as visitorsIndex } from "@/routes/admin/visitors";
 
 type Props = {
     stats: {
@@ -63,24 +63,24 @@ const PARTICIPANT_TYPE_COLORS = [
 ];
 
 const VIEW_ALL_CLASS =
-    'inline-flex min-h-10 items-center gap-2 rounded-full border border-white/25 px-5 text-xs font-bold tracking-wide uppercase hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none';
+    "inline-flex min-h-10 items-center gap-2 rounded-full border border-white/25 px-5 text-xs font-bold tracking-wide uppercase hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none";
 
-const numberFormat = new Intl.NumberFormat('en-PH');
+const numberFormat = new Intl.NumberFormat("en-PH");
 
-const dateTimeFormat = new Intl.DateTimeFormat('en-PH', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
+const dateTimeFormat = new Intl.DateTimeFormat("en-PH", {
+    dateStyle: "medium",
+    timeStyle: "short",
 });
 
-const shortDateFormat = new Intl.DateTimeFormat('en-PH', {
-    month: 'short',
-    day: 'numeric',
+const shortDateFormat = new Intl.DateTimeFormat("en-PH", {
+    month: "short",
+    day: "numeric",
 });
 
 function StatCard({
     label,
     value,
-    className = 'border border-white/10 bg-neutral-950',
+    className = "border border-white/10 bg-neutral-950",
 }: {
     label: string;
     value: string;
@@ -101,7 +101,7 @@ function StatCard({
 function Panel({
     title,
     action,
-    className = '',
+    className = "",
     children,
 }: {
     title: string;
@@ -139,10 +139,10 @@ export default function AdminDashboard({
     recentParticipants,
 }: Props) {
     const sectors: Datum[] = [
-        { name: 'PWD', total: stats.pwd },
-        { name: 'Indigenous peoples', total: stats.indigenous },
-        { name: 'Senior citizens', total: stats.seniorCitizens },
-        { name: '4Ps members', total: stats.fourPs },
+        { name: "PWD", total: stats.pwd },
+        { name: "Indigenous peoples", total: stats.indigenous },
+        { name: "Senior citizens", total: stats.seniorCitizens },
+        { name: "4Ps members", total: stats.fourPs },
     ];
 
     let cumulative =
@@ -192,7 +192,7 @@ export default function AdminDashboard({
                     />
                     <StatCard
                         label="Average age"
-                        value={stats.total > 0 ? String(stats.averageAge) : '—'}
+                        value={stats.total > 0 ? String(stats.averageAge) : "—"}
                     />
                 </div>
 
@@ -203,10 +203,7 @@ export default function AdminDashboard({
                 <Panel
                     title="Top points earners"
                     action={
-                        <Link
-                            href={visitorsIndex()}
-                            className={VIEW_ALL_CLASS}
-                        >
+                        <Link href={visitorsIndex()} className={VIEW_ALL_CLASS}>
                             Leaderboard
                             <ArrowRight className="size-4" />
                         </Link>
@@ -225,7 +222,8 @@ export default function AdminDashboard({
                         <DonutChart
                             data={sexes.map((sex) => ({
                                 ...sex,
-                                color: SEX_COLORS[sex.name] ?? CHART_COLORS.yellow,
+                                color:
+                                    SEX_COLORS[sex.name] ?? CHART_COLORS.yellow,
                             }))}
                         />
                     </Panel>
@@ -237,7 +235,10 @@ export default function AdminDashboard({
                             }))}
                         />
                     </Panel>
-                    <Panel title="Sectors" className="md:col-span-2 xl:col-span-1">
+                    <Panel
+                        title="Sectors"
+                        className="md:col-span-2 xl:col-span-1"
+                    >
                         <HorizontalBarChart
                             data={sectors}
                             color={CHART_COLORS.red}
@@ -251,13 +252,13 @@ export default function AdminDashboard({
                             data={ageGroups}
                             series={[
                                 {
-                                    key: 'male',
-                                    name: 'Male',
+                                    key: "male",
+                                    name: "Male",
                                     color: SEX_COLORS.Male,
                                 },
                                 {
-                                    key: 'female',
-                                    name: 'Female',
+                                    key: "female",
+                                    name: "Female",
                                     color: SEX_COLORS.Female,
                                 },
                             ]}
@@ -269,18 +270,18 @@ export default function AdminDashboard({
                             horizontal
                             series={[
                                 {
-                                    key: 'highSchool',
-                                    name: 'High School',
+                                    key: "highSchool",
+                                    name: "High School",
                                     color: PARTICIPANT_TYPE_COLORS[0],
                                 },
                                 {
-                                    key: 'college',
-                                    name: 'College',
+                                    key: "college",
+                                    name: "College",
                                     color: PARTICIPANT_TYPE_COLORS[1],
                                 },
                                 {
-                                    key: 'others',
-                                    name: 'Professionals & others',
+                                    key: "others",
+                                    name: "Professionals & others",
                                     color: PARTICIPANT_TYPE_COLORS[2],
                                 },
                             ]}
@@ -346,7 +347,7 @@ export default function AdminDashboard({
                                             {participant.name}
                                         </span>
                                         <span className="truncate text-white/60">
-                                            {participant.festId} ·{' '}
+                                            {participant.festId} ·{" "}
                                             {participant.municipality}
                                         </span>
                                     </div>
@@ -372,7 +373,7 @@ export default function AdminDashboard({
 AdminDashboard.layout = {
     breadcrumbs: [
         {
-            title: 'Dashboard',
+            title: "Dashboard",
             href: dashboard(),
         },
     ],

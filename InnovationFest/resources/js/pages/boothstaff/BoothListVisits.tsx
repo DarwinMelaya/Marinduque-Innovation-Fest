@@ -1,20 +1,20 @@
-import { Head } from '@inertiajs/react';
-import AdminPageHeading from '@/components/layout/AdminPageHeading';
-import { index as visitsIndex } from '@/routes/booth/visits';
-import type { BoothVisit } from '@/types';
+import { Head } from "@inertiajs/react";
+import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import { index as visitsIndex } from "@/routes/booth/visits";
+import type { BoothVisit } from "@/types";
 
 type Props = {
     visits: BoothVisit[];
 };
 
-const dateTimeFormat = new Intl.DateTimeFormat('en-PH', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'Asia/Manila',
+const dateTimeFormat = new Intl.DateTimeFormat("en-PH", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Manila",
 });
 
 function formatVisitedAt(visitedAt: string | null) {
-    return visitedAt ? dateTimeFormat.format(new Date(visitedAt)) : '';
+    return visitedAt ? dateTimeFormat.format(new Date(visitedAt)) : "";
 }
 
 const BoothListVisits = ({ visits }: Props) => {
@@ -26,7 +26,7 @@ const BoothListVisits = ({ visits }: Props) => {
                 <AdminPageHeading
                     eyebrow="Booth"
                     title="Visits"
-                    description={`${visits.length} ${visits.length === 1 ? 'visit' : 'visits'} recorded`}
+                    description={`${visits.length} ${visits.length === 1 ? "visit" : "visits"} recorded`}
                 />
 
                 {visits.length === 0 ? (
@@ -105,7 +105,7 @@ const BoothListVisits = ({ visits }: Props) => {
 BoothListVisits.layout = {
     breadcrumbs: [
         {
-            title: 'Visits',
+            title: "Visits",
             href: visitsIndex(),
         },
     ],

@@ -12,6 +12,7 @@ use App\Http\Controllers\Booth\HomeController as BoothHomeController;
 use App\Http\Controllers\Booth\VisitController;
 use App\Http\Controllers\ParticipantRegistrationController;
 use App\Http\Controllers\Visitor\AccountController;
+use App\Http\Controllers\Visitor\ActivityEvaluationController;
 use App\Http\Controllers\Visitor\BonusCodeController as VisitorBonusCodeController;
 use App\Http\Controllers\Visitor\EvaluationController as VisitorEvaluationController;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,10 @@ Route::middleware('auth:participant')
         Route::post('evaluation', [VisitorEvaluationController::class, 'store'])
             ->middleware('throttle:10,1')
             ->name('evaluation.store');
+        Route::get('forums/{visit}/evaluation', [ActivityEvaluationController::class, 'show'])->name('activity-evaluation.show');
+        Route::post('forums/{visit}/evaluation', [ActivityEvaluationController::class, 'store'])
+            ->middleware('throttle:10,1')
+            ->name('activity-evaluation.store');
         Route::post('logout', [AccountController::class, 'destroy'])->name('logout');
     });
 
@@ -76,6 +81,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
         Route::get('visitors', [VisitorController::class, 'index'])->name('visitors.index');
         Route::get('evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
         Route::patch('evaluations', [EvaluationController::class, 'update'])->name('evaluations.update');
+        Route::patch('evaluations/forums', [EvaluationController::class, 'updateForumPoints'])->name('evaluations.forums.update');
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
         Route::patch('staff/{staff}', [StaffController::class, 'update'])->name('staff.update');

@@ -1,10 +1,10 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowRight } from 'lucide-react';
-import ScanVisitor from '@/components/booth/ScanVisitor';
-import AdminPageHeading from '@/components/layout/AdminPageHeading';
-import { home } from '@/routes/booth';
-import { index as visitsIndex } from '@/routes/booth/visits';
-import type { BoothVisit } from '@/types';
+import { Head, Link, usePage } from "@inertiajs/react";
+import { ArrowRight } from "lucide-react";
+import ScanVisitor from "@/components/booth/ScanVisitor";
+import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import { home } from "@/routes/booth";
+import { index as visitsIndex } from "@/routes/booth/visits";
+import type { BoothVisit } from "@/types";
 
 type Props = {
     stats: {
@@ -14,9 +14,9 @@ type Props = {
     recentVisits: BoothVisit[];
 };
 
-const timeFormat = new Intl.DateTimeFormat('en-PH', {
-    timeStyle: 'short',
-    timeZone: 'Asia/Manila',
+const timeFormat = new Intl.DateTimeFormat("en-PH", {
+    timeStyle: "short",
+    timeZone: "Asia/Manila",
 });
 
 const BoothHome = ({ stats, recentVisits }: Props) => {
@@ -29,7 +29,7 @@ const BoothHome = ({ stats, recentVisits }: Props) => {
             <div className="flex flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
                 <AdminPageHeading
                     eyebrow="Booth"
-                    title={user.booth_name ?? 'My booth'}
+                    title={user.booth_name ?? "My booth"}
                     description={`Welcome, ${user.name}.`}
                 />
 
@@ -105,7 +105,7 @@ const BoothHome = ({ stats, recentVisits }: Props) => {
 BoothHome.layout = {
     breadcrumbs: [
         {
-            title: 'Home',
+            title: "Home",
             href: home(),
         },
     ],

@@ -1,17 +1,17 @@
-import { Head, router } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Crown, Medal, Search } from 'lucide-react';
-import { useRef, useState } from 'react';
-import PageLink from '@/components/admin/PageLink';
-import AdminPageHeading from '@/components/layout/AdminPageHeading';
-import { Input } from '@/components/ui/input';
+import { Head, router } from "@inertiajs/react";
+import { ChevronLeft, ChevronRight, Crown, Medal, Search } from "lucide-react";
+import { useRef, useState } from "react";
+import PageLink from "@/components/admin/PageLink";
+import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { index as visitorsIndex } from '@/routes/admin/visitors';
+} from "@/components/ui/select";
+import { index as visitorsIndex } from "@/routes/admin/visitors";
 
 type Leader = {
     id: number;
@@ -57,42 +57,42 @@ type Props = {
     filters: Filters;
 };
 
-const ALL_BOOTHS = 'all';
+const ALL_BOOTHS = "all";
 
-const visitedAtFormat = new Intl.DateTimeFormat('en-PH', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'Asia/Manila',
+const visitedAtFormat = new Intl.DateTimeFormat("en-PH", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Manila",
 });
 
 const FIELD_CLASS =
-    'h-11 rounded-full border-white/15 bg-neutral-950 text-white focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30 dark:bg-neutral-950 dark:hover:bg-neutral-900';
+    "h-11 rounded-full border-white/15 bg-neutral-950 text-white focus-visible:border-[#F7B600] focus-visible:ring-[#F7B600]/30 dark:bg-neutral-950 dark:hover:bg-neutral-900";
 
-const CARD_CLASS = 'rounded-3xl border border-white/10 bg-neutral-950';
+const CARD_CLASS = "rounded-3xl border border-white/10 bg-neutral-950";
 
 const LABEL_CLASS =
-    'text-xs font-semibold tracking-[0.2em] text-white/50 uppercase';
+    "text-xs font-semibold tracking-[0.2em] text-white/50 uppercase";
 
 /** Gold, silver and bronze for the top three. */
 const PODIUM = [
     {
-        ring: 'border-[#F7B600]/50 bg-[#F7B600]/10',
-        badge: 'bg-[#F7B600] text-black',
-        text: 'text-[#F7B600]',
+        ring: "border-[#F7B600]/50 bg-[#F7B600]/10",
+        badge: "bg-[#F7B600] text-black",
+        text: "text-[#F7B600]",
     },
     {
-        ring: 'border-white/25 bg-white/[0.06]',
-        badge: 'bg-neutral-300 text-black',
-        text: 'text-neutral-200',
+        ring: "border-white/25 bg-white/[0.06]",
+        badge: "bg-neutral-300 text-black",
+        text: "text-neutral-200",
     },
     {
-        ring: 'border-[#CD7F32]/45 bg-[#CD7F32]/10',
-        badge: 'bg-[#CD7F32] text-black',
-        text: 'text-[#E9A46A]',
+        ring: "border-[#CD7F32]/45 bg-[#CD7F32]/10",
+        badge: "bg-[#CD7F32] text-black",
+        text: "text-[#E9A46A]",
     },
 ];
 
-const formatNumber = (value: number) => value.toLocaleString('en-PH');
+const formatNumber = (value: number) => value.toLocaleString("en-PH");
 
 function formatVisitedAt(value: string | null) {
     return value ? visitedAtFormat.format(new Date(value)) : null;
@@ -116,7 +116,7 @@ export default function VisitorsList({
                 booth: next.booth || undefined,
             },
             {
-                only: ['visits', 'filters'],
+                only: ["visits", "filters"],
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
@@ -133,7 +133,7 @@ export default function VisitorsList({
         );
     };
 
-    const isFiltered = filters.search !== '' || filters.booth !== '';
+    const isFiltered = filters.search !== "" || filters.booth !== "";
 
     return (
         <>
@@ -148,20 +148,22 @@ export default function VisitorsList({
 
                 <div className="grid grid-cols-3 gap-3">
                     {[
-                        { label: 'Booth visits', value: stats.visits },
-                        { label: 'Visitors', value: stats.visitors },
+                        { label: "Booth visits", value: stats.visits },
+                        { label: "Visitors", value: stats.visitors },
                         {
-                            label: 'Points given',
+                            label: "Points given",
                             value: stats.points,
                             accent: true,
                         },
                     ].map(({ label, value, accent }) => (
                         <div key={label} className={`${CARD_CLASS} p-4 sm:p-5`}>
-                            <p className={`${LABEL_CLASS} text-[10px] sm:text-xs`}>
+                            <p
+                                className={`${LABEL_CLASS} text-[10px] sm:text-xs`}
+                            >
                                 {label}
                             </p>
                             <p
-                                className={`mt-2 text-2xl font-black sm:text-4xl ${accent ? 'text-[#F7B600]' : ''}`}
+                                className={`mt-2 text-2xl font-black sm:text-4xl ${accent ? "text-[#F7B600]" : ""}`}
                             >
                                 {formatNumber(value)}
                             </p>
@@ -176,18 +178,15 @@ export default function VisitorsList({
                     className="flex flex-col gap-4"
                 >
                     <div className="flex flex-col gap-1">
-                        <h2
-                            id="visit-log-title"
-                            className="text-lg font-bold"
-                        >
+                        <h2 id="visit-log-title" className="text-lg font-bold">
                             Booth visits
                         </h2>
                         <p className="text-sm text-white/60">
                             <span className="font-bold text-white">
                                 {formatNumber(visits.total)}
-                            </span>{' '}
-                            {isFiltered ? 'matching' : 'total'}{' '}
-                            {visits.total === 1 ? 'visit' : 'visits'}
+                            </span>{" "}
+                            {isFiltered ? "matching" : "total"}{" "}
+                            {visits.total === 1 ? "visit" : "visits"}
                         </p>
                     </div>
 
@@ -210,7 +209,7 @@ export default function VisitorsList({
                             onValueChange={(value) =>
                                 applyFilters({
                                     search,
-                                    booth: value === ALL_BOOTHS ? '' : value,
+                                    booth: value === ALL_BOOTHS ? "" : value,
                                 })
                             }
                         >
@@ -241,8 +240,8 @@ export default function VisitorsList({
                             className={`${CARD_CLASS} px-6 py-16 text-center text-white/50`}
                         >
                             {isFiltered
-                                ? 'No visits match your filters.'
-                                : 'No booth visits yet.'}
+                                ? "No visits match your filters."
+                                : "No booth visits yet."}
                         </p>
                     ) : (
                         <>
@@ -257,7 +256,7 @@ export default function VisitorsList({
                                                 {visit.name}
                                             </p>
                                             <p className="text-sm text-white/60">
-                                                {visit.festId} ·{' '}
+                                                {visit.festId} ·{" "}
                                                 {visit.municipality}
                                             </p>
                                             <p className="mt-2 text-sm">
@@ -338,7 +337,7 @@ export default function VisitorsList({
                     {visits.last_page > 1 && (
                         <div className="flex flex-col items-center justify-between gap-4 text-sm sm:flex-row">
                             <p className="text-white/60">
-                                Showing {visits.from}–{visits.to} of{' '}
+                                Showing {visits.from}–{visits.to} of{" "}
                                 {formatNumber(visits.total)}
                             </p>
                             <div className="flex gap-2">
@@ -423,10 +422,10 @@ function Leaderboard({ leaders }: { leaders: Leader[] }) {
                                         {leader.name}
                                     </p>
                                     <p className="truncate text-xs text-white/60">
-                                        {leader.festId} · {leader.visits}{' '}
+                                        {leader.festId} · {leader.visits}{" "}
                                         {leader.visits === 1
-                                            ? 'visit'
-                                            : 'visits'}
+                                            ? "visit"
+                                            : "visits"}
                                     </p>
                                 </div>
                                 <p
@@ -456,7 +455,7 @@ function Leaderboard({ leaders }: { leaders: Leader[] }) {
                                             {leader.name}
                                         </p>
                                         <p className="truncate text-xs text-white/50">
-                                            {leader.festId} ·{' '}
+                                            {leader.festId} ·{" "}
                                             {leader.municipality}
                                         </p>
                                     </div>
@@ -476,7 +475,7 @@ function Leaderboard({ leaders }: { leaders: Leader[] }) {
 VisitorsList.layout = {
     breadcrumbs: [
         {
-            title: 'Visitors & Points',
+            title: "Visitors & Points",
             href: visitorsIndex(),
         },
     ],

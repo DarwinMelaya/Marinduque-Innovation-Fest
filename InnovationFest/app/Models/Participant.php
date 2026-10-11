@@ -130,9 +130,13 @@ class Participant extends Model implements AuthenticatableContract
             ->selectRaw('coalesce(sum(evaluations.points), 0)')
             ->whereColumn('evaluations.participant_id', 'participants.id');
 
+        $activityPoints = ActivityEvaluation::query()
+            ->selectRaw('coalesce(sum(activity_evaluations.points), 0)')
+            ->whereColumn('activity_evaluations.participant_id', 'participants.id');
+
         $query->where(fn (Builder $query) => $query->has('boothVisits')->orHas('bonusCodes')->orHas('evaluation'))
             ->select('participants.*')
-            ->selectRaw("({$visitPoints->toSql()}) + ({$bonusPoints->toSql()}) + ({$evaluationPoints->toSql()}) as points")
+            ->selectRaw("({$visitPoints->toSql()}) + ({$bonusPoints->toSql()}) + ({$evaluationPoints->toSql()}) + ({$activityPoints->toSql()}) as points")
             ->withCount('boothVisits as visits')
             ->orderByDesc('points')
             ->orderByDesc('visits')

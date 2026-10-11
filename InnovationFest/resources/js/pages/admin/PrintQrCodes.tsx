@@ -1,8 +1,8 @@
-import { Head } from '@inertiajs/react';
-import { Printer } from 'lucide-react';
-import { useState } from 'react';
-import qrLogo from '../../../images/mail/logo-icon.png';
-import logoIcon from '../../../pictures/Marinduque Innovation Fest 206 logo.png';
+import { Head } from "@inertiajs/react";
+import { Printer } from "lucide-react";
+import { useState } from "react";
+import qrLogo from "../../../images/mail/logo-icon.png";
+import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 
 type Props = {
     batch: {
@@ -21,7 +21,7 @@ type Props = {
 /** Card layouts for one A4 sheet (210 × 297 mm with a 10 mm margin). Sizes are in mm and pt so print matches exactly. */
 const LAYOUTS = {
     small: {
-        name: 'Small',
+        name: "Small",
         columns: 4,
         rows: 5,
         qr: 30,
@@ -32,7 +32,7 @@ const LAYOUTS = {
         logo: 0,
     },
     medium: {
-        name: 'Medium',
+        name: "Medium",
         columns: 3,
         rows: 4,
         qr: 40,
@@ -43,7 +43,7 @@ const LAYOUTS = {
         logo: 0,
     },
     large: {
-        name: 'Large',
+        name: "Large",
         columns: 2,
         rows: 3,
         qr: 54,
@@ -54,7 +54,7 @@ const LAYOUTS = {
         logo: 0,
     },
     poster: {
-        name: 'Poster',
+        name: "Poster",
         columns: 1,
         rows: 1,
         qr: 140,
@@ -79,7 +79,7 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 
 export default function PrintQrCodes({ batch, codes, logoRatio }: Props) {
-    const [layoutKey, setLayoutKey] = useState<LayoutKey>('medium');
+    const [layoutKey, setLayoutKey] = useState<LayoutKey>("medium");
     const layout = LAYOUTS[layoutKey];
     const pages = chunk(codes, layout.columns * layout.rows);
 
@@ -101,10 +101,10 @@ export default function PrintQrCodes({ batch, codes, logoRatio }: Props) {
                                 {batch.label}
                             </h1>
                             <p className="text-sm text-white/60">
-                                {codes.length} unscanned{' '}
-                                {codes.length === 1 ? 'code' : 'codes'} · +
-                                {batch.points} points each · {pages.length} A4{' '}
-                                {pages.length === 1 ? 'page' : 'pages'}
+                                {codes.length} unscanned{" "}
+                                {codes.length === 1 ? "code" : "codes"} · +
+                                {batch.points} points each · {pages.length} A4{" "}
+                                {pages.length === 1 ? "page" : "pages"}
                             </p>
                         </div>
 
@@ -166,22 +166,22 @@ export default function PrintQrCodes({ batch, codes, logoRatio }: Props) {
                                 aria-label={`Page ${index + 1}`}
                                 className="grid shrink-0 overflow-hidden bg-white text-[#0A1F44] shadow-2xl [print-color-adjust:exact] print:shadow-none"
                                 style={{
-                                    width: '210mm',
-                                    height: '296mm',
-                                    padding: '10mm',
+                                    width: "210mm",
+                                    height: "296mm",
+                                    padding: "10mm",
                                     gridTemplateColumns: `repeat(${layout.columns}, 1fr)`,
                                     gridTemplateRows: `repeat(${layout.rows}, 1fr)`,
                                     breakAfter:
                                         index < pages.length - 1
-                                            ? 'page'
-                                            : 'auto',
+                                            ? "page"
+                                            : "auto",
                                 }}
                             >
                                 {page.map(({ code, qr }) => (
                                     <div
                                         key={code}
                                         className="flex min-h-0 flex-col items-center justify-center overflow-hidden border border-dashed border-neutral-300 text-center"
-                                        style={{ gap: '1.5mm', padding: '2mm' }}
+                                        style={{ gap: "1.5mm", padding: "2mm" }}
                                     >
                                         {layout.logo > 0 && (
                                             <img

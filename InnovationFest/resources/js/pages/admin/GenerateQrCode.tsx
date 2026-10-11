@@ -1,9 +1,9 @@
-import { Head } from '@inertiajs/react';
-import { Printer } from 'lucide-react';
-import AdminPageHeading from '@/components/layout/AdminPageHeading';
-import DeleteBonusBatch from '@/components/modals/admin/DeleteBonusBatch';
-import GenerateBonusCodes from '@/components/modals/admin/GenerateBonusCodes';
-import { index as qrCodesIndex, print } from '@/routes/admin/qr-codes';
+import { Head } from "@inertiajs/react";
+import { Printer } from "lucide-react";
+import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import DeleteBonusBatch from "@/components/modals/admin/DeleteBonusBatch";
+import GenerateBonusCodes from "@/components/modals/admin/GenerateBonusCodes";
+import { index as qrCodesIndex, print } from "@/routes/admin/qr-codes";
 
 type Batch = {
     id: number;
@@ -25,17 +25,17 @@ type Props = {
     maxPoints: number;
 };
 
-const dateFormat = new Intl.DateTimeFormat('en-PH', {
-    dateStyle: 'medium',
-    timeZone: 'Asia/Manila',
+const dateFormat = new Intl.DateTimeFormat("en-PH", {
+    dateStyle: "medium",
+    timeZone: "Asia/Manila",
 });
 
-const CARD_CLASS = 'rounded-3xl border border-white/10 bg-neutral-950';
+const CARD_CLASS = "rounded-3xl border border-white/10 bg-neutral-950";
 
 const LABEL_CLASS =
-    'text-xs font-semibold tracking-[0.2em] text-white/50 uppercase';
+    "text-xs font-semibold tracking-[0.2em] text-white/50 uppercase";
 
-const formatNumber = (value: number) => value.toLocaleString('en-PH');
+const formatNumber = (value: number) => value.toLocaleString("en-PH");
 
 function ScanProgress({ batch }: { batch: Batch }) {
     const percent = batch.codes > 0 ? (batch.redeemed / batch.codes) * 100 : 0;
@@ -47,7 +47,7 @@ function ScanProgress({ batch }: { batch: Batch }) {
                     {formatNumber(batch.redeemed)}
                 </span>
                 <span className="text-white/50">
-                    {' '}
+                    {" "}
                     / {formatNumber(batch.codes)} scanned
                 </span>
             </p>
@@ -118,10 +118,10 @@ export default function GenerateQrCode({
 
                 <div className="grid grid-cols-3 gap-3">
                     {[
-                        { label: 'Codes generated', value: stats.codes },
-                        { label: 'Scanned', value: stats.redeemed },
+                        { label: "Codes generated", value: stats.codes },
+                        { label: "Scanned", value: stats.redeemed },
                         {
-                            label: 'Bonus points given',
+                            label: "Bonus points given",
                             value: stats.points,
                             accent: true,
                         },
@@ -133,7 +133,7 @@ export default function GenerateQrCode({
                                 {label}
                             </p>
                             <p
-                                className={`mt-2 text-2xl font-black sm:text-4xl ${accent ? 'text-[#F7B600]' : ''}`}
+                                className={`mt-2 text-2xl font-black sm:text-4xl ${accent ? "text-[#F7B600]" : ""}`}
                             >
                                 {formatNumber(value)}
                             </p>
@@ -243,7 +243,7 @@ export default function GenerateQrCode({
 GenerateQrCode.layout = {
     breadcrumbs: [
         {
-            title: 'Generate QR Code',
+            title: "Generate QR Code",
             href: qrCodesIndex(),
         },
     ],

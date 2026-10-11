@@ -1,9 +1,9 @@
-import { router } from '@inertiajs/react';
-import { ImageUp, UserRound } from 'lucide-react';
-import { useRef, useState } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
+import { router } from "@inertiajs/react";
+import { ImageUp, UserRound } from "lucide-react";
+import { useRef, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import InputError from "@/components/input-error";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -11,16 +11,20 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { authButtonClass, authInputClass, authLabelClass } from '@/lib/auth-styles';
-import { login } from '@/routes/visitor';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import {
+    authButtonClass,
+    authInputClass,
+    authLabelClass,
+} from "@/lib/auth-styles";
+import { login } from "@/routes/visitor";
 
 const VisitorSignIn = () => {
     const fileInput = useRef<HTMLInputElement>(null);
-    const [festId, setFestId] = useState('');
+    const [festId, setFestId] = useState("");
     const [error, setError] = useState<string | undefined>();
     const [processing, setProcessing] = useState(false);
 
@@ -50,7 +54,7 @@ const VisitorSignIn = () => {
 
     const readQrImage = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        event.target.value = '';
+        event.target.value = "";
 
         if (!file) {
             return;
@@ -60,7 +64,7 @@ const VisitorSignIn = () => {
         setProcessing(true);
 
         try {
-            const { default: QrScanner } = await import('qr-scanner');
+            const { default: QrScanner } = await import("qr-scanner");
             const { data } = await QrScanner.scanImage(file, {
                 returnDetailedScanResult: true,
             });
