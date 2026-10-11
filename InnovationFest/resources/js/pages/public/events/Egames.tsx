@@ -11,7 +11,10 @@ const event: EventPageData = {
         "Finalist games are showcased to visitors in the Gamers Den during the festival.",
     ],
     facts: [
-        { label: "Showcase", value: "Gamers Den, Marinduque Innovation Fest 2026" },
+        {
+            label: "Showcase",
+            value: "Gamers Den, Marinduque Innovation Fest 2026",
+        },
         {
             label: "Who can join",
             value: "Enrolled high school and college students. Up to 3 students plus 1 faculty coach or adviser per team.",
@@ -20,16 +23,35 @@ const event: EventPageData = {
         { label: "Game submission deadline", value: "October 16, 2026" },
     ],
     links: [
-        { label: "Register your team", href: "https://forms.gle/w6VcDSBH4N5epufg8" },
-        { label: "Submit your game", href: "https://forms.gle/dpD5STaJVaaa1HjHA" },
+        {
+            label: "Register your team",
+            href: "https://forms.gle/w6VcDSBH4N5epufg8",
+        },
+        {
+            label: "Submit your game",
+            href: "https://forms.gle/dpD5STaJVaaa1HjHA",
+        },
     ],
     timeline: [
         { date: "October 6, 2026", activity: "Registration deadline" },
         { date: "October 8, 2026", activity: "Bootcamp" },
-        { date: "October 16, 2026", activity: "Deadline for submission of the final game and required documents" },
-        { date: "October 17–20, 2026", activity: "Initial screening and evaluation" },
-        { date: "October 21, 2026", activity: "Announcement of the five (5) finalists" },
-        { date: "Last week of October", activity: "Final judging, game demonstration, and awarding" },
+        {
+            date: "October 16, 2026",
+            activity:
+                "Deadline for submission of the final game and required documents",
+        },
+        {
+            date: "October 17–20, 2026",
+            activity: "Initial screening and evaluation",
+        },
+        {
+            date: "October 21, 2026",
+            activity: "Announcement of the five (5) finalists",
+        },
+        {
+            date: "Last week of October",
+            activity: "Final judging, game demonstration, and awarding",
+        },
     ],
     criteria: [
         {

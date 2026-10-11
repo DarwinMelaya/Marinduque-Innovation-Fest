@@ -24,11 +24,13 @@ const event: EventPageData = {
     timeline: [
         {
             date: "October 6, 2026 · PM",
-            activity: "MTBI-led series of forums, talk shows, and panel discussions with resource speakers",
+            activity:
+                "MTBI-led series of forums, talk shows, and panel discussions with resource speakers",
         },
         {
             date: "October 7, 2026 · AM",
-            activity: "iHUB-led forum and panel discussion on innovation, technology, and entrepreneurship",
+            activity:
+                "iHUB-led forum and panel discussion on innovation, technology, and entrepreneurship",
         },
     ],
     faqs: [

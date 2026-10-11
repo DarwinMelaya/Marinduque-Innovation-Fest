@@ -18,7 +18,10 @@ const event: EventPageData = {
             label: "Gamers Den",
             value: "All games submitted to the E-Games Sports Development Challenge, open for visitors to play and explore.",
         },
-        { label: "Opening", value: "Ribbon cutting for the exhibits after the opening program" },
+        {
+            label: "Opening",
+            value: "Ribbon cutting for the exhibits after the opening program",
+        },
         { label: "Admission", value: "Free for the public" },
     ],
     faqs: [

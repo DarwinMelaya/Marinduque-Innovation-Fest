@@ -11,34 +11,74 @@ const event: EventPageData = {
         "Teams explore how technology can bring cultural stories to life, and how heritage can inspire creative, meaningful use of technology.",
     ],
     facts: [
-        { label: "Video length", value: "Up to 5 minutes, MP4 or MOV, landscape 16:9, at least 1080p" },
+        {
+            label: "Video length",
+            value: "Up to 5 minutes, MP4 or MOV, landscape 16:9, at least 1080p",
+        },
         {
             label: "Who can join",
             value: "Groups of 3 members of any age, from any school, organization, or community, with 1 faculty coach or adviser.",
         },
-        { label: "Registration and concept deadline", value: "October 6, 2026" },
+        {
+            label: "Registration and concept deadline",
+            value: "October 6, 2026",
+        },
         { label: "Final video deadline", value: "October 16, 2026" },
     ],
     links: [
-        { label: "Register your team", href: "https://forms.gle/z6KGX7EyQR2zvkZt8" },
-        { label: "Submit final video", href: "https://forms.gle/VPw1vF2zuLj2RpSY7" },
+        {
+            label: "Register your team",
+            href: "https://forms.gle/z6KGX7EyQR2zvkZt8",
+        },
+        {
+            label: "Submit final video",
+            href: "https://forms.gle/VPw1vF2zuLj2RpSY7",
+        },
     ],
     timeline: [
-        { date: "October 6, 2026", activity: "Registration and submission of the proposed video concept" },
-        { date: "October 16, 2026", activity: "Deadline for the final video, poster, and required documents" },
-        { date: "October 17–20, 2026", activity: "Initial screening and evaluation" },
-        { date: "October 21, 2026", activity: "Announcement of the five (5) finalists" },
-        { date: "Last week of October", activity: "Final judging, video presentation, and awarding" },
+        {
+            date: "October 6, 2026",
+            activity:
+                "Registration and submission of the proposed video concept",
+        },
+        {
+            date: "October 16, 2026",
+            activity:
+                "Deadline for the final video, poster, and required documents",
+        },
+        {
+            date: "October 17–20, 2026",
+            activity: "Initial screening and evaluation",
+        },
+        {
+            date: "October 21, 2026",
+            activity: "Announcement of the five (5) finalists",
+        },
+        {
+            date: "Last week of October",
+            activity: "Final judging, video presentation, and awarding",
+        },
     ],
     criteria: [
         {
             title: "Final judging",
             rows: [
                 { criterion: "Storytelling and Impact", weight: "30%" },
-                { criterion: "Representation of Marinduque Culture and Identity", weight: "25%" },
-                { criterion: "Meaningful Integration of Technology", weight: "20%" },
+                {
+                    criterion:
+                        "Representation of Marinduque Culture and Identity",
+                    weight: "25%",
+                },
+                {
+                    criterion: "Meaningful Integration of Technology",
+                    weight: "20%",
+                },
                 { criterion: "Creativity and Originality", weight: "15%" },
-                { criterion: "Technical Execution and Overall Production Quality", weight: "10%" },
+                {
+                    criterion:
+                        "Technical Execution and Overall Production Quality",
+                    weight: "10%",
+                },
             ],
         },
     ],

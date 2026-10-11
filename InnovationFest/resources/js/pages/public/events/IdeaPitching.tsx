@@ -11,7 +11,10 @@ const event: EventPageData = {
         "It also gives proponents a way to turn academic studies into deployable solutions and connect with industry experts for mentorship.",
     ],
     facts: [
-        { label: "Venue", value: "The Nexus Stage, Marinduque Innovation Fest 2026" },
+        {
+            label: "Venue",
+            value: "The Nexus Stage, Marinduque Innovation Fest 2026",
+        },
         {
             label: "Who can join",
             value: "Enrolled college and high school students. Individuals or teams of up to 3 members, with 1 faculty coach or adviser.",
@@ -20,16 +23,38 @@ const event: EventPageData = {
         { label: "Proposal and poster deadline", value: "October 16, 2026" },
     ],
     links: [
-        { label: "Register your team", href: "https://forms.gle/oSps4BPjbXm73TQ49" },
-        { label: "Submit proposal & poster", href: "https://forms.gle/BS29eNNmFZ4uAVgk7" },
+        {
+            label: "Register your team",
+            href: "https://forms.gle/oSps4BPjbXm73TQ49",
+        },
+        {
+            label: "Submit proposal & poster",
+            href: "https://forms.gle/BS29eNNmFZ4uAVgk7",
+        },
     ],
     timeline: [
         { date: "October 6, 2026", activity: "Registration deadline" },
-        { date: "October 8, 2026", activity: "Webinar Bootcamp on Design Thinking and Idea Pitching" },
-        { date: "October 16, 2026", activity: "Deadline for the final proposal, poster, and required documents" },
-        { date: "October 17–20, 2026", activity: "Initial screening and evaluation" },
-        { date: "October 21, 2026", activity: "Announcement of the five (5) finalists" },
-        { date: "Last week of October", activity: "Pitching proper and awarding" },
+        {
+            date: "October 8, 2026",
+            activity: "Webinar Bootcamp on Design Thinking and Idea Pitching",
+        },
+        {
+            date: "October 16, 2026",
+            activity:
+                "Deadline for the final proposal, poster, and required documents",
+        },
+        {
+            date: "October 17–20, 2026",
+            activity: "Initial screening and evaluation",
+        },
+        {
+            date: "October 21, 2026",
+            activity: "Announcement of the five (5) finalists",
+        },
+        {
+            date: "Last week of October",
+            activity: "Pitching proper and awarding",
+        },
     ],
     criteria: [
         {
@@ -38,8 +63,14 @@ const event: EventPageData = {
                 { criterion: "Relevance and Significance", weight: "25%" },
                 { criterion: "Innovativeness and Originality", weight: "25%" },
                 { criterion: "Potential Impact and Value", weight: "25%" },
-                { criterion: "Clarity and Completeness of the Concept", weight: "15%" },
-                { criterion: "Compliance with Submission Requirements", weight: "10%" },
+                {
+                    criterion: "Clarity and Completeness of the Concept",
+                    weight: "15%",
+                },
+                {
+                    criterion: "Compliance with Submission Requirements",
+                    weight: "10%",
+                },
             ],
         },
     ],

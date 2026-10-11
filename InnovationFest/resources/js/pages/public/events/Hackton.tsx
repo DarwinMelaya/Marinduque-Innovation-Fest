@@ -37,12 +37,18 @@ const event: EventPageData = {
     ],
     timeline: [
         { date: "October 6, 2026", activity: "Registration deadline" },
-        { date: "October 8, 2026", activity: "Webinar Bootcamp on Design Thinking and Idea Pitching" },
+        {
+            date: "October 8, 2026",
+            activity: "Webinar Bootcamp on Design Thinking and Idea Pitching",
+        },
         {
             date: "October 16, 2026",
             activity: "Deadline for the final proposal and required documents",
         },
-        { date: "October 17–20, 2026", activity: "Initial screening and evaluation" },
+        {
+            date: "October 17–20, 2026",
+            activity: "Initial screening and evaluation",
+        },
         {
             date: "October 21, 2026",
             activity: "Announcement of the five (5) finalists",
@@ -56,20 +62,38 @@ const event: EventPageData = {
         {
             title: "Initial screening",
             rows: [
-                { criterion: "Team Capability & Technical Skills", weight: "25%" },
-                { criterion: "Problem Identification & Relevance", weight: "25%" },
+                {
+                    criterion: "Team Capability & Technical Skills",
+                    weight: "25%",
+                },
+                {
+                    criterion: "Problem Identification & Relevance",
+                    weight: "25%",
+                },
                 { criterion: "Proposed Solution & Innovation", weight: "20%" },
                 { criterion: "Technical & Business Viability", weight: "15%" },
-                { criterion: "Clarity & Completeness of Submission", weight: "15%" },
+                {
+                    criterion: "Clarity & Completeness of Submission",
+                    weight: "15%",
+                },
             ],
         },
         {
             title: "Final judging",
             rows: [
                 { criterion: "Relevance to the Theme", weight: "25%" },
-                { criterion: "Technical Execution & Prototype Functionality", weight: "25%" },
-                { criterion: "Tech-Business Viability & Innovation", weight: "20%" },
-                { criterion: "User Interface (UI) & User Experience (UX)", weight: "15%" },
+                {
+                    criterion: "Technical Execution & Prototype Functionality",
+                    weight: "25%",
+                },
+                {
+                    criterion: "Tech-Business Viability & Innovation",
+                    weight: "20%",
+                },
+                {
+                    criterion: "User Interface (UI) & User Experience (UX)",
+                    weight: "15%",
+                },
                 { criterion: "Pitch Presentation & Live Demo", weight: "15%" },
             ],
         },

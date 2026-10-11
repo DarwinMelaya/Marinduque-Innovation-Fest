@@ -22,6 +22,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import Reveal from "@/components/public/Reveal";
 import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 import logoName from "../../../pictures/logoname.png";
 
@@ -240,7 +241,7 @@ function SectionHeading({
     title: string;
 }) {
     return (
-        <div className="flex flex-col gap-4">
+        <Reveal className="flex flex-col gap-4">
             <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
                 {eyebrow}
             </p>
@@ -248,7 +249,7 @@ function SectionHeading({
                 {title}
             </h2>
             <GradientRule />
-        </div>
+        </Reveal>
     );
 }
 
@@ -423,7 +424,7 @@ function Hero() {
         >
             <div
                 ref={contentRef}
-                className="mx-auto max-w-7xl px-6 pt-14 pb-28 will-change-transform lg:pt-20 lg:pb-32"
+                className="mx-auto max-w-7xl px-6 pt-14 pb-28 duration-1000 will-change-transform animate-in fade-in slide-in-from-bottom-8 lg:pt-20 lg:pb-32"
             >
                 <p className="text-sm font-semibold tracking-[0.2em] text-white/60 uppercase">
                     {EVENT.organizer} presents
@@ -515,7 +516,11 @@ function About() {
                     eyebrow="About the festival"
                     title={EVENT.name}
                 />
-                <div className="flex flex-col gap-6 text-lg leading-relaxed text-white/70">
+                <Reveal
+                    delay={150}
+                    direction="right"
+                    className="flex flex-col gap-6 text-lg leading-relaxed text-white/70"
+                >
                     <p>
                         The {EVENT.name} is a provincial initiative designed to
                         promote the practical, inclusive, and collaborative
@@ -538,7 +543,7 @@ function About() {
                         solutions, enhance technical skills, and foster
                         sustainable partnerships.
                     </p>
-                </div>
+                </Reveal>
             </div>
         </section>
     );
@@ -549,7 +554,7 @@ function Schedule() {
         <section id="schedule" className="scroll-mt-20 bg-black">
             <div className="mx-auto max-w-7xl px-6 py-24 lg:py-32">
                 <div className="grid gap-6 lg:grid-cols-3">
-                    <div className="flex flex-col justify-between gap-10 rounded-3xl bg-[#0078D9] p-8 lg:col-span-2 lg:p-12">
+                    <Reveal className="flex flex-col justify-between gap-10 rounded-3xl bg-[#0078D9] p-8 lg:col-span-2 lg:p-12">
                         <div className="flex flex-col gap-3">
                             <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
                                 Schedule
@@ -566,47 +571,59 @@ function Schedule() {
                                 {EVENT.venue}
                             </p>
                         </div>
-                    </div>
+                    </Reveal>
 
                     <div className="grid gap-6">
-                        {STATS.map(({ value, label, icon: Icon, color }) => (
-                            <div
+                        {STATS.map(({ value, label, icon: Icon, color }, i) => (
+                            <Reveal
                                 key={label}
-                                className="flex items-center gap-6 rounded-3xl border border-white/10 bg-neutral-950 p-8"
+                                delay={150 + i * 120}
+                                direction="right"
                             >
-                                <Icon className={`size-8 shrink-0 ${color}`} />
-                                <div>
-                                    <p className="text-4xl font-black tracking-tight">
-                                        {value}
-                                    </p>
-                                    <p className="text-sm font-semibold tracking-[0.2em] text-white/60 uppercase">
-                                        {label}
-                                    </p>
+                                <div className="flex h-full items-center gap-6 rounded-3xl border border-white/10 bg-neutral-950 p-8 transition duration-300 hover:-translate-y-1 hover:border-white/30">
+                                    <Icon
+                                        className={`size-8 shrink-0 ${color}`}
+                                    />
+                                    <div>
+                                        <p className="text-4xl font-black tracking-tight">
+                                            {value}
+                                        </p>
+                                        <p className="text-sm font-semibold tracking-[0.2em] text-white/60 uppercase">
+                                            {label}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>
 
                 <div className="mt-6 grid gap-6 md:grid-cols-3">
-                    <div className="rounded-3xl border border-white/10 bg-neutral-950 p-8">
-                        <p className="text-lg leading-relaxed text-white/70">
-                            Join and network with a community of professionals,
-                            students, innovators, and more.
-                        </p>
-                    </div>
-                    {PERKS.map(({ title, description, icon: Icon, color }) => (
-                        <div
-                            key={title}
-                            className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-neutral-950 p-8"
-                        >
-                            <Icon
-                                className={`size-7 ${color} group-hover:animate-hang motion-reduce:animate-none`}
-                            />
-                            <h3 className="text-xl font-bold">{title}</h3>
-                            <p className="text-white/60">{description}</p>
+                    <Reveal>
+                        <div className="h-full rounded-3xl border border-white/10 bg-neutral-950 p-8 transition duration-300 hover:-translate-y-1 hover:border-white/30">
+                            <p className="text-lg leading-relaxed text-white/70">
+                                Join and network with a community of
+                                professionals, students, innovators, and more.
+                            </p>
                         </div>
-                    ))}
+                    </Reveal>
+                    {PERKS.map(
+                        ({ title, description, icon: Icon, color }, i) => (
+                            <Reveal key={title} delay={(i + 1) * 120}>
+                                <div className="group flex h-full flex-col gap-4 rounded-3xl border border-white/10 bg-neutral-950 p-8 transition duration-300 hover:-translate-y-1 hover:border-white/30">
+                                    <Icon
+                                        className={`size-7 ${color} group-hover:animate-hang motion-reduce:animate-none`}
+                                    />
+                                    <h3 className="text-xl font-bold">
+                                        {title}
+                                    </h3>
+                                    <p className="text-white/60">
+                                        {description}
+                                    </p>
+                                </div>
+                            </Reveal>
+                        ),
+                    )}
                 </div>
             </div>
         </section>
@@ -625,47 +642,56 @@ function MajorEvents() {
                     title="What to expect this year"
                 />
 
-                <ol className="mt-16 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div
+                    role="list"
+                    className="mt-16 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+                >
                     {MAJOR_EVENTS.map((event, index) => (
-                        <li
+                        <Reveal
                             key={event.title}
-                            className="group relative aspect-[4/5] overflow-hidden rounded-xl border border-white/10 bg-neutral-900"
+                            delay={(index % 4) * 100}
+                            className="aspect-[4/5]"
                         >
-                            {event.image ? (
-                                <img
-                                    src={event.image}
-                                    alt=""
-                                    className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                />
-                            ) : (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pb-16 text-white/25">
-                                    <ImageIcon className="size-10" />
-                                    <span className="text-sm">
-                                        Photo coming soon
-                                    </span>
-                                </div>
-                            )}
-
                             <div
-                                aria-hidden
-                                className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/50"
-                            />
+                                role="listitem"
+                                className="group relative size-full overflow-hidden rounded-xl border border-white/10 bg-neutral-900 transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_-12px_rgba(241,94,0,0.4)]"
+                            >
+                                {event.image ? (
+                                    <img
+                                        src={event.image}
+                                        alt=""
+                                        className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pb-16 text-white/25">
+                                        <ImageIcon className="size-10" />
+                                        <span className="text-sm">
+                                            Photo coming soon
+                                        </span>
+                                    </div>
+                                )}
 
-                            <span className="absolute top-3 left-3 rounded-md bg-black/60 px-2 py-1 text-sm font-black text-[#F7B600] tabular-nums backdrop-blur-sm">
-                                {String(index + 1).padStart(2, "0")}
-                            </span>
+                                <div
+                                    aria-hidden
+                                    className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/50"
+                                />
 
-                            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-linear-to-t from-black/90 via-black/60 to-transparent p-3 pt-20">
-                                <p className="max-h-0 overflow-hidden text-sm leading-relaxed text-white/85 opacity-0 transition-all duration-300 group-hover:max-h-48 group-hover:opacity-100">
-                                    {event.description}
-                                </p>
-                                <h3 className="rounded-md bg-[#0078D9] px-3 py-2 text-sm font-bold tracking-wide transition-colors duration-300 group-hover:bg-[#FA0A00]">
-                                    {event.title}
-                                </h3>
+                                <span className="absolute top-3 left-3 rounded-md bg-black/60 px-2 py-1 text-sm font-black text-[#F7B600] tabular-nums backdrop-blur-sm">
+                                    {String(index + 1).padStart(2, "0")}
+                                </span>
+
+                                <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-linear-to-t from-black/90 via-black/60 to-transparent p-3 pt-20">
+                                    <p className="max-h-0 overflow-hidden text-sm leading-relaxed text-white/85 opacity-0 transition-all duration-300 group-hover:max-h-48 group-hover:opacity-100">
+                                        {event.description}
+                                    </p>
+                                    <h3 className="rounded-md bg-[#0078D9] px-3 py-2 text-sm font-bold tracking-wide transition-colors duration-300 group-hover:bg-[#FA0A00]">
+                                        {event.title}
+                                    </h3>
+                                </div>
                             </div>
-                        </li>
+                        </Reveal>
                     ))}
-                </ol>
+                </div>
             </div>
         </section>
     );
@@ -680,7 +706,11 @@ function Faqs() {
                     title="Frequently asked questions"
                 />
 
-                <div className="divide-y divide-white/10 border-y border-white/10">
+                <Reveal
+                    delay={150}
+                    direction="right"
+                    className="divide-y divide-white/10 border-y border-white/10"
+                >
                     {FAQS.map((faq) => (
                         <details key={faq.question} className="faq-item group">
                             <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-semibold focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none [&::-webkit-details-marker]:hidden">
@@ -692,7 +722,7 @@ function Faqs() {
                             </p>
                         </details>
                     ))}
-                </div>
+                </Reveal>
             </div>
         </section>
     );
@@ -702,12 +732,14 @@ function Organizers() {
     return (
         <section className="border-t border-white/10 bg-neutral-950">
             <div className="mx-auto max-w-7xl px-6 py-24 text-center lg:py-32">
-                <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
-                    Organized by
-                </p>
-                <h2 className="mt-4 text-2xl font-black tracking-tight uppercase sm:text-3xl">
-                    {EVENT.organizer}
-                </h2>
+                <Reveal>
+                    <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
+                        Organized by
+                    </p>
+                    <h2 className="mt-4 text-2xl font-black tracking-tight uppercase sm:text-3xl">
+                        {EVENT.organizer}
+                    </h2>
+                </Reveal>
                 <div className="mt-12 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
                     <div className="flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none">
                         {[0, 1].map((copy) => (
