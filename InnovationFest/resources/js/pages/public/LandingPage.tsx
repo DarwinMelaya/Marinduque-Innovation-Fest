@@ -22,6 +22,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import Organizers from "@/components/public/Organizers";
 import Reveal from "@/components/public/Reveal";
 import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 import logoName from "../../../pictures/logoname.png";
@@ -181,8 +182,6 @@ const FAQS: { question: string; answer: ReactNode }[] = [
         ),
     },
 ];
-
-const ORGANIZER_SLOTS = 8;
 
 const BRAND_GRADIENT = "bg-[linear-gradient(to_right,#030209,#3230C1)]";
 
@@ -723,45 +722,6 @@ function Faqs() {
                         </details>
                     ))}
                 </Reveal>
-            </div>
-        </section>
-    );
-}
-
-function Organizers() {
-    return (
-        <section className="border-t border-white/10 bg-neutral-950">
-            <div className="mx-auto max-w-7xl px-6 py-24 text-center lg:py-32">
-                <Reveal>
-                    <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
-                        Organized by
-                    </p>
-                    <h2 className="mt-4 text-2xl font-black tracking-tight uppercase sm:text-3xl">
-                        {EVENT.organizer}
-                    </h2>
-                </Reveal>
-                <div className="mt-12 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-                    <div className="flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none">
-                        {[0, 1].map((copy) => (
-                            <ul
-                                key={copy}
-                                aria-hidden={copy === 1}
-                                className="flex shrink-0 gap-4 pr-4"
-                            >
-                                {Array.from({ length: ORGANIZER_SLOTS }).map(
-                                    (_, i) => (
-                                        <li
-                                            key={i}
-                                            className="flex aspect-[3/2] w-48 items-center justify-center rounded-2xl border border-dashed border-white/15 text-sm text-white/30"
-                                        >
-                                            Partner logo
-                                        </li>
-                                    ),
-                                )}
-                            </ul>
-                        ))}
-                    </div>
-                </div>
             </div>
         </section>
     );

@@ -10,6 +10,7 @@ import {
     Trophy,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import Organizers from "@/components/public/Organizers";
 import Reveal from "@/components/public/Reveal";
 import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 
@@ -111,7 +112,11 @@ export default function EventPage({ event }: { event: EventPageData }) {
                 </header>
 
                 <main className="flex flex-col gap-24 pb-24">
-                    <div className="relative overflow-hidden bg-[linear-gradient(135deg,#030209,#1b1a7a_60%,#3230C1)] py-20 sm:py-28">
+                    <div className="relative overflow-hidden border-b border-white/10 bg-black py-20 sm:py-28">
+                        <div
+                            aria-hidden
+                            className="pointer-events-none absolute -right-24 -bottom-32 size-96 rounded-full bg-[#0078D9]/20 blur-3xl"
+                        />
                         <img
                             src={logoIcon}
                             alt=""
@@ -120,7 +125,7 @@ export default function EventPage({ event }: { event: EventPageData }) {
                         />
                         <div
                             aria-hidden
-                            className="pointer-events-none absolute -top-24 left-1/3 size-72 rounded-full bg-[#F15E00]/20 blur-3xl"
+                            className="pointer-events-none absolute -top-24 left-1/3 size-72 rounded-full bg-[#F15E00]/10 blur-3xl"
                         />
                         <div className="relative mx-auto flex max-w-5xl flex-col gap-6 px-6 duration-700 animate-in fade-in slide-in-from-bottom-6">
                             <Link
@@ -383,6 +388,8 @@ export default function EventPage({ event }: { event: EventPageData }) {
                         )}
                     </div>
                 </main>
+
+                <Organizers />
             </div>
         </>
     );
