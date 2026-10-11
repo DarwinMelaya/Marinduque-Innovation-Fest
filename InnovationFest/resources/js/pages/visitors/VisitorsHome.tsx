@@ -1,5 +1,6 @@
-import { Head, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import {
+    ClipboardCheck,
     Download,
     Gift,
     LogOut,
@@ -24,6 +25,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import ScanBonusQr from "@/components/visitors/ScanBonusQr";
 import { logout } from "@/routes/visitor";
+import { show as evaluationShow } from "@/routes/visitor/evaluation";
 import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 
 type Visit = {
@@ -53,6 +55,12 @@ type Props = {
         points: number;
         visits: number;
         booths: number;
+    };
+    evaluation: {
+        rewardPoints: number;
+        completed: boolean;
+        earnedPoints: number | null;
+        submittedAt: string | null;
     };
     visits: Visit[];
     bonuses: Bonus[];
@@ -158,7 +166,36 @@ function FestPass({ participant }: Pick<Props, "participant">) {
     );
 }
 
-function PointsSummary({ stats }: Pick<Props, "stats">) {
+function EvaluationButton({ evaluation }: Pick<Props, "evaluation">) {
+    if (evaluation.completed) {
+        return (
+            <p className="flex items-center gap-3 rounded-2xl border border-[#229D1C]/40 bg-[#229D1C]/10 px-4 py-3 text-sm font-semibold">
+                <ClipboardCheck className="size-5 shrink-0 text-[#6FD66A]" />
+                Overall evaluation done · +{evaluation.earnedPoints} pts
+            </p>
+        );
+    }
+
+    return (
+        <Link
+            href={evaluationShow()}
+            className={`flex h-14 items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/[0.04] px-5 font-semibold transition-colors hover:bg-white/10 ${FOCUS_RING}`}
+        >
+            <span className="inline-flex items-center gap-3">
+                <ClipboardCheck className="size-5 text-[#F7B600]" />
+                Overall evaluation
+            </span>
+            <span className="rounded-full bg-[#F7B600]/15 px-3 py-1 text-sm font-bold text-[#F7B600]">
+                +{evaluation.rewardPoints} pts
+            </span>
+        </Link>
+    );
+}
+
+function PointsSummary({
+    stats,
+    evaluation,
+}: Pick<Props, "stats" | "evaluation">) {
     return (
         <section aria-label="Points summary" className="flex flex-col gap-4">
             <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#F15E00] via-[#FF8A3D] to-[#F7B600] p-6 text-white shadow-2xl shadow-[#F15E00]/25 sm:p-8">
@@ -195,11 +232,16 @@ function PointsSummary({ stats }: Pick<Props, "stats">) {
             </div>
 
             <ScanBonusQr />
+            <EvaluationButton evaluation={evaluation} />
         </section>
     );
 }
 
-function PointsHistory({ visits, bonuses }: Pick<Props, "visits" | "bonuses">) {
+function PointsHistory({
+    visits,
+    bonuses,
+    evaluation,
+}: Pick<Props, "visits" | "bonuses" | "evaluation">) {
     const entries = [
         ...visits.map((visit) => ({
             key: `visit-${visit.id}`,
@@ -217,6 +259,18 @@ function PointsHistory({ visits, bonuses }: Pick<Props, "visits" | "bonuses">) {
             bonus: true,
             forum: false,
         })),
+        ...(evaluation.completed
+            ? [
+                  {
+                      key: "evaluation",
+                      title: "Overall evaluation",
+                      points: evaluation.earnedPoints ?? 0,
+                      at: evaluation.submittedAt,
+                      bonus: true,
+                      forum: false,
+                  },
+              ]
+            : []),
     ].sort((a, b) => (b.at ?? "").localeCompare(a.at ?? ""));
 
     return (
@@ -281,7 +335,9 @@ function PointsHistory({ visits, bonuses }: Pick<Props, "visits" | "bonuses">) {
                                 </p>
                                 <p className="text-sm text-white/50">
                                     {entry.bonus
-                                        ? "Bonus QR"
+                                        ? entry.key === "evaluation"
+                                            ? "Feedback"
+                                            : "Bonus QR"
                                         : entry.forum
                                           ? "Forum session"
                                           : "Booth visit"}
@@ -374,7 +430,13 @@ function LogoutButton({ festId }: { festId: string }) {
     );
 }
 
-const VisitorsHome = ({ participant, stats, visits, bonuses }: Props) => (
+const VisitorsHome = ({
+    participant,
+    stats,
+    evaluation,
+    visits,
+    bonuses,
+}: Props) => (
     <>
         <Head title="My account" />
 
@@ -416,8 +478,12 @@ const VisitorsHome = ({ participant, stats, visits, bonuses }: Props) => (
                     <FestPass participant={participant} />
 
                     <div className="flex flex-col gap-6">
-                        <PointsSummary stats={stats} />
-                        <PointsHistory visits={visits} bonuses={bonuses} />
+                        <PointsSummary stats={stats} evaluation={evaluation} />
+                        <PointsHistory
+                            visits={visits}
+                            bonuses={bonuses}
+                            evaluation={evaluation}
+                        />
                     </div>
                 </div>
             </div>

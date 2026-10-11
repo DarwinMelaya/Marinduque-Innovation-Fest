@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
@@ -125,9 +126,13 @@ class Participant extends Model implements AuthenticatableContract
             ->selectRaw('coalesce(sum(bonus_code_batches.points), 0)')
             ->whereColumn('bonus_codes.participant_id', 'participants.id');
 
-        $query->where(fn (Builder $query) => $query->has('boothVisits')->orHas('bonusCodes'))
+        $evaluationPoints = Evaluation::query()
+            ->selectRaw('coalesce(sum(evaluations.points), 0)')
+            ->whereColumn('evaluations.participant_id', 'participants.id');
+
+        $query->where(fn (Builder $query) => $query->has('boothVisits')->orHas('bonusCodes')->orHas('evaluation'))
             ->select('participants.*')
-            ->selectRaw("({$visitPoints->toSql()}) + ({$bonusPoints->toSql()}) as points")
+            ->selectRaw("({$visitPoints->toSql()}) + ({$bonusPoints->toSql()}) + ({$evaluationPoints->toSql()}) as points")
             ->withCount('boothVisits as visits')
             ->orderByDesc('points')
             ->orderByDesc('visits')
@@ -150,6 +155,14 @@ class Participant extends Model implements AuthenticatableContract
     public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * @return HasOne<Evaluation, $this>
+     */
+    public function evaluation(): HasOne
+    {
+        return $this->hasOne(Evaluation::class);
     }
 
     /**

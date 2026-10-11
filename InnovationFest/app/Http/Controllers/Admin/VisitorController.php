@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\BonusCode;
 use App\Models\BoothVisit;
+use App\Models\Evaluation;
 use App\Models\Participant;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,7 +78,7 @@ class VisitorController extends Controller
                 'points' => (int) BoothVisit::sum('points') + (int) BonusCode::query()
                     ->join('bonus_code_batches', 'bonus_code_batches.id', '=', 'bonus_codes.bonus_code_batch_id')
                     ->whereNotNull('bonus_codes.redeemed_at')
-                    ->sum('bonus_code_batches.points'),
+                    ->sum('bonus_code_batches.points') + (int) Evaluation::sum('points'),
             ],
             'leaderboard' => $leaderboard,
             'visits' => $visits,

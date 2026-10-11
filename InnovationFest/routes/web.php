@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\BonusCodeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EvaluationController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\VisitorController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Booth\VisitController;
 use App\Http\Controllers\ParticipantRegistrationController;
 use App\Http\Controllers\Visitor\AccountController;
 use App\Http\Controllers\Visitor\BonusCodeController as VisitorBonusCodeController;
+use App\Http\Controllers\Visitor\EvaluationController as VisitorEvaluationController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/LandingPage')->name('home');
@@ -46,6 +48,10 @@ Route::middleware('auth:participant')
         Route::post('bonus', [VisitorBonusCodeController::class, 'store'])
             ->middleware('throttle:20,1')
             ->name('bonus.store');
+        Route::get('evaluation', [VisitorEvaluationController::class, 'show'])->name('evaluation.show');
+        Route::post('evaluation', [VisitorEvaluationController::class, 'store'])
+            ->middleware('throttle:10,1')
+            ->name('evaluation.store');
         Route::post('logout', [AccountController::class, 'destroy'])->name('logout');
     });
 
@@ -68,7 +74,8 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
         Route::get('qr-codes/{batch}/print', [BonusCodeController::class, 'print'])->name('qr-codes.print');
         Route::delete('qr-codes/{batch}', [BonusCodeController::class, 'destroy'])->name('qr-codes.destroy');
         Route::get('visitors', [VisitorController::class, 'index'])->name('visitors.index');
-        Route::inertia('evaluations', 'admin/Evaluations')->name('evaluations.index');
+        Route::get('evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
+        Route::patch('evaluations', [EvaluationController::class, 'update'])->name('evaluations.update');
         Route::get('staff', [StaffController::class, 'index'])->name('staff.index');
         Route::post('staff', [StaffController::class, 'store'])->name('staff.store');
         Route::patch('staff/{staff}', [StaffController::class, 'update'])->name('staff.update');

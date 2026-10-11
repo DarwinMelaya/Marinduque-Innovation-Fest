@@ -63,6 +63,44 @@
     --animate-hang:
         hang-sink 0.3s ease-out, hang 1.5s 0.3s ease-in-out infinite alternate;
     --animate-marquee: marquee 40s linear infinite;
+    --animate-float: float 2.4s ease-in-out infinite;
+    --animate-wiggle: wiggle 0.5s ease-in-out infinite;
+    --animate-pop: pop 0.6s ease-out both, float 1.2s 0.6s ease-in-out infinite;
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0) rotate(-4deg);
+        }
+        50% {
+            transform: translateY(-6px) rotate(4deg);
+        }
+    }
+
+    @keyframes wiggle {
+        0%,
+        100% {
+            transform: rotate(-12deg) scale(1.2);
+        }
+        50% {
+            transform: rotate(12deg) scale(1.3);
+        }
+    }
+
+    @keyframes pop {
+        0% {
+            transform: scale(1);
+        }
+        40% {
+            transform: scale(1.7) rotate(-10deg);
+        }
+        70% {
+            transform: scale(1.3) rotate(8deg);
+        }
+        100% {
+            transform: scale(1.45) rotate(0);
+        }
+    }
 
     @keyframes hang-sink {
         to {
