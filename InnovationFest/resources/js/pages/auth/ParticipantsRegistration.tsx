@@ -720,6 +720,16 @@ export default function ParticipantsRegistration({
                                         inputMode="tel"
                                         required
                                         autoComplete="tel"
+                                        maxLength={11}
+                                        minLength={11}
+                                        pattern="09[0-9]{9}"
+                                        title="11-digit mobile number starting with 09"
+                                        onInput={(event) => {
+                                            event.currentTarget.value =
+                                                event.currentTarget.value
+                                                    .replace(/\D/g, "")
+                                                    .slice(0, 11);
+                                        }}
                                         placeholder="09171234567"
                                         className={authInputClass}
                                     />
@@ -740,6 +750,9 @@ export default function ParticipantsRegistration({
                                         type="email"
                                         required
                                         autoComplete="email"
+                                        maxLength={255}
+                                        pattern="[^@\s]+@[^@\s]+\.[A-Za-z]{2,}"
+                                        title="Enter a valid email address, e.g. you@example.com"
                                         placeholder="you@example.com"
                                         className={authInputClass}
                                     />

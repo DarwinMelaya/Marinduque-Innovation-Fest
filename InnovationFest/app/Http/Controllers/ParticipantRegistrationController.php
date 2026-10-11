@@ -65,10 +65,11 @@ class ParticipantRegistrationController extends Controller
             'course' => ['exclude_unless:education_level,College', 'required', 'string', 'max:255'],
             'agency' => ['exclude_unless:education_level,null', 'nullable', 'string', 'max:255'],
             'organization' => ['exclude_unless:education_level,null', 'nullable', 'string', 'max:255'],
-            'contact_number' => ['required', 'string', 'regex:/^(09|\+639)\d{9}$/'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(Participant::class)],
+            'contact_number' => ['required', 'string', 'regex:/^09\d{9}$/'],
+            'email' => ['required', 'string', 'email:rfc', 'regex:/^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/', 'max:255', Rule::unique(Participant::class)],
         ], [
-            'contact_number.regex' => 'Enter a valid mobile number, e.g. 09171234567.',
+            'contact_number.regex' => 'Enter an 11-digit mobile number starting with 09, e.g. 09171234567.',
+            'email.regex' => 'Enter a valid email address, e.g. you@example.com.',
             'email.unique' => 'This email is already registered.',
             'barangay.in' => 'Select a barangay from the chosen municipality.',
         ]);
