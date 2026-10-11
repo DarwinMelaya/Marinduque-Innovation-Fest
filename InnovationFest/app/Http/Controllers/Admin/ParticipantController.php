@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class ParticipantController extends Controller
 {
@@ -71,6 +72,20 @@ class ParticipantController extends Controller
                 'municipality' => $filters['municipality'] ?? '',
             ],
             'municipalities' => $municipalities,
+        ]);
+    }
+
+    /**
+     * The participant's pass (QR code with their fest ID and name) as a PNG, inline or as a download.
+     */
+    public function qr(Request $request, Participant $participant): HttpResponse
+    {
+        abort_if($participant->fest_id === null, 404);
+
+        return response($participant->qrTicketPng(), 200, [
+            'Content-Type' => 'image/png',
+            'Content-Disposition' => ($request->boolean('download') ? 'attachment' : 'inline')."; filename=\"{$participant->fest_id}.png\"",
+            'Cache-Control' => 'private, max-age=3600',
         ]);
     }
 }

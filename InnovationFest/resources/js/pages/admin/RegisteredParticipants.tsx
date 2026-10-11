@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useRef, useState } from "react";
 import PageLink from "@/components/admin/PageLink";
 import AdminPageHeading from "@/components/layout/AdminPageHeading";
+import ViewParticipantQr from "@/components/modals/admin/ViewParticipantQr";
 import { Input } from "@/components/ui/input";
 import {
     Select,
@@ -208,8 +209,20 @@ export default function RegisteredParticipants({
                                             key={participant.id}
                                             className="align-top transition-colors hover:bg-white/5"
                                         >
-                                            <td className="px-5 py-4 font-mono text-xs whitespace-nowrap text-[#F7B600]">
-                                                {participant.festId}
+                                            <td className="px-5 py-4 whitespace-nowrap">
+                                                <div className="font-mono text-xs text-[#F7B600]">
+                                                    {participant.festId}
+                                                </div>
+                                                {participant.festId && (
+                                                    <div className="mt-1 -ml-3">
+                                                        <ViewParticipantQr
+                                                            participant={{
+                                                                ...participant,
+                                                                festId: participant.festId,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="px-5 py-4">
                                                 <div className="font-semibold">
@@ -390,11 +403,21 @@ function ParticipantCard({ participant }: { participant: Participant }) {
                 ))}
             </dl>
 
-            {participant.registeredAt && (
-                <p className="text-xs text-white/50">
-                    Registered {formatDate(participant.registeredAt)}
-                </p>
-            )}
+            <div className="flex items-center justify-between gap-3">
+                {participant.registeredAt && (
+                    <p className="text-xs text-white/50">
+                        Registered {formatDate(participant.registeredAt)}
+                    </p>
+                )}
+                {participant.festId && (
+                    <ViewParticipantQr
+                        participant={{
+                            ...participant,
+                            festId: participant.festId,
+                        }}
+                    />
+                )}
+            </div>
         </article>
     );
 }

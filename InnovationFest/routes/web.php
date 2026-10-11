@@ -74,6 +74,7 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
             ->middleware('throttle:60,1')
             ->name('attendance.store');
         Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
+        Route::get('participants/{participant}/qr', [ParticipantController::class, 'qr'])->name('participants.qr');
         Route::get('qr-codes', [BonusCodeController::class, 'index'])->name('qr-codes.index');
         Route::post('qr-codes', [BonusCodeController::class, 'store'])->name('qr-codes.store');
         Route::get('qr-codes/{batch}/print', [BonusCodeController::class, 'print'])->name('qr-codes.print');
