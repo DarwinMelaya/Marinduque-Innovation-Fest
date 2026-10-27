@@ -10,7 +10,7 @@ const event: EventPageData = {
         "The signing shows their shared commitment to support the Hub's programs, foster innovation, and strengthen collaboration within the Marinduque innovation ecosystem.",
     ],
     facts: [
-        { label: "Date and time", value: "October 6, 2026 · 8:00 AM" },
+        { label: "Date and time", value: "October 30, 2026 · 8:00 AM" },
         {
             label: "Venue",
             value: "DOST Marinduque Office, Capitol Compound, Bangbangalon, Boac, Marinduque",

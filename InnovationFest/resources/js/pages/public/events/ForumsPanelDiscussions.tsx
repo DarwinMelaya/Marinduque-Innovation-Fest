@@ -13,22 +13,22 @@ const event: EventPageData = {
         { label: "Venue", value: "The Nexus Stage" },
         { label: "Who can attend", value: "Open to everyone" },
         {
-            label: "Session 1 · October 6, PM",
+            label: "Session 1 · October 30, PM",
             value: "Facilitated by the Marinduque Technology Business Incubator (MTBI)",
         },
         {
-            label: "Session 2 · October 7, AM",
+            label: "Session 2 · October 31, AM",
             value: "Facilitated by the Marinduque Innovation Hub (iHUB)",
         },
     ],
     timeline: [
         {
-            date: "October 6, 2026 · PM",
+            date: "October 30, 2026 · PM",
             activity:
                 "MTBI-led series of forums, talk shows, and panel discussions with resource speakers",
         },
         {
-            date: "October 7, 2026 · AM",
+            date: "October 31, 2026 · AM",
             activity:
                 "iHUB-led forum and panel discussion on innovation, technology, and entrepreneurship",
         },

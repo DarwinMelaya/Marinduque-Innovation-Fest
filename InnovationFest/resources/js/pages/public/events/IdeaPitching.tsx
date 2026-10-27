@@ -52,7 +52,7 @@ const event: EventPageData = {
             activity: "Announcement of the five (5) finalists",
         },
         {
-            date: "Last week of October",
+            date: "October 30–31, 2026",
             activity: "Pitching proper and awarding",
         },
     ],

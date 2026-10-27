@@ -501,12 +501,11 @@ function Hero() {
                 </p>
 
                 <h1 className="sr-only">{EVENT.name}</h1>
-                {/* Pulls the image left by its built-in transparent margin so the artwork lines up with the text. */}
                 <div className="mt-6 max-w-4xl">
                     <img
                         src={logoName}
                         alt={`${EVENT.name} — ${EVENT.theme}`}
-                        className="-ml-[2.6%] aspect-[4524/1360] w-[102.6%] max-w-none object-cover object-[0%_23%]"
+                        className="h-auto w-full object-contain"
                     />
                 </div>
 

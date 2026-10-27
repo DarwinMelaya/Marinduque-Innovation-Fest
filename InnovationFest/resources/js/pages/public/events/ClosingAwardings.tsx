@@ -7,11 +7,11 @@ const event: EventPageData = {
         "Official recognition of winning teams and participating qualifiers across all challenge components.",
     summary: [
         "The closing program caps the Marinduque Innovation Fest 2026 with the awarding of prize money, medals, and certificates. It follows the final presentations of the Hackathon prototype pitching, Idea Pitching, E-Games Development Challenge, and the Kuwentolohiya video presentation.",
-        "The awarding ceremony is held in the last week of October as part of the festival.",
+        "The awarding ceremony is held on October 30–31, 2026 as part of the festival.",
     ],
     facts: [
         { label: "Venue", value: "The Nexus Stage" },
-        { label: "When", value: "Last week of October 2026" },
+        { label: "When", value: "October 30–31, 2026" },
         {
             label: "Awarded",
             value: "Hackathon, Idea Pitching, E-Games Sports Development Challenge, and Kuwentolohiya",
