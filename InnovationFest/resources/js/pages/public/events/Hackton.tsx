@@ -11,7 +11,7 @@ const event: EventPageData = {
         "Each team conceptualizes its own tech-business Information System and delivers a fully working prototype, either an app or a website, then pitches it live before the Board of Judges.",
     ],
     facts: [
-        { label: "Venue", value: "Marinduque State University" },
+        { label: "Venue", value: "Marinduque Convention Center" },
         {
             label: "Development phase",
             value: "2 days: 1:00–5:00 PM on day 1 and 8:00 AM–5:00 PM on day 2. No overnight stay; lunch and snacks provided.",

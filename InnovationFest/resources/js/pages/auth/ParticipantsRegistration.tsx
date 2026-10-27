@@ -780,6 +780,6 @@ export default function ParticipantsRegistration({
 ParticipantsRegistration.layout = {
     title: "Register",
     description:
-        "Join the Marinduque Innovation Fest 2026 at Marinduque State University.",
+        "Join the Marinduque Innovation Fest 2026 at Marinduque Convention Center.",
     wide: true,
 };

@@ -3,7 +3,7 @@
     $mono = "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace";
     $details = [
         'Date' => 'October 30–31, 2026',
-        'Venue' => 'Marinduque State University',
+        'Venue' => 'Marinduque Convention Center',
         'Name' => $participant->fullName(),
         'Address' => "{$participant->barangay}, {$participant->municipality}, Marinduque",
         'Contact' => $participant->contact_number,

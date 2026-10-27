@@ -2,17 +2,21 @@ import { Head, Link } from "@inertiajs/react";
 import {
     ArrowRight,
     Award,
+    Bot,
     CalendarDays,
     ChevronDown,
     Facebook,
     Gift,
-    ImageIcon,
     Instagram,
     MapPin,
     Menu,
+    MessagesSquare,
     Mic,
     Plus,
+    Rocket,
+    Trophy,
     Users,
+    type LucideIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -26,13 +30,17 @@ import Organizers from "@/components/public/Organizers";
 import Reveal from "@/components/public/Reveal";
 import logoIcon from "../../../pictures/Marinduque Innovation Fest 206 logo.png";
 import logoName from "../../../pictures/logoname.png";
+import hackathonImage from "../../../pictures/majorevents/Innovation Fest Hackathon.png";
+import ideaPitchingImage from "../../../pictures/majorevents/Idea Pitching Competition.png";
+import eGamesImage from "../../../pictures/majorevents/E-Games Sports Development Challenge.png";
+import kuwentolohiyaImage from "../../../pictures/majorevents/Kuwentolohiya Short Video Contest.png";
 
 const EVENT = {
     name: "Marinduque Innovation Fest 2026",
     theme: "From Ideas to Solutions: Connect, Innovate, Transform",
     dates: "October 30-31, 2026",
     startsAt: "2026-10-30T08:00:00+08:00",
-    venue: "Marinduque State University",
+    venue: "Marinduque Convention Center",
     organizer: "DOST MIMAROPA – DOST Marinduque",
 };
 
@@ -73,6 +81,8 @@ type MajorEvent = {
     title: string;
     description: string;
     image?: string;
+    /** Shown on the brand-color background when there is no image. */
+    icon?: LucideIcon;
 };
 
 const MAJOR_EVENTS: MajorEvent[] = [
@@ -80,42 +90,59 @@ const MAJOR_EVENTS: MajorEvent[] = [
         title: "Launching of Marinduque Innovation Hub (iHUB)",
         description:
             "The official inauguration of the Marinduque iHUB, featuring a Ceremonial Signing of the Memorandum of Understanding (MOU) and Pledge of Commitment with key regional partners and stakeholders.",
+        icon: Rocket,
     },
     {
         title: "Forums and Panel Discussions",
         description:
             "A series of talks and fireside chats at The Nexus Stage featuring industry experts, researchers, government agencies, and tech organizations discussing technopreneurship, design thinking, robotics, and emerging technologies.",
+        icon: MessagesSquare,
     },
     {
         title: "Innovation Fest Hackathon",
         description:
             "A two-day collaborative challenge where student teams develop and pitch working tech-business prototypes (apps or websites) addressing local community needs in Marinduque.",
+        image: hackathonImage,
     },
     {
         title: "Idea Pitching Competition",
         description:
             "Student innovators present creative, research-backed solutions and five-slide pitch decks to a panel of judges under the theme “Imagine. Innovate. Impact: Building a Smarter Marinduque”.",
+        image: ideaPitchingImage,
     },
     {
         title: "E-Games Sports Development Challenge",
         description:
             "A student competition where teams design and showcase original skill-based e-sports games centered on local culture, smart cities, and community themes.",
+        image: eGamesImage,
     },
     {
         title: "Kuwentolohiya: Short Video Contest",
         description:
             "A creative short-form storytelling competition exploring the connection between stories (Kuwento), local culture (Kultura), and technology (Teknolohiya).",
+        image: kuwentolohiyaImage,
     },
     {
         title: "Technology Exhibits, Gamers Den, and Robots Den",
         description:
             "Interactive exhibition spaces featuring robotics demonstrations, playable entries from the game development contest, and technology showcases from partner organizations and local startups.",
+        icon: Bot,
     },
     {
         title: "Closing Ceremonies and Awarding",
         description:
             "Official recognition and awarding of prize money, medals, and certificates to winning teams and participating qualifiers across all challenge components.",
+        icon: Trophy,
     },
+];
+
+/** Brand-color backgrounds for event cards without a photo. */
+const EVENT_FALLBACK_COLORS = [
+    "from-[#F15E00] to-[#7a2f00]",
+    "from-[#0078D9] to-[#003a6b]",
+    "from-[#229D1C] to-[#0f4a0c]",
+    "from-[#FA0A00] to-[#7a0500]",
+    "from-[#F7B600] to-[#7a5a00]",
 ];
 
 /** Maps each major event to its page under /events/{slug}. */
@@ -140,7 +167,7 @@ const FAQS: { question: string; answer: ReactNode }[] = [
     },
     {
         question: "When and where will the festival take place?",
-        answer: "The festival will take place from October 26 to 30, 2026. Main events, exhibits, and challenge presentations will be held across the Marinduque State University Gymnasium, The Nexus Stage, and the Marinduque Innovation Hub at DOST Marinduque in Boac, Marinduque.",
+        answer: "The festival will take place from October 26 to 30, 2026. Main events, exhibits, and challenge presentations will be held across the Marinduque Convention Center, The Nexus Stage, and the Marinduque Innovation Hub at DOST Marinduque in Boac, Marinduque.",
     },
     {
         question: "Who can attend the event?",
@@ -706,11 +733,27 @@ function MajorEvents() {
                                         className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
                                     />
                                 ) : (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pb-16 text-white/25">
-                                        <ImageIcon className="size-10" />
-                                        <span className="text-sm">
-                                            Photo coming soon
-                                        </span>
+                                    <div
+                                        aria-hidden
+                                        className={`absolute inset-0 bg-linear-to-br transition-transform duration-500 group-hover:scale-105 ${
+                                            EVENT_FALLBACK_COLORS[
+                                                index %
+                                                    EVENT_FALLBACK_COLORS.length
+                                            ]
+                                        }`}
+                                    >
+                                        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.18)_1px,transparent_1px)] bg-size-[18px_18px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.25),transparent_60%)]" />
+                                        {event.icon && (
+                                            <div className="absolute inset-0 flex items-center justify-center pb-20">
+                                                <div className="rounded-full bg-white/10 p-7 ring-1 ring-white/25 backdrop-blur-sm transition-transform duration-500 group-hover:-rotate-6">
+                                                    <event.icon
+                                                        className="size-16 text-white drop-shadow-lg"
+                                                        strokeWidth={1.5}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
