@@ -37,16 +37,19 @@ type Props = {
 const EditStaff = ({ staff }: Props) => {
     const [open, setOpen] = useState(false);
     const [boothName, setBoothName] = useState(staff.boothName);
+    const [category, setCategory] = useState<StaffCategory>(staff.category);
 
     const handleOpenChange = (next: boolean) => {
         setOpen(next);
 
         if (next) {
             setBoothName(staff.boothName);
+            setCategory(staff.category);
         }
     };
 
     const boothRenamed = boothName.trim() !== staff.boothName;
+    const isAttendance = category === "attendance";
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -68,7 +71,9 @@ const EditStaff = ({ staff }: Props) => {
                         Edit staff
                     </DialogTitle>
                     <DialogDescription className="text-white/60">
-                        Visits already recorded keep their points.
+                        {isAttendance
+                            ? "Attendance staff scan for daily check-in only."
+                            : "Visits already recorded keep their points."}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -81,13 +86,16 @@ const EditStaff = ({ staff }: Props) => {
                     {({ processing, errors }) => (
                         <>
                             <CategoryField
-                                defaultValue={staff.category}
+                                value={category}
+                                onChange={setCategory}
                                 error={errors.category}
                             />
 
                             <div className="grid gap-2">
                                 <Label htmlFor={`booth_name_${staff.id}`}>
-                                    Booth name
+                                    {isAttendance
+                                        ? "Station name"
+                                        : "Booth name"}
                                 </Label>
                                 <Input
                                     id={`booth_name_${staff.id}`}
@@ -118,26 +126,34 @@ const EditStaff = ({ staff }: Props) => {
                                 <InputError message={errors.name} />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor={`scan_points_${staff.id}`}>
-                                    Points per scan
-                                </Label>
-                                <Input
-                                    id={`scan_points_${staff.id}`}
+                            {isAttendance ? (
+                                <input
+                                    type="hidden"
                                     name="scan_points"
-                                    type="number"
-                                    required
-                                    min={0}
-                                    max={MAX_SCAN_POINTS}
-                                    defaultValue={staff.scanPoints}
-                                    className={INPUT_CLASS}
+                                    value={0}
                                 />
-                                <InputError message={errors.scan_points} />
-                            </div>
+                            ) : (
+                                <div className="grid gap-2">
+                                    <Label htmlFor={`scan_points_${staff.id}`}>
+                                        Points per scan
+                                    </Label>
+                                    <Input
+                                        id={`scan_points_${staff.id}`}
+                                        name="scan_points"
+                                        type="number"
+                                        required
+                                        min={0}
+                                        max={MAX_SCAN_POINTS}
+                                        defaultValue={staff.scanPoints}
+                                        className={INPUT_CLASS}
+                                    />
+                                    <InputError message={errors.scan_points} />
+                                </div>
+                            )}
 
                             {boothRenamed && boothName.trim() && (
                                 <p className="rounded-lg border border-[#F7B600]/30 bg-[#F7B600]/10 px-3 py-2 text-xs text-[#FFD66B]">
-                                    Renaming the booth changes the password to{" "}
+                                    Renaming changes the password to{" "}
                                     <span className="font-mono font-bold">
                                         {defaultPassword(boothName)}
                                     </span>

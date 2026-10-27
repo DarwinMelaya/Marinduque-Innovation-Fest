@@ -23,7 +23,7 @@ class LoginResponse implements LoginResponseContract
         if ($request->user()->isStaff()) {
             $request->session()->forget('url.intended');
 
-            return to_route('booth.home');
+            return to_route($request->user()->staffHomeRoute());
         }
 
         return redirect()->intended(config('fortify.home'));

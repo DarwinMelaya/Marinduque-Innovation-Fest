@@ -24,13 +24,16 @@ type Props = {
 const dateFormat = new Intl.DateTimeFormat("en-PH", { dateStyle: "medium" });
 
 function CategoryBadge({ category }: { category: StaffCategory }) {
+    const tone =
+        category === "forum"
+            ? "bg-[#0078D9]/20 text-[#5CB3FF]"
+            : category === "attendance"
+              ? "bg-[#229D1C]/20 text-[#6FD66A]"
+              : "bg-[#F7B600]/15 text-[#F7B600]";
+
     return (
         <span
-            className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                category === "forum"
-                    ? "bg-[#0078D9]/20 text-[#5CB3FF]"
-                    : "bg-[#F7B600]/15 text-[#F7B600]"
-            }`}
+            className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${tone}`}
         >
             {CATEGORY_LABELS[category]}
         </span>
@@ -47,14 +50,14 @@ export default function RegisteredStaff({ staff }: Props) {
                     <AdminPageHeading
                         eyebrow="Staff"
                         title="Registered staff"
-                        description={`${staff.length} ${staff.length === 1 ? "booth" : "booths"} · Staff log in with their booth name and password`}
+                        description={`${staff.length} ${staff.length === 1 ? "account" : "accounts"} · Staff log in with their booth/station name and password`}
                     />
                     <AddStaff />
                 </div>
 
                 {staff.length === 0 ? (
                     <p className="rounded-3xl border border-white/10 bg-neutral-950 px-6 py-16 text-center text-white/50">
-                        No staff yet. Add the person manning each booth.
+                        No staff yet. Add booth, forum, or attendance staff.
                     </p>
                 ) : (
                     <>
@@ -85,10 +88,14 @@ export default function RegisteredStaff({ staff }: Props) {
                                     </p>
                                     <p className="text-sm">
                                         <span className="text-white/50">
-                                            Points per scan:{" "}
+                                            {member.category === "attendance"
+                                                ? "Role: "
+                                                : "Points per scan: "}
                                         </span>
                                         <span className="font-bold">
-                                            {member.scanPoints}
+                                            {member.category === "attendance"
+                                                ? "Daily check-in"
+                                                : member.scanPoints}
                                         </span>
                                     </p>
                                     <div className="flex justify-end gap-1 border-t border-white/10 pt-3">
@@ -107,7 +114,7 @@ export default function RegisteredStaff({ staff }: Props) {
                                             Category
                                         </th>
                                         <th className="px-5 py-4 font-semibold">
-                                            Booth
+                                            Booth / station
                                         </th>
                                         <th className="px-5 py-4 font-semibold">
                                             Staff name
@@ -147,7 +154,10 @@ export default function RegisteredStaff({ staff }: Props) {
                                                 {member.password}
                                             </td>
                                             <td className="px-5 py-4 font-bold tabular-nums">
-                                                {member.scanPoints}
+                                                {member.category ===
+                                                "attendance"
+                                                    ? "—"
+                                                    : member.scanPoints}
                                             </td>
                                             <td className="px-5 py-4 whitespace-nowrap text-white/60">
                                                 {member.createdAt &&

@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string|null $booth_name
- * @property StaffCategory $category Whether a staff account mans a booth or the forums.
+ * @property StaffCategory|null $category Booth, forums, or attendance check-in.
  * @property int $scan_points Points a participant earns each time this booth scans them.
  * @property string|null $email
  * @property Carbon|null $email_verified_at
@@ -97,5 +97,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isStaff(): bool
     {
         return $this->role === UserRole::Staff;
+    }
+
+    public function isAttendanceStaff(): bool
+    {
+        return $this->isStaff() && $this->category === StaffCategory::Attendance;
+    }
+
+    public function isBoothStaff(): bool
+    {
+        return $this->isStaff() && ($this->category?->scansVisits() ?? true);
+    }
+
+    /** Named route staff land on after login. */
+    public function staffHomeRoute(): string
+    {
+        return $this->isAttendanceStaff() ? 'attendance.home' : 'booth.home';
     }
 }

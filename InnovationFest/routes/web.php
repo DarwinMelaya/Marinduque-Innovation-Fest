@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\EvaluationController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\VisitorController;
+use App\Http\Controllers\Attendance\HomeController as AttendanceHomeController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Booth\HomeController as BoothHomeController;
 use App\Http\Controllers\Booth\VisitController;
@@ -98,6 +99,16 @@ Route::middleware(['auth', 'can:access-booth'])
         Route::post('visits', [VisitController::class, 'store'])
             ->middleware('throttle:60,1')
             ->name('visits.store');
+    });
+
+Route::middleware(['auth', 'can:access-attendance'])
+    ->prefix('attendance')
+    ->name('attendance.')
+    ->group(function () {
+        Route::get('/', AttendanceHomeController::class)->name('home');
+        Route::post('check-in', [AttendanceController::class, 'store'])
+            ->middleware('throttle:60,1')
+            ->name('check-in');
     });
 
 require __DIR__.'/settings.php';

@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->redirectUsersTo(fn (Request $request): string => match (true) {
             $request->user()?->isAdmin() => route('admin.dashboard'),
-            $request->user()?->isStaff() => route('booth.home'),
+            $request->user()?->isStaff() => route($request->user()->staffHomeRoute()),
             default => route('home'),
         });
 

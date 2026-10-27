@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\StaffCategory;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -64,6 +65,7 @@ class UserFactory extends Factory
 
             return [
                 'booth_name' => $boothName,
+                'category' => StaffCategory::Booth,
                 'email' => null,
                 'password' => User::staffPassword($boothName),
                 'role' => UserRole::Staff,

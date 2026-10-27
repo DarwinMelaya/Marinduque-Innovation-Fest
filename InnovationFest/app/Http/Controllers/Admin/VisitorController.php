@@ -26,6 +26,7 @@ class VisitorController extends Controller
     {
         $booths = User::query()
             ->where('role', UserRole::Staff)
+            ->where('category', '!=', 'attendance')
             ->orderBy('booth_name')
             ->get(['id', 'booth_name']);
 

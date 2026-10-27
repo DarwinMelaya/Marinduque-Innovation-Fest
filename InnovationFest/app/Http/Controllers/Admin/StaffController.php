@@ -45,6 +45,7 @@ class StaffController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate($this->rules(), $this->messages());
+        $validated = $this->normalize($validated);
 
         $password = User::staffPassword($validated['booth_name']);
 
@@ -71,7 +72,9 @@ class StaffController extends Controller
     {
         abort_unless($staff->isStaff(), 404);
 
-        $validated = $request->validate($this->rules($staff), $this->messages());
+        $validated = $this->normalize(
+            $request->validate($this->rules($staff), $this->messages()),
+        );
 
         $staff->forceFill($validated);
 
@@ -124,12 +127,27 @@ class StaffController extends Controller
     }
 
     /**
+     * Attendance staff do not award visit points.
+     *
+     * @param  array{booth_name: string, category: string, name: string, scan_points: int}  $validated
+     * @return array{booth_name: string, category: string, name: string, scan_points: int}
+     */
+    private function normalize(array $validated): array
+    {
+        if ($validated['category'] === StaffCategory::Attendance->value) {
+            $validated['scan_points'] = 0;
+        }
+
+        return $validated;
+    }
+
+    /**
      * @return array<string, string>
      */
     private function messages(): array
     {
         return [
-            'booth_name.unique' => 'This booth already has a staff account.',
+            'booth_name.unique' => 'This name already has a staff account.',
         ];
     }
 }

@@ -28,39 +28,43 @@ export function defaultPassword(boothName: string) {
     return `${boothName.replace(/\s+/g, "")}123`;
 }
 
-export type StaffCategory = "booth" | "forum";
+export type StaffCategory = "booth" | "forum" | "attendance";
 
 export const CATEGORY_LABELS: Record<StaffCategory, string> = {
     booth: "Booth",
     forum: "Forums",
+    attendance: "Attendance",
 };
 
-/** Booth or Forums radio pair; mirrors App\Enums\StaffCategory. */
+/** Booth, Forums, or Attendance radio group; mirrors App\Enums\StaffCategory. */
 export function CategoryField({
-    defaultValue = "booth",
+    value,
+    onChange,
     error,
 }: {
-    defaultValue?: StaffCategory;
+    value: StaffCategory;
+    onChange: (value: StaffCategory) => void;
     error?: string;
 }) {
     return (
         <fieldset className="grid gap-2">
             <legend className="mb-2 text-sm font-medium">Category</legend>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
                 {(Object.keys(CATEGORY_LABELS) as StaffCategory[]).map(
-                    (value) => (
+                    (option) => (
                         <label
-                            key={value}
+                            key={option}
                             className="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-white/15 bg-white/5 text-sm font-semibold transition-colors has-[:checked]:border-[#F7B600] has-[:checked]:bg-[#F7B600]/10 has-[:checked]:text-[#F7B600] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#F7B600]/40"
                         >
                             <input
                                 type="radio"
                                 name="category"
-                                value={value}
-                                defaultChecked={defaultValue === value}
+                                value={option}
+                                checked={value === option}
+                                onChange={() => onChange(option)}
                                 className="sr-only"
                             />
-                            {CATEGORY_LABELS[value]}
+                            {CATEGORY_LABELS[option]}
                         </label>
                     ),
                 )}
@@ -73,14 +77,18 @@ export function CategoryField({
 const AddStaff = () => {
     const [open, setOpen] = useState(false);
     const [boothName, setBoothName] = useState("");
+    const [category, setCategory] = useState<StaffCategory>("booth");
 
     const handleOpenChange = (next: boolean) => {
         setOpen(next);
 
         if (!next) {
             setBoothName("");
+            setCategory("booth");
         }
     };
+
+    const isAttendance = category === "attendance";
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -97,7 +105,9 @@ const AddStaff = () => {
                         Add staff
                     </DialogTitle>
                     <DialogDescription className="text-white/60">
-                        Create an account for the person manning a booth.
+                        {isAttendance
+                            ? "Create an account that can scan participants for daily attendance."
+                            : "Create an account for the person manning a booth."}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -110,10 +120,18 @@ const AddStaff = () => {
                 >
                     {({ processing, errors }) => (
                         <>
-                            <CategoryField error={errors.category} />
+                            <CategoryField
+                                value={category}
+                                onChange={setCategory}
+                                error={errors.category}
+                            />
 
                             <div className="grid gap-2">
-                                <Label htmlFor="booth_name">Booth name</Label>
+                                <Label htmlFor="booth_name">
+                                    {isAttendance
+                                        ? "Station name"
+                                        : "Booth name"}
+                                </Label>
                                 <Input
                                     id="booth_name"
                                     name="booth_name"
@@ -124,7 +142,11 @@ const AddStaff = () => {
                                     onChange={(event) =>
                                         setBoothName(event.target.value)
                                     }
-                                    placeholder="e.g. DOST Booth"
+                                    placeholder={
+                                        isAttendance
+                                            ? "e.g. Main Gate"
+                                            : "e.g. DOST Booth"
+                                    }
                                     className={INPUT_CLASS}
                                 />
                                 <InputError message={errors.booth_name} />
@@ -143,26 +165,34 @@ const AddStaff = () => {
                                 <InputError message={errors.name} />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="scan_points">
-                                    Points per scan
-                                </Label>
-                                <Input
-                                    id="scan_points"
+                            {isAttendance ? (
+                                <input
+                                    type="hidden"
                                     name="scan_points"
-                                    type="number"
-                                    required
-                                    min={0}
-                                    max={MAX_SCAN_POINTS}
-                                    defaultValue={10}
-                                    className={INPUT_CLASS}
+                                    value={0}
                                 />
-                                <p className="text-xs text-white/50">
-                                    Points a participant earns each time this
-                                    booth scans them.
-                                </p>
-                                <InputError message={errors.scan_points} />
-                            </div>
+                            ) : (
+                                <div className="grid gap-2">
+                                    <Label htmlFor="scan_points">
+                                        Points per scan
+                                    </Label>
+                                    <Input
+                                        id="scan_points"
+                                        name="scan_points"
+                                        type="number"
+                                        required
+                                        min={0}
+                                        max={MAX_SCAN_POINTS}
+                                        defaultValue={10}
+                                        className={INPUT_CLASS}
+                                    />
+                                    <p className="text-xs text-white/50">
+                                        Points a participant earns each time
+                                        this booth scans them.
+                                    </p>
+                                    <InputError message={errors.scan_points} />
+                                </div>
+                            )}
 
                             <div className="grid gap-2">
                                 <span className="text-sm font-medium">
@@ -171,10 +201,13 @@ const AddStaff = () => {
                                 <p className="flex h-11 items-center rounded-lg border border-dashed border-white/15 px-3 font-mono text-sm text-[#F7B600]">
                                     {boothName.trim()
                                         ? defaultPassword(boothName)
-                                        : "Booth name + 123"}
+                                        : isAttendance
+                                          ? "Station name + 123"
+                                          : "Booth name + 123"}
                                 </p>
                                 <p className="text-xs text-white/50">
-                                    Generated automatically from the booth name.
+                                    Generated automatically from the{" "}
+                                    {isAttendance ? "station" : "booth"} name.
                                 </p>
                             </div>
 
