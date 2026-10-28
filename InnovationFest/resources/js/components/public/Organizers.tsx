@@ -18,13 +18,13 @@ const PARTNERS = [
 
 export default function Organizers() {
     return (
-        <section className="border-t border-white/10 bg-neutral-950 py-24 lg:py-32">
-            <div className="mx-auto max-w-7xl px-6 text-center">
+        <section className="border-t border-white/10 bg-neutral-950 py-16 sm:py-24 lg:py-32">
+            <div className="mx-auto max-w-7xl px-4 text-center sm:px-6">
                 <Reveal>
                     <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
                         Organized by
                     </p>
-                    <h2 className="mt-4 text-2xl font-black tracking-tight uppercase sm:text-3xl">
+                    <h2 className="mt-4 text-xl font-black tracking-tight uppercase sm:text-3xl">
                         {ORGANIZER}
                     </h2>
                 </Reveal>
@@ -35,12 +35,12 @@ export default function Organizers() {
                         <ul
                             key={copy}
                             aria-hidden={copy === 1}
-                            className="flex shrink-0 gap-4 pr-4"
+                            className="flex shrink-0 gap-3 pr-3 sm:gap-4 sm:pr-4"
                         >
                             {[...PARTNERS, ...PARTNERS].map((partner, i) => (
                                 <li
                                     key={i}
-                                    className="flex size-44 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black transition duration-300 hover:scale-105 hover:border-white/30"
+                                    className="flex size-32 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-black transition duration-300 hover:scale-105 hover:border-white/30 sm:size-44"
                                 >
                                     <img
                                         src={partner.logo}

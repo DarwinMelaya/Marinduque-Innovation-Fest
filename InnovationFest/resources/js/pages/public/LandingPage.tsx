@@ -16,7 +16,7 @@ import {
     Trophy,
     type LucideIcon,
 } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import {
     Sheet,
     SheetClose,
@@ -37,7 +37,6 @@ const EVENT = {
     name: "Marinduque Innovation Fest 2026",
     theme: "From Ideas to Solutions: Connect, Innovate, Transform",
     dates: "October 30-31, 2026",
-    startsAt: "2026-10-30T08:00:00+08:00",
     venue: "Marinduque Convention Center",
     organizer: "DOST MIMAROPA – DOST Marinduque",
 };
@@ -427,128 +426,66 @@ function Header() {
     );
 }
 
-function getTimeLeft(target: number, now: number) {
-    const total = Math.max(target - now, 0);
-    return {
-        total,
-        units: [
-            { label: "Days", value: Math.floor(total / 86_400_000) },
-            { label: "Hours", value: Math.floor(total / 3_600_000) % 24 },
-            { label: "Minutes", value: Math.floor(total / 60_000) % 60 },
-            { label: "Seconds", value: Math.floor(total / 1000) % 60 },
-        ],
-    };
-}
-
-function Countdown({ target }: { target: string }) {
-    const targetTime = new Date(target).getTime();
-    // Starts null so server-rendered HTML matches the first client render.
-    const [now, setNow] = useState<number | null>(null);
-
-    useEffect(() => {
-        setNow(Date.now());
-        const id = window.setInterval(() => setNow(Date.now()), 1000);
-        return () => window.clearInterval(id);
-    }, []);
-
-    const { total, units } = getTimeLeft(targetTime, now ?? 0);
-    if (now !== null && total === 0) return null;
-
-    return (
-        <div role="timer" aria-label="Countdown to the festival">
-            <p className="text-sm font-semibold tracking-[0.2em] text-[#F7B600] uppercase">
-                Festival starts in
-            </p>
-            <ul className="mt-3 flex gap-6 sm:gap-10">
-                {units.map(({ label, value }) => (
-                    <li key={label}>
-                        <span className="block text-4xl font-black tabular-nums sm:text-5xl">
-                            {now === null
-                                ? "--"
-                                : String(value).padStart(2, "0")}
-                        </span>
-                        <span className="text-xs font-semibold tracking-wider text-white/50 uppercase">
-                            {label}
-                        </span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-}
-
 function Hero() {
-    const contentRef = useParallax<HTMLDivElement>(0.12);
-
     return (
-        <section
-            id="home"
-            className="relative overflow-hidden bg-black scroll-mt-20"
-        >
-            <div
-                ref={contentRef}
-                className="mx-auto max-w-7xl px-6 pt-14 pb-28 duration-1000 will-change-transform animate-in fade-in slide-in-from-bottom-8 lg:pt-20 lg:pb-32"
-            >
+        <section id="home" className="relative bg-black scroll-mt-20">
+            <div className="mx-auto max-w-7xl px-5 pt-12 pb-24 duration-1000 animate-in fade-in slide-in-from-bottom-4 sm:px-6 lg:pt-16 lg:pb-28">
                 <p className="text-sm font-semibold tracking-[0.2em] text-white/60 uppercase">
                     {EVENT.organizer} presents
                 </p>
 
                 <h1 className="sr-only">{EVENT.name}</h1>
-                <div className="mt-6 max-w-4xl">
+                {/* mix-blend-lighten drops the PNG's black box into the page; same file, no crop. */}
+                <div className="-mx-5 mt-5 min-w-0 sm:mx-0 sm:mt-7">
                     <img
                         src={logoName}
                         alt={`${EVENT.name} — ${EVENT.theme}`}
-                        className="h-auto w-full object-contain"
+                        width={3840}
+                        height={1008}
+                        decoding="async"
+                        fetchPriority="high"
+                        draggable={false}
+                        className="block h-auto w-full max-w-full select-none object-contain mix-blend-lighten sm:max-w-4xl lg:max-w-5xl"
                     />
                 </div>
 
-                <ul className="mt-8 flex flex-col gap-3 text-lg text-white/80 sm:flex-row sm:gap-8">
+                <ul className="mt-7 flex flex-col gap-2.5 text-base text-white/80 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-2 sm:text-lg">
                     <li className="inline-flex items-center gap-2">
-                        <CalendarDays className="size-5 text-[#F7B600]" />
+                        <CalendarDays className="size-5 shrink-0 text-[#F7B600]" />
                         {EVENT.dates}
                     </li>
                     <li className="inline-flex items-center gap-2">
-                        <MapPin className="size-5 text-[#F7B600]" />
+                        <MapPin className="size-5 shrink-0 text-[#F7B600]" />
                         {EVENT.venue}
                     </li>
                 </ul>
 
-                <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row">
-                    <a
-                        href="#schedule"
-                        className="group inline-flex min-h-12 items-center gap-2 rounded-full bg-[#F15E00] px-8 text-base font-bold tracking-wide uppercase transition-colors hover:bg-[#FA0A00] focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none"
+                <div className="mt-8 sm:mt-10">
+                    <Link
+                        href="/register"
+                        className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#F15E00] px-8 text-sm font-bold tracking-wide uppercase transition-colors hover:bg-[#FA0A00] focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none sm:min-h-14 sm:w-auto sm:px-10 sm:text-base"
                     >
-                        View schedules
+                        Register
                         <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-                    </a>
-                    <a
-                        href="#events"
-                        className="inline-flex min-h-12 items-center rounded-full border border-white/25 px-8 text-base font-bold tracking-wide uppercase transition-colors hover:border-white hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
-                    >
-                        Explore events
-                    </a>
+                    </Link>
                 </div>
 
-                <div className="mt-14 flex flex-col gap-8 border-t border-white/10 pt-8 sm:flex-row sm:items-end sm:justify-between">
-                    <Countdown target={EVENT.startsAt} />
-
-                    <ul
-                        className="flex items-center gap-3"
-                        aria-label="Social media"
-                    >
-                        {SOCIALS.map(({ label, href, icon: Icon }) => (
-                            <li key={label}>
-                                <a
-                                    href={href}
-                                    aria-label={label}
-                                    className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition duration-300 hover:scale-90 hover:border-white hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
-                                >
-                                    <Icon className="size-5" />
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <ul
+                    className="mt-12 flex items-center gap-3 border-t border-white/10 pt-7 sm:mt-14 sm:pt-8"
+                    aria-label="Social media"
+                >
+                    {SOCIALS.map(({ label, href, icon: Icon }) => (
+                        <li key={label}>
+                            <a
+                                href={href}
+                                aria-label={label}
+                                className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition duration-300 hover:scale-90 hover:border-white hover:text-white focus-visible:ring-2 focus-visible:ring-[#F7B600] focus-visible:outline-none"
+                            >
+                                <Icon className="size-5" />
+                            </a>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </section>
     );
@@ -789,7 +726,7 @@ function Footer() {
                     <img
                         src={logoName}
                         alt={EVENT.name}
-                        className="w-full max-w-sm"
+                        className="w-full max-w-sm mix-blend-lighten"
                     />
                 </div>
 
