@@ -66,7 +66,7 @@ Route::post('admin/register', [AdminRegisterController::class, 'store'])
     ->middleware('throttle:6,1')
     ->name('admin.register.store');
 
-Route::middleware(['auth', 'verified', 'can:access-admin'])
+Route::middleware(['auth', 'can:access-admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {

@@ -11,11 +11,9 @@ import {
     MapPin,
     Menu,
     MessagesSquare,
-    Mic,
     Plus,
     Rocket,
     Trophy,
-    Users,
     type LucideIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -53,11 +51,6 @@ const NAV_LINKS = [
 const SOCIALS = [
     { label: "Facebook", href: "#", icon: Facebook },
     { label: "Instagram", href: "#", icon: Instagram },
-];
-
-const STATS = [
-    { value: "10+", label: "Speakers", icon: Mic, color: "text-[#229D1C]" },
-    { value: "500+", label: "Attendees", icon: Users, color: "text-[#F7B600]" },
 ];
 
 const PERKS = [
@@ -622,50 +615,24 @@ function Schedule() {
     return (
         <section id="schedule" className="scroll-mt-20 bg-black">
             <div className="mx-auto max-w-7xl px-6 py-24 lg:py-32">
-                <div className="grid gap-6 lg:grid-cols-3">
-                    <Reveal className="flex flex-col justify-between gap-10 rounded-3xl bg-[#0078D9] p-8 lg:col-span-2 lg:p-12">
-                        <div className="flex flex-col gap-3">
-                            <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
-                                Schedule
-                            </p>
-                            <p className="text-4xl font-black tracking-tight uppercase sm:text-6xl">
-                                {EVENT.dates}
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-3">
-                            <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
-                                Venue
-                            </p>
-                            <p className="max-w-xl text-xl font-semibold sm:text-2xl">
-                                {EVENT.venue}
-                            </p>
-                        </div>
-                    </Reveal>
-
-                    <div className="grid gap-6">
-                        {STATS.map(({ value, label, icon: Icon, color }, i) => (
-                            <Reveal
-                                key={label}
-                                delay={150 + i * 120}
-                                direction="right"
-                            >
-                                <div className="flex h-full items-center gap-6 rounded-3xl border border-white/10 bg-neutral-950 p-8 transition duration-300 hover:-translate-y-1 hover:border-white/30">
-                                    <Icon
-                                        className={`size-8 shrink-0 ${color}`}
-                                    />
-                                    <div>
-                                        <p className="text-4xl font-black tracking-tight">
-                                            {value}
-                                        </p>
-                                        <p className="text-sm font-semibold tracking-[0.2em] text-white/60 uppercase">
-                                            {label}
-                                        </p>
-                                    </div>
-                                </div>
-                            </Reveal>
-                        ))}
+                <Reveal className="flex flex-col justify-between gap-10 rounded-3xl bg-[#0078D9] p-8 sm:flex-row sm:items-end sm:gap-16 lg:p-12">
+                    <div className="flex flex-col gap-3">
+                        <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
+                            Schedule
+                        </p>
+                        <p className="text-4xl font-black tracking-tight uppercase sm:text-6xl">
+                            {EVENT.dates}
+                        </p>
                     </div>
-                </div>
+                    <div className="flex flex-col gap-3">
+                        <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
+                            Venue
+                        </p>
+                        <p className="max-w-xl text-xl font-semibold sm:text-2xl">
+                            {EVENT.venue}
+                        </p>
+                    </div>
+                </Reveal>
 
                 <div className="mt-6 grid gap-6 md:grid-cols-3">
                     <Reveal>
